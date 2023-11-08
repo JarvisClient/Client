@@ -18,12 +18,3 @@ Cargo.lock
 
 # Ignore environment-specific config files
 .env
-
-# Ignore compiled JavaScript or TypeScript files
-*.js
-*.js.map
-*.ts
-*.ts.map
-
-# Ignore compiled Rust binaries
-*.rs

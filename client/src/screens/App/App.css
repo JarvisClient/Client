@@ -1,7 +1,20 @@
-.logo.vite:hover {
-  filter: drop-shadow(0 0 2em #747bff);
+.custom-scroll::-webkit-scrollbar {
+    width: 0;
+    background: transparent;
 }
 
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafb);
+.sidescroll-container {
+  width: 320px; /* Adjust the width as needed */
+  overflow-x: auto;
+}
+
+.sidescroll-buttons {
+  display: flex;
+  gap: 8px; /* Adjust the gap between buttons as needed */
+}
+
+.sidescroll-button {
+  width: 64px;
+  height: 64px;
+  /* Add any other styling you need for your buttons */
 }
