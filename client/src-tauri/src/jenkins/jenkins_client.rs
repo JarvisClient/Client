@@ -1,5 +1,6 @@
 use reqwest;
 use base64::{encode, decode};
+use std::collections::HashMap;
 
 pub struct JenkinsClient {
     base_url: String,
@@ -67,24 +68,81 @@ impl JenkinsClient {
         response.text().await
     }
 
-pub async fn check_authentication(&self) -> Result<String, String> {
-    let url = format!("{}/api/json", self.base_url);
+    pub async fn check_authentication(&self) -> Result<String, String> {
+        let url = format!("{}/api/json", self.base_url);
 
-    let client = reqwest::Client::new();
-    let response = match client
-        .get(&url)
-        .header("Authorization", format!("Basic {}", base64::encode(&format!("{}:{}", self.jenkins_username, self.jenkins_api_token))))
-        .send()
-        .await
-    {
-        Ok(response) => response,
-        Err(err) => return Err(err.to_string()), // Propagate the reqwest::Error as a String
-    };
+        let client = reqwest::Client::new();
+        let response = match client
+            .get(&url)
+            .header("Authorization", format!("Basic {}", base64::encode(&format!("{}:{}", self.jenkins_username, self.jenkins_api_token))))
+            .send()
+            .await
+        {
+            Ok(response) => response,
+            Err(err) => return Err(err.to_string()), // Propagate the reqwest::Error as a String
+        };
 
-    if !response.status().is_success() {
-        return Err(format!("Error getting job data: {}", response.status()));
+        if !response.status().is_success() {
+            return Err(format!("Error getting job data: {}", response.status()));
+        }
+
+        response.text().await.map_err(|err| err.to_string())
     }
-
-    response.text().await.map_err(|err| err.to_string())
+    
+    pub async fn start_build_with_parameters(
+        &self,
+        job_name: &str,
+        params: HashMap<String, String>,
+    ) -> Result<String, reqwest::Error> {
+        let url = format!("{}/job/{}/buildWithParameters", self.base_url, job_name);
+        
+        let client = reqwest::Client::new();
+        let response = client
+        .post(&url)
+        .header(
+            "Authorization",
+            format!(
+                "Basic {}",
+                encode(&format!("{}:{}", self.jenkins_username, self.jenkins_api_token))
+            ),
+        )
+        .form(&params)
+        .send()
+        .await?;
+    
+    if !response.status().is_success() {
+        panic!("Error starting build: {}", response.status());
+    }
+    
+    response.text().await
 }
+
+pub async fn start_build(
+    &self,
+    job_name: &str,
+    params: HashMap<String, String>,
+) -> Result<String, reqwest::Error> {
+    let url = format!("{}/job/{}/build", self.base_url, job_name);
+    
+    let client = reqwest::Client::new();
+    let response = client
+    .post(&url)
+    .header(
+        "Authorization",
+        format!(
+            "Basic {}",
+            encode(&format!("{}:{}", self.jenkins_username, self.jenkins_api_token))
+        ),
+    )
+    .form(&params)
+    .send()
+    .await?;
+
+if !response.status().is_success() {
+    panic!("Error starting build: {}", response.status());
+}
+
+response.text().await
+}
+
 }

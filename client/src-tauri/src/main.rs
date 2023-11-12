@@ -16,7 +16,9 @@ async fn main() {
         .invoke_handler(tauri::generate_handler![AppHandle::jenkins_calls::get_project_data,
                                                  AppHandle::jenkins_calls::get_build_data,
                                                  AppHandle::jenkins_calls::get_console_text,
-                                                 AppHandle::jenkins_calls::authenticate_user
+                                                 AppHandle::jenkins_calls::authenticate_user,
+                                                 AppHandle::jenkins_calls::start_build_with_parameters,
+                                                 AppHandle::jenkins_calls::start_build
                                                  ])
         .run(tauri::generate_context!())
         .expect("Failed to run Tauri application.");

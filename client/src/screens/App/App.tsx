@@ -20,6 +20,7 @@ import FeatureViewHead from "../../components/FeatureView/FeatureViewHead";
 import FeatureButtonsConfig from "../../config/FeatureButtons";
 import "./App.css";
 import ParametersView from "../../components/FeatureView/ParametersView/ParametersView";
+import BuildView from "../../components/FeatureView/BuildView/BuildView";
 
 /**
  * React functional component representing the main application.
@@ -87,8 +88,6 @@ function App() {
    * @param {string} feature - The feature to set as the active feature.
    */
   const handleFeatureButtonClick = (feature: string) => {
-    console.log(feature);
-
     switch (feature) {
       case "settings":
         setActiveJobBuildNumber(null);
@@ -174,23 +173,29 @@ function App() {
    */
   const createFeatureButtons = () => {
     const featureButtons: any = [];
-
+  
     for (const key in FeatureButtonsConfig) {
       let element = FeatureButtonsConfig[key];
-
+  
       // Check if the element should be included based on the conditions
       if (
-        (!element["hidden"]) && // Check if "hidden" is not true
-        ((activeJobBuildNumber && element.forJob) || (!activeJobBuildNumber && !element.forJob))
+        (!element.hidden) && // Check if "hidden" is not true
+        (
+          (element.purpose === "BOTH") ||
+          (activeJobBuildNumber && element.purpose === "JOB") ||
+          (!activeJobBuildNumber && element.purpose === "PROJECT")
+        )
       ) {
         featureButtons.push({
           name: key,
         });
       }
     }
-
+  
     setFeatureButtons(featureButtons);
   };
+  
+  
 
 
 
@@ -248,7 +253,7 @@ function App() {
 
         {/* Feature View */}
         <div className="overflow-y-scroll general-view custom-scroll">
-          {activeFeature !== "settings" && activeFeature !== "status_for_project" && (
+          {activeFeature !== "settings" && activeFeature !== "status_for_project" && activeFeature !== "build" && (
             <FeatureViewHead buildData={selectedBuildData} />
           )}
           {activeFeature === "status" && <StatusView buildData={selectedBuildData} />}
@@ -256,6 +261,7 @@ function App() {
           {activeFeature === "parameters" && <ParametersView buildData={selectedBuildData} parameterDefinition={parameterDefinition} />}
           {activeFeature === "settings" && <SettingsView buildData={selectedBuildData} />}
           {activeFeature === "status_for_project" && <ProjectStatusView buildData={projectData} />}
+          {activeFeature === "build" && <BuildView parameterDefinition={parameterDefinition} />}
         </div>
         {/* End of Feature View */}
 

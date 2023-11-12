@@ -11,7 +11,7 @@ interface TitleBarProps {
 
 const TitleBarComponent: React.FC<TitleBarProps> = ({ activeFeature, windowTitle }) => {
     const featureList = FeatureButtons[activeFeature];
-    const IconComponent: React.ComponentType<any> | undefined = featureList?.icon;
+    const IconComponent: React.ComponentType<any> | undefined = featureList?.icon as React.ComponentType<any> | undefined;
 
     const closeWindow = async () => {
         appWindow.close();

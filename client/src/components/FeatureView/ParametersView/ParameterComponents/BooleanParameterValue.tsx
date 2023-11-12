@@ -7,6 +7,7 @@ interface Props {
 }
 
 const BooleanParameterValue: React.FC<Props> = ({ parameter }): JSX.Element => {
+
     return (
         <div className="grid items-center">
             <div className="flex items-center mr-2">

@@ -2,6 +2,7 @@
 
 use crate::jenkins::jenkins_client::JenkinsClient;
 use tauri::AppHandle;
+use std::collections::HashMap;
 
 #[tauri::command]
 pub async fn get_project_data(baseurl: String, username: String, apitoken: String, project_name: String) -> Result<String, String> {
@@ -40,9 +41,30 @@ pub async fn authenticate_user(baseurl: String, username: String, apitoken: Stri
             // Check if the error is due to unauthorized access
             if err.to_string().contains("401 Unauthorized") {
                 Ok(false)
+            } else if err.to_string().contains("404 Not Found") {
+                println!("404 Not Found");
+                Ok(false)
             } else {
                 Err(err.to_string())
             }
         }
+    }
+}
+
+#[tauri::command]
+pub async fn start_build_with_parameters(baseurl: String, username: String, apitoken: String, project_name: String, params: HashMap<String, String>) {
+    let jenkins_client = JenkinsClient::new(&baseurl, &username, &apitoken);
+    match jenkins_client.start_build_with_parameters(&project_name, params).await {
+        Ok(_) => (),
+        Err(err) => println!("Error starting build: {}", err.to_string()),
+    }
+}
+
+#[tauri::command]
+pub async fn start_build(baseurl: String, username: String, apitoken: String, project_name: String, params: HashMap<String, String>) {
+    let jenkins_client = JenkinsClient::new(&baseurl, &username, &apitoken);
+    match jenkins_client.start_build(&project_name, params).await {
+        Ok(_) => (),
+        Err(err) => println!("Error starting build: {}", err.to_string()),
     }
 }
