@@ -10,9 +10,6 @@ import { BsPlayFill } from "react-icons/bs";
 
 const projectName = localStorage.getItem("projectName");
 
-console.log(!!projectName);
-
-
 interface FeatureButtonProps {
   title: string;
   titleBar: string;

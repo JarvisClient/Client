@@ -13,12 +13,13 @@ import ChoiceParameterDefinition from "./ParameterComponents/ChoiceParameterDefi
 
 interface BuildViewProps {
     parameterDefinition: any[];
+    buildData: any;
 }
 
 export interface JenkinsParameters {
     defaultParameterValue: {
         _class: string;
-        value: string | boolean | number | null;
+        value: string | boolean;
     },
     choices: string[];
     description: string;
@@ -27,10 +28,39 @@ export interface JenkinsParameters {
     _class: string;
 }
 
-const BuildView: React.FC<BuildViewProps> = ({ parameterDefinition }) => {
+const BuildView: React.FC<BuildViewProps> = ({ parameterDefinition, buildData }) => {
     const [parameterValues, setParameterValues] = useState<{ [key: string]: string | boolean | number | null }>({});
     const [showBanner, setShowBanner] = useState(false);
+    const [SParameterDefinitions, setSParameterDefinitions] = useState<JenkinsParameters[]>([]);
+    const [parameterAvailable, setParameterAvailable] = useState(false);
     let projectName = localStorage.getItem("projectName");
+
+    useEffect(() => {
+        try {
+            setSParameterDefinitions(parameterDefinition);
+            if (buildData) setSParameterDefinitions(mergeParameters(parameterDefinition, buildData));
+        } catch (error) {
+            setParameterAvailable(true)
+        }
+    }, [parameterDefinition, buildData])
+
+    const mergeParameters = (parameterDefinition: JenkinsParameters[], buildData: any) => {
+
+        let buildData_params = buildData.actions.find((action: any) => action._class === "hudson.model.ParametersAction")["parameters"];
+        let definitons: JenkinsParameters[] = parameterDefinition;
+
+        definitons.forEach((definition) => {
+            let correspondingBuildData = buildData_params.find((param: any) => param.name === definition.name);
+
+            if (correspondingBuildData) {
+                definition.defaultParameterValue.value = (correspondingBuildData.value).toString();
+                console.log(definition);
+
+            }
+        })
+
+        return definitons;
+    }
 
     const buildButtonClick = async () => {
         const config = {
@@ -39,9 +69,8 @@ const BuildView: React.FC<BuildViewProps> = ({ parameterDefinition }) => {
             params: parameterValues
         };
 
-        
         try {
-            if (parameterDefinition) {
+            if (SParameterDefinitions) {
                 console.log("Made request to start build with parameters: ", parameterValues);
                 await invoke("start_build_with_parameters", config);
             } else {
@@ -105,13 +134,23 @@ const BuildView: React.FC<BuildViewProps> = ({ parameterDefinition }) => {
 
             {showBanner && (
                 <div className="flex mb-5 items-center w-full p-4 bg-[#2D483A] rounded-lg shadow">
-                    <div className="ms-3 text-md font-normal"><b>Build started!</b> It might take some time until it shows up here.</div>
-                </div>
+                    <div className="ms-3 text-md font-normal">
+                        <strong>Build started!</strong> Please allow some time for it to appear here.
+                    </div>
 
+                </div>
+            )}
+            {parameterAvailable && (
+                <div className="flex mb-5 items-center w-full p-4 bg-[#403D2F] rounded-lg shadow">
+                    <div className="ms-3 text-md font-normal">
+                        <strong>No parameters available!</strong> It appears that this job does not offer any parameters.
+                    </div>
+
+                </div>
             )}
 
             <h1 className="text-3xl font-bold mb-[40px]">Start a new Build</h1>
-            {parameterDefinition?.map((parameter, index) => (
+            {SParameterDefinitions?.map((parameter, index) => (
                 <div key={index} className="mb-10">{getComponentForParameter(parameter)}</div>
             ))}
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { RxSwitch } from 'react-icons/rx';
 
 import { JenkinsParameters } from '../BuildView';
@@ -15,6 +15,10 @@ const BooleanParameterDefinition: React.FC<Props> = ({ parameters, value, onChan
     const newValue = value === 'true' ? 'false' : 'true';
     onChange(newValue);
   };
+
+  useEffect(() => {
+    onChange(parameters.defaultParameterValue.value);
+  }, []);
 
   return (
     <div className="grid items-center">

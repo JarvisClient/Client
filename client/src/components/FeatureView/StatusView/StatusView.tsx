@@ -113,8 +113,12 @@ const StatusView: React.FC<StatusViewProps> = ({ buildData }) => {
 
                 <div className="flex flex-col pt-2">
                     <h1 className="text-2xl font-bold mb-1 cursor-pointer" onClick={() => openArtifact()}>Build Artifacts</h1>
-                    {buildData?.artifacts?.map((artifact: any) => {
-                        return <p className="transition text-blue-500 hover:text-blue-600 active:text-blue-700 cursor-pointer" onClick={() => openArtifact(artifact?.relativePath)}>{artifact?.fileName}</p>
+                    {buildData?.artifacts?.map((artifact: any, key: number) => {
+                        return <p 
+                                className="transition text-blue-500 hover:text-blue-600 active:text-blue-700 cursor-pointer"
+                                onClick={() => openArtifact(artifact?.relativePath)}>
+                                    {artifact?.fileName}
+                                </p>
                     })}
 
                     {buildData?.artifacts?.length === 0 ? <p>No artifacts found</p> : null}

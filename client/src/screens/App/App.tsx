@@ -57,6 +57,8 @@ function App() {
   useEffect(() => {
     updateActiveJobInJobCardProps();
     createFeatureButtons();
+    
+    fetchParameterDefinition();
   }, [activeJobBuildNumber]);
 
   /**
@@ -94,6 +96,8 @@ function App() {
         break;
       case "status_for_project":
         setActiveJobBuildNumber(null);
+        setSelectedBuildData(null);
+        
         break;
       case "jenkins":
         window.open(selectedBuildData["url"], "_blank")
@@ -121,9 +125,6 @@ function App() {
       setProjectData(jsonData);
 
       // Get the parameter definition
-      const parameterDefinition = jsonData["property"].find((element: any) => element["_class"] === "hudson.model.ParametersDefinitionProperty");
-
-      if (parameterDefinition) setParameterDefinition(parameterDefinition["parameterDefinitions"]);
 
       const newJobCardProps: Array<Object> = jsonData["builds"].map((build: any) => ({
         buildNumber: build["number"],
@@ -136,6 +137,26 @@ function App() {
       console.error("Error invoking get_project_data:", error);
     }
   };
+
+  const fetchParameterDefinition = async () => {
+    try {
+      const config = {
+        projectName: storedProjectName,
+        ...authDetails,
+      };
+
+      const response: string = await invoke("get_project_data", config);
+      const jsonData = JSON.parse(response);
+
+      const parameterDefinition = jsonData["property"].find((element: any) => element["_class"] === "hudson.model.ParametersDefinitionProperty");
+
+      if (parameterDefinition) setParameterDefinition(parameterDefinition["parameterDefinitions"]);
+    }
+    catch (error) {
+      console.error("Error invoking get_project_data:", error);
+    }
+  }
+
 
   /**
    * Fetches data from the Rust Backend for a specific build.
@@ -231,8 +252,9 @@ function App() {
         <div className="overflow-y-scroll small-sidebar custom-scroll grid justify-items-center  py-4">
           {/* Dynamically generates Featurebuttons */}
           <div className="space-y-4 mb-4">
-            {featureButtons.map((button: any) => (
+            {featureButtons.map((button: any, key) => (
               <FeatureButtonComponent
+                key={key}
                 buildNumber={activeJobBuildNumber}
                 onClick={() => handleFeatureButtonClick(button["name"])}
                 feature={button["name"]}
@@ -262,7 +284,7 @@ function App() {
           {activeFeature === "parameters" && <ParametersView buildData={selectedBuildData} parameterDefinition={parameterDefinition} />}
           {activeFeature === "settings" && <SettingsView buildData={selectedBuildData} />}
           {activeFeature === "status_for_project" && <ProjectStatusView buildData={projectData} />}
-          {activeFeature === "build" && <BuildView parameterDefinition={parameterDefinition} />}
+          {activeFeature === "build" && <BuildView buildData={selectedBuildData} parameterDefinition={parameterDefinition} />}
         </div>
         {/* End of Feature View */}
 
