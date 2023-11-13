@@ -72,6 +72,7 @@ const BuildView: React.FC<BuildViewProps> = ({ parameterDefinition }) => {
                 />
 
             case "hudson.model.StringParameterDefinition":
+            case "org.jvnet.jenkins.plugins.nodelabelparameter.NodeParameterDefinition":
                 return <StringParameterDefinition
                     parameters={parameter}
                     value={parameterValues[parameter.name] || ""}
@@ -86,6 +87,7 @@ const BuildView: React.FC<BuildViewProps> = ({ parameterDefinition }) => {
                 />
 
             case "hudson.model.ChoiceParameterDefinition":
+            case "jp.ikedam.jenkins.plugins.extensible_choice_parameter.ExtensibleChoiceParameterDefinition":
                 return <ChoiceParameterDefinition
                     parameters={parameter}
                     value={parameterValues[parameter.name] || ""}

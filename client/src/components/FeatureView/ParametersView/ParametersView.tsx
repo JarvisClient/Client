@@ -59,6 +59,8 @@ const ParametersView: React.FC<StatusViewProps> = ({ buildData, parameterDefinit
                 return <BooleanParameterValue parameter={parameter} />;
 
             case "hudson.model.StringParameterValue":
+            case "org.jvnet.jenkins.plugins.nodelabelparameter.NodeParameterValue":
+            case "com.cwctravel.hudson.plugins.extended_choice_parameter.ExtendedChoiceParameterValue":
                 return <StringParameterValue parameter={parameter} />;
 
             case "com.cloudbees.plugins.credentials.CredentialsParameterValue":
