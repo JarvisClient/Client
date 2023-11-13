@@ -1,33 +1,25 @@
-// Tech. Imports
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { invoke } from "@tauri-apps/api/tauri";
 import authDetails from "../../config/auth";
-
-// Components 
 import TitleBarComponent from "../../components/TitleBar/TitleBarComponent";
 import JobCardComponent from "../../components/JobCardComponent/JobCardComponent";
 import SearchComponent from "../../components/SearchComponent/SearchComponent";
 import FeatureButtonComponent from "../../components/FeatureButtonComponent/FeatureButtonComponent";
-
-// Views
 import StatusView from "../Views/StatusView/StatusView";
 import ConsoleView from "../Views/ConsoleView/ConsoleView";
 import ProjectStatusView from "../Views/ProjectStatusView/ProjectStatusView";
 import SettingsView from "../Views/SettingsView/SettingsView";
 import FeatureViewHead from "../Views/FeatureViewHead";
-
-// Constants
 import FeatureButtonsConfig from "../../config/FeatureButtons";
-import "./App.css";
 import ParametersView from "../Views/ParametersView/ParametersView";
 import BuildView from "../Views/BuildView/BuildView";
 import { openLink } from "../../helpers/utils";
+import "./App.css";
 
 /**
  * React functional component representing the main application.
  */
 function App() {
-  // State variables
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [featureButtons, setFeatureButtons] = useState<Array<Object>>([]);
   const [activeJobBuildNumber, setActiveJobBuildNumber] = useState<number | null>(null);
@@ -36,35 +28,113 @@ function App() {
   const [jobCardProps, setJobCardProps] = useState<Array<Object>>([]);
   const [activeFeature, setActiveFeature] = useState<string | null>("status_for_project");
   const [parameterDefinition, setParameterDefinition] = useState<any>(null);
-
-  /**
-   * Constants and Variables
-   */
   const storedProjectName: string = localStorage.getItem("projectName") || "";
 
   /**
-   * useEffect Hook
-   * Runs once after the component is mounted to fetch data for the active project.
-   */
-  useEffect(() => {
-    fetchDataForActiveProject();
-    createFeatureButtons();
-  }, []);
+ * Memoized function to fetch project data.
+ * It fetches project data, including builds and generates JobCardProps.
+ */
+  const fetchProjectData = useCallback(async () => {
+    try {
+      const config = {
+        projectName: storedProjectName,
+        ...authDetails,
+      };
+
+      const response: string = await invoke("get_project_data", config);
+      const jsonData = JSON.parse(response);
+
+      setProjectData(jsonData);
+
+      const newJobCardProps: Array<Object> = await Promise.all(
+        jsonData["builds"].map(async (build: any) => {
+          const details = await fetchJobCardDetails(build["number"]);
+          return {
+            buildNumber: build["number"],
+            displayName: details["displayName"],
+            description: details["description"],
+            result: details["result"],
+            onClick: () => handleJobCardClick(build["number"]),
+            active: false,
+          };
+        })
+      );
+
+      setJobCardProps(newJobCardProps);
+      createFeatureButtons();
+    } catch (error) {
+      console.error("Error invoking get_project_data:", error);
+    }
+  }, [storedProjectName]);
 
   /**
-   * useEffect Hook
-   * Runs every time a JobCard is clicked to update the active state.
-   */
-  useEffect(() => {
-    updateActiveJobInJobCardProps();
-    createFeatureButtons();
-    
-    fetchParameterDefinition();
-  }, [activeJobBuildNumber]);
+ * Memoized function to fetch build data for a specific build number.
+ * @param {number} buildNumber - The build number for which to fetch data.
+ * @returns {Promise<any>} - The JSON response for the specified build.
+ */
+  const fetchBuildData = useCallback(
+    async (buildNumber: number): Promise<any> => {
+      try {
+        const config = {
+          projectName: storedProjectName,
+          buildNumber: buildNumber.toString(),
+          ...authDetails,
+        };
+        const response: string = await invoke("get_build_data", config);
+        return JSON.parse(response);
+      } catch (error) {
+        console.error("Error invoking get_build_data:", error);
+      }
+    },
+    [storedProjectName]
+  );
 
   /**
-   * Updates the 'active' property in jobCardProps based on the activeJobBuildNumber.
-   */
+ * Memoized function to fetch details for a specific build number.
+ * @param {number} buildNumber - The build number for which to fetch details.
+ * @returns {Promise<any>} - The JSON response containing build details.
+ */
+  const fetchJobCardDetails = useCallback(async (buildNumber: number) => {
+    try {
+      const config = {
+        projectName: storedProjectName,
+        buildNumber: buildNumber.toString(),
+        ...authDetails,
+      };
+      const response: string = await invoke("get_build_data", config);
+      return JSON.parse(response);
+    } catch (error) {
+      console.error("Error invoking get_build_data:", error);
+    }
+  }, [storedProjectName]);
+
+  /**
+ * Fetches the parameter definition for the active project.
+ * This is called when the component is mounted.
+ */
+  const fetchParameterDefinition = useCallback(async () => {
+    try {
+      const config = {
+        projectName: storedProjectName,
+        ...authDetails,
+      };
+
+      const response: string = await invoke("get_project_data", config);
+      const jsonData = JSON.parse(response);
+
+      const parameterDefinition = jsonData["property"].find(
+        (element: any) => element["_class"] === "hudson.model.ParametersDefinitionProperty"
+      );
+
+      if (parameterDefinition) setParameterDefinition(parameterDefinition["parameterDefinitions"]);
+    } catch (error) {
+      console.error("Error invoking get_project_data:", error);
+    }
+  }, [storedProjectName]);
+
+  /**
+ * Updates the 'active' property in jobCardProps based on the activeJobBuildNumber.
+ */
   const updateActiveJobInJobCardProps = () => {
     let updatedJobCardProps = jobCardProps.map((element: any) => ({
       ...element,
@@ -75,21 +145,21 @@ function App() {
   };
 
   /**
-   * Handles the click event on a JobCard, setting the activeJobBuildNumber and fetching data for the selected build.
-   * Also sets the activeFeature to "status" if it is null or "settings".
-   * @param {number} buildNumber - The build number of the selected JobCard.
-   */
+ * Handles the click event on a JobCard, setting the activeJobBuildNumber and fetching data for the selected build.
+ * Also sets the activeFeature to "status" if it is null or "settings".
+ * @param {number} buildNumber - The build number of the selected JobCard.
+ */
   const handleJobCardClick = async (buildNumber: number) => {
     setActiveJobBuildNumber(buildNumber);
-    const buildData = await fetchDataForBuild(buildNumber);
+    const buildData = await fetchBuildData(buildNumber);
     setSelectedBuildData(buildData);
     setActiveFeature("status");
   };
 
   /**
-   * Handles the click event on a FeatureButton, setting the activeJobBuildNumber to null if the feature is "settings".
-   * @param {string} feature - The feature to set as the active feature.
-   */
+ * Handles the click event on a FeatureButton, setting the activeJobBuildNumber to null if the feature is "settings".
+ * @param {string} feature - The feature to set as the active feature.
+ */
   const handleFeatureButtonClick = (feature: string) => {
     switch (feature) {
       case "settings":
@@ -98,10 +168,9 @@ function App() {
       case "status_for_project":
         setActiveJobBuildNumber(null);
         setSelectedBuildData(null);
-        
         break;
       case "jenkins":
-        openLink(selectedBuildData["url"])
+        openLink(selectedBuildData["url"]);
         break;
       default:
         break;
@@ -111,120 +180,59 @@ function App() {
   };
 
   /**
-   * Fetches data from the Rust Backend for the active project, including build numbers and generates JobCardProps.
-   * This is called when the component is mounted.
-   */
-  const fetchDataForActiveProject = async () => {
-    try {
-      const config = {
-        projectName: storedProjectName,
-        ...authDetails,
-      };
-
-      const response: string = await invoke("get_project_data", config);
-      const jsonData = JSON.parse(response);
-      setProjectData(jsonData);
-
-      // Get the parameter definition
-
-      const newJobCardProps: Array<Object> = jsonData["builds"].map((build: any) => ({
-        buildNumber: build["number"],
-        onClick: () => handleJobCardClick(build["number"]),
-        active: false,
-      }));
-
-      setJobCardProps(newJobCardProps);
-    } catch (error) {
-      console.error("Error invoking get_project_data:", error);
-    }
-  };
-
-  const fetchParameterDefinition = async () => {
-    try {
-      const config = {
-        projectName: storedProjectName,
-        ...authDetails,
-      };
-
-      const response: string = await invoke("get_project_data", config);
-      const jsonData = JSON.parse(response);
-
-      const parameterDefinition = jsonData["property"].find((element: any) => element["_class"] === "hudson.model.ParametersDefinitionProperty");
-
-      if (parameterDefinition) setParameterDefinition(parameterDefinition["parameterDefinitions"]);
-    }
-    catch (error) {
-      console.error("Error invoking get_project_data:", error);
-    }
-  }
-
-
-  /**
-   * Fetches data from the Rust Backend for a specific build.
-   * This is called when a JobCard is clicked, and the JSON response is passed to the FeatureView Components.
-   * @param {number} buildNumber - The build number for which to fetch data.
-   * @returns {Promise<any>} - The JSON response for the specified build.
-   */
-  const fetchDataForBuild = async (buildNumber: number): Promise<any> => {
-    try {
-      const config = {
-        projectName: storedProjectName,
-        buildNumber: buildNumber.toString(),
-        ...authDetails,
-      };
-      const response: string = await invoke("get_build_data", config);
-      const jsonData = JSON.parse(response);
-
-      return jsonData;
-    } catch (error) {
-      console.error("Error invoking get_build_data:", error);
-    }
-  };
-
-  /**
-   * Handles the change event for the search input.
-   * @param {string} value - The new value of the search input.
-   */
+ * Handles the change event for the search input.
+ * @param {string} value - The new value of the search input.
+ */
   const handleSearchInputChange = (value: string) => {
     setSearchQuery(value);
   };
 
   /**
-   * Creates the FeatureButtons based on the FeatureButtonsConfig.
-   * This is called when the component is mounted and when the activeJobBuildNumber is updated.
-   * @returns {void}
-   */
+ * Creates the FeatureButtons based on the FeatureButtonsConfig.
+ * This is called when the component is mounted and when the activeJobBuildNumber is updated.
+ */
   const createFeatureButtons = () => {
     const featureButtons: any = [];
-  
+
     for (const key in FeatureButtonsConfig) {
       let element = FeatureButtonsConfig[key];
-  
-      // Check if the element should be included based on the conditions
+
       if (
-        (!element.hidden) && // Check if "hidden" is not true
-        (
-          (element.purpose === "BOTH") ||
+        !element.hidden &&
+        ((element.purpose === "BOTH") ||
           (activeJobBuildNumber && element.purpose === "JOB") ||
-          (!activeJobBuildNumber && element.purpose === "PROJECT")
-        )
+          (!activeJobBuildNumber && element.purpose === "PROJECT"))
       ) {
         featureButtons.push({
           name: key,
         });
       }
     }
-  
+
     setFeatureButtons(featureButtons);
   };
-  
-  
-
-
 
   /**
-   * Render
-   */
+ * useEffect Hook
+ * Runs once after the component is mounted to fetch data for the active project.
+ */
+  useEffect(() => {
+    fetchProjectData();
+  }, [fetchProjectData]);
+
+  /**
+  * useEffect Hook
+  * Runs every time a JobCard is clicked to update the active state.
+  */
+  useEffect(() => {
+    updateActiveJobInJobCardProps();
+    createFeatureButtons();
+    fetchParameterDefinition();
+  }, [activeJobBuildNumber]);
+
+  /**
+ * Render
+ */
   return (
     <div className="h-screen flex flex-col">
       <TitleBarComponent
@@ -245,7 +253,7 @@ function App() {
         <div className="overflow-y-scroll overflow-x-hidden big-sidebar custom-scroll grid content-start justify-items-center space-y-4 py-4 relative">
           <SearchComponent onSearchChange={handleSearchInputChange} />
           {jobCardProps.map((props, index) => (
-            <JobCardComponent buildNumber={0} key={index} {...props} />
+            <JobCardComponent key={index} {...props} />
           ))}
         </div>
 

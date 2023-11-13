@@ -94,7 +94,7 @@ const BuildView: React.FC<BuildViewProps> = ({ parameterDefinition, buildData })
             case "hudson.model.BooleanParameterDefinition":
                 return <BoolenParameterDefinition
                     parameters={parameter}
-                    value={parameterValues[parameter.name] || "false"}
+                    value={String(parameterValues[parameter.name]) || "false"}
                     onChange={(value) => setParameterValues((prev) => ({ ...prev, [parameter.name]: value }))}
                 />
 
