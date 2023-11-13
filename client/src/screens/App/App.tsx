@@ -10,17 +10,17 @@ import SearchComponent from "../../components/SearchComponent/SearchComponent";
 import FeatureButtonComponent from "../../components/FeatureButtonComponent/FeatureButtonComponent";
 
 // Views
-import StatusView from "../../components/FeatureView/StatusView/StatusView";
-import ConsoleView from "../../components/FeatureView/ConsoleView/ConsoleView";
-import ProjectStatusView from "../../components/FeatureView/ProjectStatusView/ProjectStatusView";
-import SettingsView from "../../components/FeatureView/SettingsView/SettingsView";
-import FeatureViewHead from "../../components/FeatureView/FeatureViewHead";
+import StatusView from "../Views/StatusView/StatusView";
+import ConsoleView from "../Views/ConsoleView/ConsoleView";
+import ProjectStatusView from "../Views/ProjectStatusView/ProjectStatusView";
+import SettingsView from "../Views/SettingsView/SettingsView";
+import FeatureViewHead from "../Views/FeatureViewHead";
 
 // Constants
 import FeatureButtonsConfig from "../../config/FeatureButtons";
 import "./App.css";
-import ParametersView from "../../components/FeatureView/ParametersView/ParametersView";
-import BuildView from "../../components/FeatureView/BuildView/BuildView";
+import ParametersView from "../Views/ParametersView/ParametersView";
+import BuildView from "../Views/BuildView/BuildView";
 import { openLink } from "../../helpers/utils";
 
 /**

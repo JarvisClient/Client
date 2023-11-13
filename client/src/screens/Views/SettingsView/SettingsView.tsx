@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import { invoke } from "@tauri-apps/api/tauri";
-import Switch from "../../Switch/Switch";
+import Switch from "../../../components/Switch/Switch"
 
 
 const SettingsView: React.FC<any> = () => {
