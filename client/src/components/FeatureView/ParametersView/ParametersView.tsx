@@ -27,9 +27,21 @@ interface StatusViewProps {
 
 const ParametersView: React.FC<StatusViewProps> = ({ buildData, parameterDefinition }) => {
     const [parametersWithDescription, setParametersWithDescription] = useState<JenkinsParameters[]>([]);
+
+    const getParameters = (): JenkinsParameters[] => {
+        try {
+            let buildDataActions = buildData?.actions || [];
+            let parameters: JenkinsParameters[] = buildDataActions.find((action: any) => action._class === "hudson.model.ParametersAction")["parameters"];
+
+            return parameters;
+        } catch (error) {
+            return [];
+        }
+    }
+
+    const parameters: JenkinsParameters[] = getParameters();
     
-    // Ensure that buildData and buildData.actions[0] exist before accessing properties
-    const parameters: JenkinsParameters[] = buildData?.actions[0]?.parameters || [];
+    
     const buildNumber: number = buildData?.number || 0;
 
     const findDefinitionByClass = (parameter: JenkinsParameters): any => {

@@ -121,7 +121,8 @@ function App() {
       setProjectData(jsonData);
 
       // Get the parameter definition
-      const parameterDefinition = jsonData["actions"].find((element: any) => element["_class"] === "hudson.model.ParametersDefinitionProperty");
+      const parameterDefinition = jsonData["property"].find((element: any) => element["_class"] === "hudson.model.ParametersDefinitionProperty");
+
       if (parameterDefinition) setParameterDefinition(parameterDefinition["parameterDefinitions"]);
 
       const newJobCardProps: Array<Object> = jsonData["builds"].map((build: any) => ({
