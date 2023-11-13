@@ -185,6 +185,7 @@ function App() {
  */
   const handleSearchInputChange = (value: string) => {
     setSearchQuery(value);
+
   };
 
   /**
@@ -252,9 +253,17 @@ function App() {
         {/* Job Cards & Search List */}
         <div className="overflow-y-scroll overflow-x-hidden big-sidebar custom-scroll grid content-start justify-items-center space-y-4 py-4 relative">
           <SearchComponent onSearchChange={handleSearchInputChange} />
-          {jobCardProps.map((props, index) => (
-            <JobCardComponent key={index} {...props} />
-          ))}
+          {searchQuery.length > 0 ? (
+            jobCardProps
+              .filter((element: any) => element["displayName"].includes(searchQuery))
+              .map((props, index) => (
+                <JobCardComponent key={index} {...props} />
+              ))
+          ) : (
+            jobCardProps.map((props, index) => (
+              <JobCardComponent key={index} {...props} />
+            ))
+          )}
         </div>
 
         {/* Feature Buttons */}
