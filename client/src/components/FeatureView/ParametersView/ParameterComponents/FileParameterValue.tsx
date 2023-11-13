@@ -2,6 +2,7 @@
 import React from 'react';
 import { JenkinsParameters } from '../ParametersView';
 import { BiFile } from "react-icons/bi";
+import { openLink } from '../../../../helpers/utils';
 
 interface Props {
     parameter: JenkinsParameters;
@@ -20,7 +21,7 @@ const FileParameterValue: React.FC<Props> = ({ parameter, buildNumber }): JSX.El
             url += "/*view*"
         }
 
-        window.open(url, "_blank")
+        openLink(url)
     }
     
 

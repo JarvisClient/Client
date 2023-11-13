@@ -21,6 +21,7 @@ import FeatureButtonsConfig from "../../config/FeatureButtons";
 import "./App.css";
 import ParametersView from "../../components/FeatureView/ParametersView/ParametersView";
 import BuildView from "../../components/FeatureView/BuildView/BuildView";
+import { openLink } from "../../helpers/utils";
 
 /**
  * React functional component representing the main application.
@@ -100,7 +101,7 @@ function App() {
         
         break;
       case "jenkins":
-        window.open(selectedBuildData["url"], "_blank")
+        openLink(selectedBuildData["url"])
         break;
       default:
         break;

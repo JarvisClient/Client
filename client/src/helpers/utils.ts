@@ -1,3 +1,5 @@
+import { open } from "@tauri-apps/api/shell";
+
 export const formatBuildDate = (timestamp: number) => {
     const date = new Date(timestamp);
 
@@ -10,3 +12,14 @@ export const formatBuildDate = (timestamp: number) => {
 
     return `${day}.${month}.${year} - ${hours}:${minutes}:${seconds}`;
 };
+
+export const openLink = async (url: string, forceBrowser: Boolean = false) => {
+    let openInBrowser = localStorage.getItem('openInBrowser');
+
+    if (openInBrowser === "true" || forceBrowser) {
+        return await open(url);
+    } else {
+        return await window.open(url, '_blank');
+    }
+
+}

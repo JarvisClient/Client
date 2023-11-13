@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import { BiCube, BiCodeAlt, BiTimer, BiInfoCircle } from "react-icons/bi";
+import { openLink } from "../../../helpers/utils";
 
 interface StatusViewProps {
     buildData: any;
@@ -13,14 +14,14 @@ const StatusView: React.FC<StatusViewProps> = ({ buildData }) => {
         let projectName: String = localStorage.getItem("projectName") || "";
         let artifactURL = `${baseURL}job/${projectName}/${buildData["id"]}/artifact/${artifact}`
 
-        await open(artifactURL)
+        await openLink(artifactURL, true)
     }
 
     const openUser = async (user: string) => {
         let baseURL: String = localStorage.getItem("baseurl") || "";
         let userURL = `${baseURL}user/${user}`
 
-        await open(userURL)
+        await openLink(userURL)
     }
 
     const startedByUser = buildData.actions.find(
@@ -35,7 +36,7 @@ const StatusView: React.FC<StatusViewProps> = ({ buildData }) => {
         let projectName: String = localStorage.getItem("projectName") || "";
         let buildTimeTrendURL = `${baseURL}job/${projectName}/buildTimeTrend`
 
-        await open(buildTimeTrendURL)
+        await openLink(buildTimeTrendURL)
     }
 
     // Format to x days, x hours, x minutes, x seconds ago

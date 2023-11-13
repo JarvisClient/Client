@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 
 import { invoke } from "@tauri-apps/api/tauri";
+import Switch from "../../Switch/Switch";
+
 
 const SettingsView: React.FC<any> = () => {
 
@@ -14,10 +16,18 @@ const SettingsView: React.FC<any> = () => {
     const [currentProject, setCurrentProject] = useState<string>("");
     const [projects, setProjects] = useState<string[]>([]);
 
+    const [isChecked, setIsChecked] = useState(false);
+
+    const handleCheckboxChange = () => {
+        localStorage.setItem("openInBrowser", (!isChecked).toString());
+        setIsChecked(!isChecked);
+    };
+
     useEffect(() => {
         checkIfAlreadyAuthenticated();
         setProjects(JSON.parse(localStorage.getItem("projects") || "[]"));
         setCurrentProject(localStorage.getItem("projectName") || "");
+        setIsChecked(JSON.parse(localStorage.getItem("openInBrowser") || "false"));
     }, []);
 
     useEffect(() => {
@@ -122,7 +132,7 @@ const SettingsView: React.FC<any> = () => {
         <div className="mx-10 my-10 select-none">
             <h1 className="text-3xl font-bold">Settings</h1>
             <div className="flex items-center mt-10">
-                <h2 className="text-2xl font-bold mr-1">Authentication</h2>
+                <h2 className="text-2xl font-bold">Authentication</h2>
                 {authenticated ?
                     <span className="inline-flex items-center rounded-md bg-[#122a2d] px-2 py-1 text-xs font-medium text-green-300 ring-1 ring-inset ring-green-600/20">Authenticated</span>
                     :
@@ -162,42 +172,48 @@ const SettingsView: React.FC<any> = () => {
                 </button>
             </div>
             <div className="flex items-center mt-10">
-                <h2 className="text-2xl font-bold mr-1">Projects</h2>
+                <h2 className="text-2xl font-bold">Projects / Jenkins Builds</h2>
             </div>
             <div>
                 <div className="mt-5">
                     <div className="bg-console-background px-5 py-3 rounded-md space-y-2">
 
-                {projects.map((project, index) => (
-                    <div className="flex space-x-5">
-                        <p className={`hover:bg-background-card-selected px-7 py-1 rounded-lg active:brightness-[0.9] cursor-pointer  ${project === currentProject ? 'bg-background-card-selected' : ''}`} onClick={() => selectProject(project)}>{project}</p> 
+                        {projects.map((project, index) => (
+                            <div className="flex space-x-5">
+                                <p className={`hover:bg-background-card-selected px-7 py-1 rounded-lg active:brightness-[0.9] cursor-pointer  ${project === currentProject ? 'bg-background-card-selected' : ''}`} onClick={() => selectProject(project)}>{project}</p>
+                            </div>
+                        ))}
                     </div>
-                    ))}
-                    </div>
-                <input
-                    type="text"
-                    value={draftNewProject}
-                    onChange={(e) => setDraftNewProject(e.target.value)}
-                    placeholder="Add new project (e.g. 'CI-CD Pipeline')"
-                    className="w-[310px] h-[37px] text-[15px] bg-background-card font-medium border border-border rounded-md placeholder-comment-color text-comment-color px-3 mr-3"
-                />
+                    <input
+                        type="text"
+                        value={draftNewProject}
+                        onChange={(e) => setDraftNewProject(e.target.value)}
+                        placeholder="Add new project (e.g. 'CI-CD Pipeline')"
+                        className="w-[310px] h-[37px] text-[15px] bg-background-card font-medium border border-border rounded-md placeholder-comment-color text-comment-color px-3 mr-3"
+                    />
 
 
-                <button
-                    onClick={addNewProject}
-                    className={`w-[80px] h-[37px] text-[15px] text-white bg-background-card font-medium rounded-md text-comment-color px-3 mt-5 mr-3 active:bg-background-card-selected hover:brightness-[1.3]`}>
-                    Save
-                </button>
-                <button
-                    onClick={deleteCurrentProject}
-                    className={`w-[200px] h-[37px] text-[15px] text-white font-medium rounded-md px-3 mt-5 mr-3 text-white bg-red-600 hover:brightness-[0.9] active:brightness-[0.7]`}>
-                    Delete current Project
-                </button>
+                    <button
+                        onClick={addNewProject}
+                        className={`w-[80px] h-[37px] text-[15px] text-white bg-background-card font-medium rounded-md text-comment-color px-3 mt-5 mr-3 active:bg-background-card-selected hover:brightness-[1.3]`}>
+                        Save
+                    </button>
+                    <button
+                        onClick={deleteCurrentProject}
+                        className={`w-[200px] h-[37px] text-[15px] text-white font-medium rounded-md px-3 mt-5 mr-3 text-white bg-red-600 hover:brightness-[0.9] active:brightness-[0.7]`}>
+                        Delete current Project
+                    </button>
                 </div>
             </div>
+      <div className="flex flex-col mt-10">
+        <h2 className="text-2xl font-bold mb-2">Features</h2>
+        <div>
+          <p className="mb-2">Open all Links in Browser</p>
+          <Switch isChecked={isChecked} onCheckboxChange={handleCheckboxChange} />
         </div>
-    );
-}
-
+      </div>
+    </div>
+  );
+};
 
 export default SettingsView;

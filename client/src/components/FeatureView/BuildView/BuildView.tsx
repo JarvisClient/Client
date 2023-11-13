@@ -54,8 +54,6 @@ const BuildView: React.FC<BuildViewProps> = ({ parameterDefinition, buildData })
 
             if (correspondingBuildData) {
                 definition.defaultParameterValue.value = (correspondingBuildData.value).toString();
-                console.log(definition);
-
             }
         })
 
