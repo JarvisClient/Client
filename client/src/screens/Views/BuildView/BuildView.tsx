@@ -129,15 +129,6 @@ const BuildView: React.FC<BuildViewProps> = ({ parameterDefinition, buildData })
 
     return (
         <div className="mx-10 my-10 select-none">
-
-            {showBanner && (
-                <div className="flex mb-5 items-center w-full p-4 bg-[#2D483A] rounded-lg shadow">
-                    <div className="ms-3 text-md font-normal">
-                        <strong>Build started!</strong> Please allow some time for it to appear here.
-                    </div>
-
-                </div>
-            )}
             {parameterAvailable && (
                 <div className="flex mb-5 items-center w-full p-4 bg-[#403D2F] rounded-lg shadow">
                     <div className="ms-3 text-md font-normal">
@@ -157,6 +148,14 @@ const BuildView: React.FC<BuildViewProps> = ({ parameterDefinition, buildData })
                 className={`w-[80px] h-[37px] text-[15px] text-white bg-[#3a5e4b] font-medium rounded-md text-comment-color px-3 mt-5 mr-3 active:bg-background-card-selected hover:brightness-[1.3]`}>
                 Build
             </button>
+
+            {showBanner && (
+                <div className="flex mb-5 mt-5 items-center w-full p-4 bg-[#2D483A] rounded-lg shadow">
+                    <div className="ms-3 text-md font-normal">
+                        <strong>Build started!</strong> Please allow some time for it to appear here.
+                    </div>
+                </div>
+            )}
         </div>
     )
 }

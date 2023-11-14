@@ -49,6 +49,7 @@ const JobCardComponent: React.FC<JobCardProps> = ({ active = false, buildNumber,
           clearInterval(interval);
         }
       } catch (error) {
+        clearInterval(interval);
         alert(error);
       }
     };

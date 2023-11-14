@@ -37,22 +37,28 @@ const FeatureViewHead: React.FC<ConsoleViewProps> = ({ buildData }) => {
         let isMounted = true;
 
         const fetchData = async () => {
-            let response = await fetchDataForBuild();
-            if (isMounted && response["result"] === null) {
-                // Clear existing interval before setting up a new one
+            try {
+                let response = await fetchDataForBuild();
+                if (isMounted && response["result"] === null) {
+                    // Clear existing interval before setting up a new one
+                    clearInterval(intervalRef.current);
+    
+                    // Use setTimeout instead of setInterval
+                    const timeoutId = setTimeout(() => {
+                        fetchData();
+                    }, RELOAD_INTERVAL);
+    
+                    // Store the timeout ID in a ref to clear it on unmount
+                    intervalRef.current = timeoutId;
+    
+                    setProjectBuildStateLED(circleColor(response));
+                } else {
+                    setProjectBuildStateLED(circleColor(response));
+                }
+            } catch (error) {
+                console.log(error);
                 clearInterval(intervalRef.current);
-
-                // Use setTimeout instead of setInterval
-                const timeoutId = setTimeout(() => {
-                    fetchData();
-                }, RELOAD_INTERVAL);
-
-                // Store the timeout ID in a ref to clear it on unmount
-                intervalRef.current = timeoutId;
-
-                setProjectBuildStateLED(circleColor(response));
-            } else {
-                setProjectBuildStateLED(circleColor(response));
+                
             }
         };
 
