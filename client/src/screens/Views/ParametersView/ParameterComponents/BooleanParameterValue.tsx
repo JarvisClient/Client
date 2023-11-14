@@ -23,7 +23,7 @@ const BooleanParameterValue: React.FC<Props> = ({ parameter }): JSX.Element => {
                     disabled
                     readOnly
                     value={parameter.value ? '✔' : ''}
-                    className={`w-[30px] h-[30px] bg-background-card font-medium rounded-md text-comment-color px-2 mt-2 active:bg-background-card-selected hover:brightness-[1.3]`}
+                    className={`w-[30px] h-[30px] bg-property-background font-medium rounded-md text-comment-color px-2 mt-2 active:bg-property-background-selected hover:brightness-[1.3]`}
                 />
 
             </div>

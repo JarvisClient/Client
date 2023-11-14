@@ -25,7 +25,7 @@ const FeatureButtons: { [key: string]: FeatureButtonProps } = {
   "status_for_project": {
     title: "Project",
     titleBar: "Project Status",
-    bg_color: "#464849",
+    bg_color: "#292929",
     icon_color: "#ffffff",
     icon: HiHome,
     hidden: !projectName,
@@ -34,7 +34,7 @@ const FeatureButtons: { [key: string]: FeatureButtonProps } = {
   status: {
     title: "Build Status",
     titleBar: "Build Status",
-    bg_color: "#464849",
+    bg_color: "#353535",
     icon_color: "#ffffff",
     icon: IoMdListBox,
     purpose: "JOB",
@@ -75,7 +75,7 @@ const FeatureButtons: { [key: string]: FeatureButtonProps } = {
   settings: {
     title: "Settings",
     titleBar: "Settings",
-    bg_color: "#2F3134",
+    bg_color: "#292929",
     icon_color: "#ffffff",
     icon: FaGear,
     purpose: "PROJECT",

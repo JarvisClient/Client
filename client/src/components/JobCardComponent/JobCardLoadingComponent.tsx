@@ -7,7 +7,7 @@ const JobCardLoadingComponent: React.FC<any> = () => {
 
   return (
     <div
-      className="flex items-center w-[310px] h-[80px] animate-pulse  rounded-lg p-5 border-2 border-border transition select-none overflow-hidden bg-background-card">
+      className="flex items-center w-[310px] h-[80px] animate-pulse rounded-lg p-5 border-0 border-border transition select-none overflow-hidden bg-background-card">
       <div className="flex-shrink-0 mr-3">
         {/* Small circle */}
         <span className="relative flex h-5 w-5">

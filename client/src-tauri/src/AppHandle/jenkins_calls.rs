@@ -60,19 +60,19 @@ pub async fn authenticate_user(baseurl: String, username: String, apitoken: Stri
 }
 
 #[tauri::command]
-pub async fn start_build_with_parameters(baseurl: String, username: String, apitoken: String, project_name: String, params: HashMap<String, String>) {
+pub async fn start_build_with_parameters(baseurl: String, username: String, apitoken: String, project_name: String, params: HashMap<String, String>) -> Result<String, String>  {
     let jenkins_client = JenkinsClient::new(&baseurl, &username, &apitoken);
     match jenkins_client.start_build_with_parameters(&project_name, params).await {
-        Ok(_) => (),
-        Err(err) => println!("Error starting build: {}", err.to_string()),
+        Ok(data) => Ok(data),
+        Err(err) => Err(err.to_string()),
     }
 }
 
 #[tauri::command]
-pub async fn start_build(baseurl: String, username: String, apitoken: String, project_name: String, params: HashMap<String, String>) {
+pub async fn start_build(baseurl: String, username: String, apitoken: String, project_name: String, params: HashMap<String, String>) -> Result<String, String>  {
     let jenkins_client = JenkinsClient::new(&baseurl, &username, &apitoken);
     match jenkins_client.start_build(&project_name, params).await {
-        Ok(_) => (),
-        Err(err) => println!("Error starting build: {}", err.to_string()),
+        Ok(data) => Ok(data),
+        Err(err) => Err(err.to_string()),
     }
 }

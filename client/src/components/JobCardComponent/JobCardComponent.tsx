@@ -49,7 +49,7 @@ const JobCardComponent: React.FC<JobCardProps> = ({ active = false, buildNumber,
 
   return (
     <div
-      className={`flex items-center w-[310px] h-[80px] rounded-lg p-5 border-2 border-border transition hover:bg-background-card-selected active:scale-[0.99] select-none overflow-hidden ${active ? 'bg-background-card-selected' : 'bg-background-card '}`}
+      className={`flex items-center w-[310px] h-[80px] rounded-lg p-5 border-0 border-border transition hover:bg-background-card-selected active:scale-[0.99] select-none overflow-hidden ${active ? 'bg-background-card-selected' : 'bg-background-card '}`}
       onClick={handleClick}
     >
       <div className="flex-shrink-0 mr-3">

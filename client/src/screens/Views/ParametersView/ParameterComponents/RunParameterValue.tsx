@@ -29,7 +29,7 @@ const RunParameterValue: React.FC<Props> = ({ parameter }): JSX.Element => {
             <div className='ml-[50px]'>
                 <button
                     onClick={openTest}
-                    className={`w-[100px] h-[37px] text-[15px] text-white bg-background-card font-medium rounded-md text-comment-color px-3 mt-5 mr-3 active:bg-background-card-selected hover:brightness-[1.3]`}>
+                    className={`w-[100px] h-[37px] text-[15px] text-white bg-property-background font-medium rounded-md text-comment-color px-3 mt-5 mr-3 active:bg-property-background-selected hover:brightness-[1.3]`}>
                     {parameter.jobName} #{parameter.number}
                 </button>
             </div>

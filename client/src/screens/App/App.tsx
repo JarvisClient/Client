@@ -83,7 +83,7 @@ function App() {
       setTimeout(() => {
         setJobCardProps(jobCardProps);
         setJobCardsLoading(false);
-      }, 1);
+      }, 50);
 
     } catch (error) {
       // Handle errors if any
@@ -260,7 +260,7 @@ function App() {
 
       intervalId = setInterval(async () => {
         try {
-          console.log(randomNumber + " - Fetching project data every 10 seconds for", storedProjectName);
+          console.log(randomNumber + " - Fetching project data every 30 seconds for", storedProjectName);
           const newData = await fetchProjectData();
 
           if (newData && newData["builds"]) {
@@ -340,17 +340,9 @@ function App() {
             </>
           ) : (
             <>
-              <JobCardLoadingComponent />
-              <JobCardLoadingComponent />
-              <JobCardLoadingComponent />
-              <JobCardLoadingComponent />
-              <JobCardLoadingComponent />
-              <JobCardLoadingComponent />
-              <JobCardLoadingComponent />
-              <JobCardLoadingComponent />
-              <JobCardLoadingComponent />
-              <JobCardLoadingComponent />
-
+              {Array.from(Array(10).keys()).map((index) => (
+                <JobCardLoadingComponent key={index} />
+              ))}
             </>
           )}
         </div>

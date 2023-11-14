@@ -38,6 +38,5 @@
 .general-view {
   @apply bg-background-view;
   @apply h-full;
-  @apply border-r border-border;
-  width: calc(100% - 349px - 80px);
+  width: calc(100% - 348px - 80px);
 }

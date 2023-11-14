@@ -124,7 +124,7 @@ impl JenkinsClient {
         .await?;
     
     if !response.status().is_success() {
-        panic!("Error starting build: {}", response.status());
+        println!("Error starting build: {}", response.status());
     }
     
     response.text().await
@@ -152,7 +152,7 @@ pub async fn start_build(
     .await?;
 
 if !response.status().is_success() {
-    panic!("Error starting build: {}", response.status());
+    println!("Error starting build: {}", response.status());
 }
 
 response.text().await

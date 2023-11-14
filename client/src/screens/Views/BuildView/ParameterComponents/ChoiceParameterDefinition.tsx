@@ -31,7 +31,7 @@ const ChoiceParameterDefinition: React.FC<Props> = ({ parameters, value, onChang
                     <div
                         key={choice}
                         onClick={() => onChange(choice)}
-                        className={`h-[40px] bg-background-card font-medium rounded-md text-comment-color pt-[7px] px-3 mt-2 ${choice === value ? "bg-background-card-selected" : ""} hover:brightness-[1.3]`}>
+                        className={`h-[40px] bg-property-background font-medium rounded-md text-comment-color pt-[7px] px-3 mt-2 ${choice === value ? "bg-property-background-selected" : ""} hover:brightness-[1.3]`}>
                         {choice}
                     </div>
                 ))}

@@ -24,7 +24,7 @@ const StringParameterValue: React.FC<Props> = ({ parameter }): JSX.Element => {
                     disabled
                     readOnly
                     value={String(parameter.value)}
-                    className={` h-[35px] w-full bg-background-card font-medium rounded-md text-comment-color px-3 mt-2 active:bg-background-card-selected hover:brightness-[1.3]`}
+                    className={` h-[35px] w-full bg-property-background font-medium rounded-md text-comment-color px-3 mt-2 active:bg-property-background-selected hover:brightness-[1.3]`}
                 />
             </div>
         </div>

@@ -68,12 +68,17 @@ const BuildView: React.FC<BuildViewProps> = ({ parameterDefinition, buildData })
         };
 
         try {
+            let response: String
             if (SParameterDefinitions) {
                 console.log("Made request to start build with parameters: ", parameterValues);
-                await invoke("start_build_with_parameters", config);
+                response = await invoke("start_build_with_parameters", config);
             } else {
                 console.log("Made request to start build without parameters");
-                await invoke("start_build", config);
+                response = await invoke("start_build", config);
+            }
+
+            if (response.includes("Error")) {
+                throw new Error("Most likely a Build is already in Queue! Please wait a few seconds and try again.");
             }
 
             setShowBanner(true);
@@ -145,7 +150,7 @@ const BuildView: React.FC<BuildViewProps> = ({ parameterDefinition, buildData })
             <button
                 onClick={buildButtonClick}
                 className={`w-[80px] h-[37px] text-[15px] text-white bg-[#3a5e4b] font-medium rounded-md text-comment-color px-3 mt-5 mr-3 active:bg-background-card-selected hover:brightness-[1.3]`}>
-                Build
+                <b>Build</b>
             </button>
 
             {showBanner && (

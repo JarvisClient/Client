@@ -32,7 +32,7 @@ const BooleanParameterDefinition: React.FC<Props> = ({ parameters, value, onChan
       <div className="ml-[50px]">
         <div
           onClick={toggleValue}
-          className="w-[30px] h-[30px] bg-background-card font-medium rounded-md text-comment-color pt-[3px] px-2 mt-2 active:bg-background-card-selected hover:brightness-[1.3]"
+          className="w-[30px] h-[30px] bg-property-background font-medium rounded-md text-comment-color pt-[3px] px-2 mt-2 active:bg-property-background-selected hover:brightness-[1.3]"
         >
           {value == "true" ? '✔' : ''}
         </div>

@@ -43,7 +43,7 @@ const TitleBarComponent: React.FC<TitleBarProps> = ({ activeFeature, windowTitle
                     <td className="px-4 py-2 small-sidebar relative" data-tauri-drag-region>
                         <div className="z-20 w-full h-full fixed absolute top-1 left-0" data-tauri-drag-region></div>
                     </td>
-                    <td className="general-view bg-gradient-to-b from-[rgba(42,43,47,0.9)] to-[rgba(28,30,33,0)] px-3 relative" >
+                    <td className="general-view bg-gradient-to-t from-[#171717] to-[#121212] px-3 relative" >
                         <div className="z-20 w-full h-full fixed absolute top-1 right-1" data-tauri-drag-region></div>
                         <div className='flex items-center'>
                         {IconComponent ? (
