@@ -37,27 +37,9 @@ const JobCardComponent: React.FC<JobCardProps> = ({ active = false, buildNumber,
   }
 
   useEffect(() => {
-    let interval: any;
-    const fetchData = async () => {
-      try {
-        let response = await fetchDataForBuild(buildNumber);
-        let result = response?.result;
 
-        if (result === null) {
-          interval = setInterval(fetchData, 10000);
-        } else {
-          clearInterval(interval);
-        }
-      } catch (error) {
-        clearInterval(interval);
-        alert(error);
-      }
-    };
-    
-    if (result === null) fetchData();
     setBuildData({ displayName, description, result });
 
-    return () => clearInterval(interval);
   }, [displayName, description, buildNumber]);
 
   // Conditionally render JSX based on whether buildData is available

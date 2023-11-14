@@ -3,6 +3,7 @@ import { FaGear } from "react-icons/fa6";
 import { IoMdListBox, IoIosSwitch } from "react-icons/io";
 import { BiSolidTerminal } from "react-icons/bi";
 import { MdOutlineOpenInBrowser } from "react-icons/md";
+import { LuTestTube2 } from "react-icons/lu";
 
 import { HiHome } from "react-icons/hi";
 
@@ -61,6 +62,14 @@ const FeatureButtons: { [key: string]: FeatureButtonProps } = {
     bg_color: "#2F2331",
     icon_color: "#B479AC",
     icon: IoIosSwitch,
+    purpose: "JOB",
+  },
+  testReport: {
+    title: "Test Reports",
+    titleBar: "View Test Reports",
+    bg_color: "#403D2F",
+    icon_color: "#E8D17D",
+    icon: LuTestTube2,
     purpose: "JOB",
   },
   settings: {

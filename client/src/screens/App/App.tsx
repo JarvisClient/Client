@@ -13,8 +13,10 @@ import FeatureViewHead from "../Views/FeatureViewHead";
 import FeatureButtonsConfig from "../../config/FeatureButtons";
 import ParametersView from "../Views/ParametersView/ParametersView";
 import BuildView from "../Views/BuildView/BuildView";
-import { openLink } from "../../helpers/utils";
+import { arraysAreEqual, openLink } from "../../helpers/utils";
 import "./App.css";
+import TestReport from "../Views/TestReport/TestReport";
+import JobCardLoadingComponent from "../../components/JobCardComponent/JobCardLoadingComponent";
 
 /**
  * React functional component representing the main application.
@@ -28,12 +30,15 @@ function App() {
   const [jobCardProps, setJobCardProps] = useState<Array<Object>>([]);
   const [activeFeature, setActiveFeature] = useState<string | null>("status_for_project");
   const [parameterDefinition, setParameterDefinition] = useState<any>(null);
+  const [jobCardsLoading, setJobCardsLoading] = useState<boolean>(true);
   const storedProjectName: string = localStorage.getItem("projectName") || "";
 
+
+
   /**
- * Memoized function to fetch project data.
- * It fetches project data, including builds and generates JobCardProps.
- */
+   * Memoized function to fetch project data.
+   * It fetches project data, including builds and generates JobCardProps.
+   */
   const fetchProjectData = useCallback(async () => {
     try {
       const config = {
@@ -46,27 +51,46 @@ function App() {
 
       setProjectData(jsonData);
 
-      const newJobCardProps: Array<Object> = await Promise.all(
-        jsonData["builds"].map(async (build: any) => {
-          const details = await fetchJobCardDetails(build["number"]);
-          return {
-            buildNumber: build["number"],
-            displayName: details["displayName"],
-            description: details["description"],
-            result: details["result"],
-            onClick: () => handleJobCardClick(build["number"]),
-            active: false,
-          };
-        })
-      );
+      setJobCardsLoading(false);
 
-      setJobCardProps(newJobCardProps);
-      createFeatureButtons();
+      return jsonData;
     } catch (error) {
+      alert("Error fetching project data. Please check your internet connection and try again. \n" + error);
       console.error("Error invoking get_project_data:", error);
     }
   }, [storedProjectName]);
 
+  /**
+   * Create a JSX Element containg the JobCardProps for each build.
+   */
+  const createJobCardProps = async (builds: any[]) => {
+    try {
+      const jobCardProps = await Promise.all(builds.map(async (build: any) => {
+        const details = await fetchJobCardDetails(build["number"]);
+        return {
+          buildNumber: build["number"],
+          displayName: details["displayName"],
+          description: details["description"],
+          result: details["result"],
+          onClick: () => handleJobCardClick(build["number"]),
+          active: false,
+        };
+      }));
+
+      await setJobCardProps([]);
+      setJobCardsLoading(true);
+      // wait 2 seconds before setting the job card props to allow the loading animation to play
+      setTimeout(() => {
+        setJobCardProps(jobCardProps);
+        setJobCardsLoading(false);
+      }, 1);
+
+    } catch (error) {
+      // Handle errors if any
+      alert("Error creating job card props. Please check your internet connection and try again. \n" + error)
+      console.error("Error creating job card props:", error);
+    }
+  };
   /**
  * Memoized function to fetch build data for a specific build number.
  * @param {number} buildNumber - The build number for which to fetch data.
@@ -171,6 +195,7 @@ function App() {
         break;
       case "jenkins":
         openLink(selectedBuildData["url"]);
+        return;
         break;
       default:
         break;
@@ -218,8 +243,54 @@ function App() {
  * Runs once after the component is mounted to fetch data for the active project.
  */
   useEffect(() => {
-    fetchProjectData();
-  }, [fetchProjectData]);
+    let randomNumber = Math.floor(Math.random() * 1000000);
+    console.log(randomNumber + " - BASE: Fetching project data for", storedProjectName);
+
+    let intervalId: NodeJS.Timeout; // Declare intervalId outside startJarvis
+
+    const startJarvis = async () => {
+      // Fetch project data and create JobCardProps
+      let projectData = await fetchProjectData();
+      await createJobCardProps(projectData["builds"]);
+
+
+
+      // Check if builds have changed every 10 seconds
+      let prevBuilds: any[] = projectData["builds"];
+
+      intervalId = setInterval(async () => {
+        try {
+          console.log(randomNumber + " - Fetching project data every 10 seconds for", storedProjectName);
+          const newData = await fetchProjectData();
+
+          if (newData && newData["builds"]) {
+            const newBuilds = newData["builds"];
+            const buildsChanged = !arraysAreEqual(prevBuilds, newBuilds);
+
+            if (buildsChanged) {
+              console.log(randomNumber + " - Builds have changed. Updating state...");
+              setProjectData(newData);
+              createJobCardProps(newBuilds);
+              prevBuilds = [...newBuilds];
+            } else {
+              console.log(randomNumber + " - Builds have not changed.");
+            }
+          }
+        } catch (error) {
+          console.error(randomNumber + " - Error fetching project data:", error);
+        }
+      }, 30000);
+    };
+
+    startJarvis();
+
+    // Clean up interval when the component is unmounted
+    return () => {
+      console.log(randomNumber + " - CLEANUP: Clearing interval for", storedProjectName);
+      clearInterval(intervalId);
+    };
+  }, [storedProjectName, fetchProjectData, setProjectData]);
+
 
   /**
   * useEffect Hook
@@ -253,16 +324,34 @@ function App() {
         {/* Job Cards & Search List */}
         <div className="overflow-y-scroll overflow-x-hidden big-sidebar custom-scroll grid content-start justify-items-center space-y-4 py-4 relative">
           <SearchComponent onSearchChange={handleSearchInputChange} />
-          {searchQuery.length > 0 ? (
-            jobCardProps
-              .filter((element: any) => element["displayName"].includes(searchQuery))
-              .map((props, index) => (
-                <JobCardComponent key={index} {...props} />
-              ))
+          {!jobCardsLoading ? (
+            <>
+              {searchQuery.length > 0 ? (
+                jobCardProps
+                  .filter((element: any) => element["displayName"].includes(searchQuery))
+                  .map((props, index) => (
+                    <JobCardComponent key={index} {...props} />
+                  ))
+              ) : (
+                jobCardProps.map((props, index) => (
+                  <JobCardComponent key={index} {...props} />
+                  ))
+                  )}
+            </>
           ) : (
-            jobCardProps.map((props, index) => (
-              <JobCardComponent key={index} {...props} />
-            ))
+            <>
+              <JobCardLoadingComponent />
+              <JobCardLoadingComponent />
+              <JobCardLoadingComponent />
+              <JobCardLoadingComponent />
+              <JobCardLoadingComponent />
+              <JobCardLoadingComponent />
+              <JobCardLoadingComponent />
+              <JobCardLoadingComponent />
+              <JobCardLoadingComponent />
+              <JobCardLoadingComponent />
+
+            </>
           )}
         </div>
 
@@ -302,10 +391,10 @@ function App() {
           {activeFeature === "parameters" && <ParametersView buildData={selectedBuildData} parameterDefinition={parameterDefinition} />}
           {activeFeature === "settings" && <SettingsView buildData={selectedBuildData} />}
           {activeFeature === "status_for_project" && <ProjectStatusView buildData={projectData} />}
+          {activeFeature === "testReport" && <TestReport buildData={selectedBuildData} />}
           {activeFeature === "build" && <BuildView buildData={selectedBuildData} parameterDefinition={parameterDefinition} />}
         </div>
         {/* End of Feature View */}
-
       </div>
     </div>
   );

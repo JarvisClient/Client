@@ -23,3 +23,10 @@ export const openLink = async (url: string, forceBrowser: Boolean = false) => {
     }
 
 }
+
+/**
+ * Function to check if two arrays are equal.
+ */
+export function arraysAreEqual(array1: any, array2: any) {
+    return JSON.stringify(array1) === JSON.stringify(array2);
+  }

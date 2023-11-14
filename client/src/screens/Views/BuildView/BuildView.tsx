@@ -134,7 +134,6 @@ const BuildView: React.FC<BuildViewProps> = ({ parameterDefinition, buildData })
                     <div className="ms-3 text-md font-normal">
                         <strong>No parameters available!</strong> It appears that this job does not offer any parameters.
                     </div>
-
                 </div>
             )}
 

@@ -51,6 +51,19 @@ impl JenkinsClient {
         response.text().await
     }
 
+    pub async fn get_testResult_data(&self, job_name: &str, build_number: &str) -> Result<String, reqwest::Error> {
+        let url = format!("{}/job/{}/{}/testReport/api/json", self.base_url, job_name, build_number);    
+        
+        let client = reqwest::Client::new();
+        let response = client
+            .get(&url)
+            .header("Authorization", format!("Basic {}", base64::encode(&format!("{}:{}", self.jenkins_username, self.jenkins_api_token))))
+            .send()
+            .await?;
+
+        response.text().await
+    }
+
     pub async fn get_console_text(&self, job_name: &str, build_number: &str) -> Result<String, reqwest::Error> {
         let url = format!("{}/job/{}/{}/consoleText", self.base_url, job_name, build_number);
         

@@ -22,6 +22,14 @@ pub async fn get_build_data(baseurl: String, username: String, apitoken: String,
     }
 }
 
+#[tauri::command]
+pub async fn get_testResult_data(baseurl: String, username: String, apitoken: String, project_name: String, build_number: &str) -> Result<String, String> {
+    let jenkins_client = JenkinsClient::new(&baseurl, &username, &apitoken);
+    match jenkins_client.get_testResult_data(&project_name, build_number).await {
+        Ok(data) => Ok(data),
+        Err(err) => Err(err.to_string()),
+    }
+}
 
 #[tauri::command]
 pub async fn get_console_text(baseurl: String, username: String, apitoken: String, project_name: String, build_number: &str) -> Result<String, String> {
