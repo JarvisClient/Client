@@ -13,7 +13,7 @@ const FeatureViewHead: React.FC<ConsoleViewProps> = ({ buildData }) => {
 
     const [projectBuildStateLED, setProjectBuildStateLED] = useState<any>(null);
 
-    const RELOAD_INTERVAL = 1000;
+    const RELOAD_INTERVAL = 15000;
 
     const fetchDataForBuild = async () => {
         try {

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import { invoke } from "@tauri-apps/api/tauri";
+import { getVersion } from '@tauri-apps/api/app';
 import Switch from "../../../components/Switch/Switch"
 
 
@@ -16,6 +17,8 @@ const SettingsView: React.FC<any> = () => {
     const [currentProject, setCurrentProject] = useState<string>("");
     const [projects, setProjects] = useState<string[]>([]);
 
+    const [appVersion, setAppVersion] = useState<string>("");
+
     const [isChecked, setIsChecked] = useState(false);
 
     const handleCheckboxChange = () => {
@@ -28,7 +31,20 @@ const SettingsView: React.FC<any> = () => {
         setProjects(JSON.parse(localStorage.getItem("projects") || "[]"));
         setCurrentProject(localStorage.getItem("projectName") || "");
         setIsChecked(JSON.parse(localStorage.getItem("openInBrowser") || "false"));
+
+        // Fetch Tauri app version and set it to the state
+        const fetchAppVersion = async () => {
+            try {
+                const version = await getVersion();
+                setAppVersion(version);
+            } catch (error) {
+                console.error("Error fetching app version:", error);
+            }
+        };
+
+        fetchAppVersion();
     }, []);
+
 
     useEffect(() => {
     }, [projects]);
@@ -131,6 +147,7 @@ const SettingsView: React.FC<any> = () => {
     return (
         <div className="mx-10 my-10 select-none">
             <h1 className="text-3xl font-bold">Settings</h1>
+            <p>Jarvis v{appVersion}</p>
             <div className="flex items-center mt-10">
                 <h2 className="text-2xl font-bold">Authentication</h2>
                 {authenticated ?

@@ -21,31 +21,18 @@ const JobCardComponent: React.FC<JobCardProps> = ({ active = false, buildNumber,
     }
   };
 
-  const fetchDataForBuild = async (buildNumber: any) => {
-    const config = {
-      projectName: localStorage.getItem("projectName"),
-      buildNumber: buildNumber.toString(),
-      ...authdetails
-    }
-
-    const response: string = await invoke("get_build_data", config);
-    const json = await JSON.parse(response)
-
-    setBuildData(json)
-
-    return json
-  }
-
   useEffect(() => {
 
     setBuildData({ displayName, description, result });
 
-  }, [displayName, description, buildNumber]);
+  }, [displayName, description, buildNumber, result]);
 
   // Conditionally render JSX based on whether buildData is available
   if (!buildData) {
     return null; // or you can return a placeholder, loading message, etc.
   }
+
+  
 
   return (
     <div

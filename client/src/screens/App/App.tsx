@@ -13,7 +13,7 @@ import FeatureViewHead from "../Views/FeatureViewHead";
 import FeatureButtonsConfig from "../../config/FeatureButtons";
 import ParametersView from "../Views/ParametersView/ParametersView";
 import BuildView from "../Views/BuildView/BuildView";
-import { arraysAreEqual, openLink } from "../../helpers/utils";
+import { arraysAreEqual, deepEqual, openLink } from "../../helpers/utils";
 import "./App.css";
 import TestReport from "../Views/TestReport/TestReport";
 import JobCardLoadingComponent from "../../components/JobCardComponent/JobCardLoadingComponent";
@@ -50,7 +50,6 @@ function App() {
       const jsonData = JSON.parse(response);
 
       setProjectData(jsonData);
-
       setJobCardsLoading(false);
 
       return jsonData;
@@ -66,7 +65,7 @@ function App() {
   const createJobCardProps = async (builds: any[]) => {
     try {
       const jobCardProps = await Promise.all(builds.map(async (build: any) => {
-        const details = await fetchJobCardDetails(build["number"]);
+        const details = await fetchBuildData(build["number"]);
         return {
           buildNumber: build["number"],
           displayName: details["displayName"],
@@ -76,21 +75,18 @@ function App() {
           active: false,
         };
       }));
-
-      await setJobCardProps([]);
-      setJobCardsLoading(true);
+  
       // wait 2 seconds before setting the job card props to allow the loading animation to play
-      setTimeout(() => {
-        setJobCardProps(jobCardProps);
-        setJobCardsLoading(false);
-      }, 50);
-
+      setJobCardProps(jobCardProps);
+      setJobCardsLoading(false);
+  
     } catch (error) {
       // Handle errors if any
       alert("Error creating job card props. Please check your internet connection and try again. \n" + error)
       console.error("Error creating job card props:", error);
     }
   };
+
   /**
  * Memoized function to fetch build data for a specific build number.
  * @param {number} buildNumber - The build number for which to fetch data.
@@ -112,25 +108,6 @@ function App() {
     },
     [storedProjectName]
   );
-
-  /**
- * Memoized function to fetch details for a specific build number.
- * @param {number} buildNumber - The build number for which to fetch details.
- * @returns {Promise<any>} - The JSON response containing build details.
- */
-  const fetchJobCardDetails = useCallback(async (buildNumber: number) => {
-    try {
-      const config = {
-        projectName: storedProjectName,
-        buildNumber: buildNumber.toString(),
-        ...authDetails,
-      };
-      const response: string = await invoke("get_build_data", config);
-      return JSON.parse(response);
-    } catch (error) {
-      console.error("Error invoking get_build_data:", error);
-    }
-  }, [storedProjectName]);
 
   /**
  * Fetches the parameter definition for the active project.
@@ -241,6 +218,65 @@ function App() {
   /**
  * useEffect Hook
  * Runs once after the component is mounted to fetch data for the active project.
+ * 
+ * MIGHT IMPORTANT FOR LATER:
+ * This way of checking if new builds have been added, while reducing the number of API calls, might cause Issues for projects that dont auto delete builds.
+ * Currently this works because Jenkins deletes the latest build only after the newest build is finished. So for example:
+ * 
+ * META: Max Number of Builds: 50, Current Number of Builds: 50
+ * >> BASE STATE <<
+ * NO BUILD RUNNING - Current Number of Builds: 50
+ * >> BUILD STARTED <<
+ * BUILD RUNNING - Current Number of Builds: 51
+ * %30s passed%
+ * BUILD RUNNING - CurrentNumber of Builds: 51
+ * >> BUILD FINISHED <<
+ * NO BUILD RUNNING - Current Number of Builds: 50
+ * >> UPDATE JARVIS STATE <<
+ * 
+ * If this turns out to be an Issue for Users, consider using this Code that does an extra API Call to compare the latest build number with the latest build number in the state.:
+ *  
+    useEffect(() => {
+    let randomNumber = Math.floor(Math.random() * 1000000);
+    console.log(randomNumber + " - BASE: Fetching project data for", storedProjectName);
+  
+    let intervalId: NodeJS.Timeout; // Declare intervalId outside startJarvis
+  
+    const startJarvis = async () => {
+      // Fetch project data and create JobCardProps
+      let projectData = await fetchProjectData();
+      await createJobCardProps(projectData["builds"]);
+  
+      // Check if latest build data has changed every 10 seconds
+      let prevLatestBuildData: any = null;
+  
+      intervalId = setInterval(async () => {
+        try {
+          console.log(randomNumber + " - Fetching project data every 30 seconds for", storedProjectName);
+          const newData = await fetchProjectData();
+          const fetchLatestBuild = newData["builds"][0]["number"];
+          const latestBuildData = await fetchBuildData(fetchLatestBuild);
+  
+          if (!prevLatestBuildData || !deepEqual(prevLatestBuildData, latestBuildData)) {
+            console.log(randomNumber + " - Latest build data has changed. Updating state...");
+            setProjectData(newData);
+            createJobCardProps(newData["builds"]);
+            prevLatestBuildData = latestBuildData;
+          }
+        } catch (error) {
+          console.error(randomNumber + " - Error fetching project data:", error);
+        }
+      }, 30000);
+    };
+  
+    startJarvis();
+  
+    // Clean up interval when the component is unmounted
+    return () => {
+      console.log(randomNumber + " - CLEANUP: Clearing interval for", storedProjectName);
+      clearInterval(intervalId);
+    };
+  }, [storedProjectName, fetchProjectData, setProjectData]);  
  */
   useEffect(() => {
     let randomNumber = Math.floor(Math.random() * 1000000);
@@ -253,8 +289,6 @@ function App() {
       let projectData = await fetchProjectData();
       await createJobCardProps(projectData["builds"]);
 
-
-
       // Check if builds have changed every 10 seconds
       let prevBuilds: any[] = projectData["builds"];
 
@@ -262,9 +296,9 @@ function App() {
         try {
           console.log(randomNumber + " - Fetching project data every 30 seconds for", storedProjectName);
           const newData = await fetchProjectData();
-
           if (newData && newData["builds"]) {
             const newBuilds = newData["builds"];
+            
             const buildsChanged = !arraysAreEqual(prevBuilds, newBuilds);
 
             if (buildsChanged) {
@@ -272,8 +306,6 @@ function App() {
               setProjectData(newData);
               createJobCardProps(newBuilds);
               prevBuilds = [...newBuilds];
-            } else {
-              console.log(randomNumber + " - Builds have not changed.");
             }
           }
         } catch (error) {

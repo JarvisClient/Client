@@ -29,4 +29,32 @@ export const openLink = async (url: string, forceBrowser: Boolean = false) => {
  */
 export function arraysAreEqual(array1: any, array2: any) {
     return JSON.stringify(array1) === JSON.stringify(array2);
-  }
+}
+
+export function deepEqual(obj1: any, obj2: any) {
+    // Handle primitive types
+    if (obj1 === obj2) {
+        return true;
+    }
+
+    // Check if both values are objects or arrays
+    if (typeof obj1 !== 'object' || obj1 === null || typeof obj2 !== 'object' || obj2 === null) {
+        return false;
+    }
+
+    // Check if the number of keys or elements match
+    const keys1 = Object.keys(obj1);
+    const keys2 = Object.keys(obj2);
+    if (keys1.length !== keys2.length) {
+        return false;
+    }
+
+    // Recursively compare each key or element
+    for (const key of keys1) {
+        if (!keys2.includes(key) || !deepEqual(obj1[key], obj2[key])) {
+            return false;
+        }
+    }
+
+    return true;
+}
