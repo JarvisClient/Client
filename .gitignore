@@ -1,20 +1,24 @@
-# Ignore Node.js dependencies
-node_modules/
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
 
-# Ignore Rust build artifacts
-target/
+node_modules
+dist
+dist-ssr
+*.local
 
-# Ignore npm logs
-npm-debug.log
-
-# Ignore yarn logs
-yarn-error.log
-
-# Ignore Visual Studio Code settings
-.vscode/
-
-# Ignore Rust Cargo.lock file
-Cargo.lock
-
-# Ignore environment-specific config files
-.env
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

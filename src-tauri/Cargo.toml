@@ -1,6 +1,6 @@
 [package]
 name = "Jarvis"
-version = "0.0.14"
+version = "0.0.15"
 description = "Jarvis Jenkins Client"
 authors = ["aph"]
 license = ""
