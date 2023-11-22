@@ -6,10 +6,6 @@ interface ProjectStatusViewProps {
 }
 
 const ProjectStatusView: React.FC<ProjectStatusViewProps> = ({ buildData }) => {
-  useEffect(() => {
-    // Any side effects you want to handle on component mount
-  }, []);
-
   const renderHTML = (html: string) => {
     const sanitizedHTML = DOMPurify.sanitize(html);
     return { __html: sanitizedHTML };

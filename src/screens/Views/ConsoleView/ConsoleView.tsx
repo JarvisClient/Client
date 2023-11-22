@@ -6,6 +6,7 @@ import { formatBuildDate } from "../../../helpers/utils";
 
 import circleColor from "../../../config/getCircleColor";
 import { FaChevronDown } from "react-icons/fa6";
+import { CONSOLE_RELOAD_TIME } from "../../../config/constants";
 
 interface ConsoleViewProps {
     buildData: any;
@@ -14,8 +15,6 @@ const ConsoleView: React.FC<ConsoleViewProps> = ({ buildData }) => {
 
     const consoleRef: any = useRef(null);
     const [consoleData, setConsoleData] = useState<any>(null);
-
-    const RELOAD_INTERVAL = 1000;
 
     const fetchConsoleData = async () => {
         try {
@@ -68,7 +67,7 @@ const ConsoleView: React.FC<ConsoleViewProps> = ({ buildData }) => {
                     const timeoutId = setTimeout(() => {
                         fetchConsoleData();
                         fetchData();
-                    }, RELOAD_INTERVAL);
+                    }, CONSOLE_RELOAD_TIME);
 
                     // Store the timeout ID in a ref to clear it on unmount
                     intervalRef.current = timeoutId;
@@ -85,6 +84,7 @@ const ConsoleView: React.FC<ConsoleViewProps> = ({ buildData }) => {
         return () => {
             isMounted = false;
             // Clear the interval or timeout when the component is unmounted
+            console.log("ConsoleView: Unmounting - Cleanup");
             clearInterval(intervalRef.current);
             clearTimeout(intervalRef.current);
         };

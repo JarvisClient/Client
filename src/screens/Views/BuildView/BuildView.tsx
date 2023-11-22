@@ -10,6 +10,7 @@ import authDetails from "../../../config/auth";
 import { invoke } from "@tauri-apps/api";
 import OtherParameterDefinition from "./ParameterComponents/OtherParameterDefinition";
 import ChoiceParameterDefinition from "./ParameterComponents/ChoiceParameterDefinition";
+import { BUILD_VIEW_BANNER_CLOSE_TIME } from "../../../config/constants";
 
 interface BuildViewProps {
     parameterDefinition: any[];
@@ -84,7 +85,7 @@ const BuildView: React.FC<BuildViewProps> = ({ parameterDefinition, buildData })
             setShowBanner(true);
             setTimeout(() => {
                 setShowBanner(false);
-            }, 5000);
+            }, BUILD_VIEW_BANNER_CLOSE_TIME);
         } catch (error) {
             console.error(error);
 

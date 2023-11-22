@@ -17,6 +17,7 @@ import { arraysAreEqual, deepEqual, openLink } from "../../helpers/utils";
 import "./App.css";
 import TestReport from "../Views/TestReport/TestReport";
 import JobCardLoadingComponent from "../../components/JobCardComponent/JobCardLoadingComponent";
+import { JOBCARD_REFRESH_TIME } from "../../config/constants";
 
 /**
  * React functional component representing the main application.
@@ -218,25 +219,8 @@ function App() {
   /**
  * useEffect Hook
  * Runs once after the component is mounted to fetch data for the active project.
- * 
- * MIGHT IMPORTANT FOR LATER:
- * This way of checking if new builds have been added, while reducing the number of API calls, might cause Issues for projects that dont auto delete builds.
- * Currently this works because Jenkins deletes the latest build only after the newest build is finished. So for example:
- * 
- * META: Max Number of Builds: 50, Current Number of Builds: 50
- * >> BASE STATE <<
- * NO BUILD RUNNING - Current Number of Builds: 50
- * >> BUILD STARTED <<
- * BUILD RUNNING - Current Number of Builds: 51
- * %30s passed%
- * BUILD RUNNING - CurrentNumber of Builds: 51
- * >> BUILD FINISHED <<
- * NO BUILD RUNNING - Current Number of Builds: 50
- * >> UPDATE JARVIS STATE <<
- * 
- * If this turns out to be an Issue for Users, consider using this Code that does an extra API Call to compare the latest build number with the latest build number in the state.:
- *  
-    useEffect(() => {
+ */
+  useEffect(() => {
     let randomNumber = Math.floor(Math.random() * 1000000);
     console.log(randomNumber + " - BASE: Fetching project data for", storedProjectName);
   
@@ -266,7 +250,7 @@ function App() {
         } catch (error) {
           console.error(randomNumber + " - Error fetching project data:", error);
         }
-      }, 30000);
+      }, JOBCARD_REFRESH_TIME);
     };
   
     startJarvis();
@@ -277,51 +261,6 @@ function App() {
       clearInterval(intervalId);
     };
   }, [storedProjectName, fetchProjectData, setProjectData]);  
- */
-  useEffect(() => {
-    let randomNumber = Math.floor(Math.random() * 1000000);
-    console.log(randomNumber + " - BASE: Fetching project data for", storedProjectName);
-
-    let intervalId: NodeJS.Timeout; // Declare intervalId outside startJarvis
-
-    const startJarvis = async () => {
-      // Fetch project data and create JobCardProps
-      let projectData = await fetchProjectData();
-      await createJobCardProps(projectData["builds"]);
-
-      // Check if builds have changed every 10 seconds
-      let prevBuilds: any[] = projectData["builds"];
-
-      intervalId = setInterval(async () => {
-        try {
-          console.log(randomNumber + " - Fetching project data every 30 seconds for", storedProjectName);
-          const newData = await fetchProjectData();
-          if (newData && newData["builds"]) {
-            const newBuilds = newData["builds"];
-            
-            const buildsChanged = !arraysAreEqual(prevBuilds, newBuilds);
-
-            if (buildsChanged) {
-              console.log(randomNumber + " - Builds have changed. Updating state...");
-              setProjectData(newData);
-              createJobCardProps(newBuilds);
-              prevBuilds = [...newBuilds];
-            }
-          }
-        } catch (error) {
-          console.error(randomNumber + " - Error fetching project data:", error);
-        }
-      }, 30000);
-    };
-
-    startJarvis();
-
-    // Clean up interval when the component is unmounted
-    return () => {
-      console.log(randomNumber + " - CLEANUP: Clearing interval for", storedProjectName);
-      clearInterval(intervalId);
-    };
-  }, [storedProjectName, fetchProjectData, setProjectData]);
 
 
   /**

@@ -5,6 +5,7 @@ import authdetails from "../../config/auth";
 import { formatBuildDate } from "../../helpers/utils";
 
 import circleColor from "../../config/getCircleColor";
+import { FEATURE_VIEW_HEAD_REFRESH_TIME } from "../../config/constants";
 
 interface ConsoleViewProps {
     buildData: any;
@@ -12,8 +13,6 @@ interface ConsoleViewProps {
 const FeatureViewHead: React.FC<ConsoleViewProps> = ({ buildData }) => {
 
     const [projectBuildStateLED, setProjectBuildStateLED] = useState<any>(null);
-
-    const RELOAD_INTERVAL = 15000;
 
     const fetchDataForBuild = async () => {
         try {
@@ -46,7 +45,7 @@ const FeatureViewHead: React.FC<ConsoleViewProps> = ({ buildData }) => {
                     // Use setTimeout instead of setInterval
                     const timeoutId = setTimeout(() => {
                         fetchData();
-                    }, RELOAD_INTERVAL);
+                    }, FEATURE_VIEW_HEAD_REFRESH_TIME);
     
                     // Store the timeout ID in a ref to clear it on unmount
                     intervalRef.current = timeoutId;
@@ -67,6 +66,7 @@ const FeatureViewHead: React.FC<ConsoleViewProps> = ({ buildData }) => {
         return () => {
             isMounted = false;
             // Clear the interval or timeout when the component is unmounted
+            console.log("FeatureViewHead: Unmounting - Cleanup");
             clearInterval(intervalRef.current);
             clearTimeout(intervalRef.current);
         };
