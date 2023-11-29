@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from "react";
+import { appDataDir } from '@tauri-apps/api/path';
 
 import { invoke } from "@tauri-apps/api/tauri";
 import { getVersion } from '@tauri-apps/api/app';
 import Switch from "../../../components/Switch/Switch"
+import { shell } from "@tauri-apps/api";
+import { CONSOLE_VIEW_STYLE_FILE } from "../../../config/constants";
+import { editConsoleStyling } from "./ButtonEvents";
 
 
 const SettingsView: React.FC<any> = () => {
@@ -143,6 +147,8 @@ const SettingsView: React.FC<any> = () => {
         window.location.reload();
     }
 
+    
+    
 
     return (
         <div className="mx-10 my-10 select-none">
@@ -222,15 +228,23 @@ const SettingsView: React.FC<any> = () => {
                     </button>
                 </div>
             </div>
-      <div className="flex flex-col mt-10">
-        <h2 className="text-2xl font-bold mb-2">Features</h2>
-        <div>
-          <p className="mb-2">Open all Links in Browser</p>
-          <Switch isChecked={isChecked} onCheckboxChange={handleCheckboxChange} />
+            <div className="flex flex-col mt-10 space-y-4">
+                <h2 className="text-2xl font-bold -mb-2">Features</h2>
+                <div className="flex flex-row space-x-10  items-center">
+                    <p className="mb-2">Open all Links in Browser</p>
+                    <Switch isChecked={isChecked} onCheckboxChange={handleCheckboxChange} />
+                </div>
+                <div className="flex flex-row space-x-10 items-center">
+                    <p className="mb-2">Open Console Styling JSON</p>
+                    <button
+                        onClick={editConsoleStyling}
+                        className={` h-[37px] text-[15px] text-white bg-background-card font-medium rounded-md text-comment-color px-3 mr-3 active:bg-background-card-selected hover:brightness-[1.3]`}>
+                        Open JSON
+                    </button>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  );
+    );
 };
 
 export default SettingsView;

@@ -7,7 +7,6 @@ use std::collections::HashMap;
 #[tauri::command]
 pub async fn get_project_data(baseurl: String, username: String, apitoken: String, project_name: String) -> Result<String, String> {
     let jenkins_client = JenkinsClient::new(&baseurl, &username, &apitoken);
-    println!("get_project_data");
     match jenkins_client.get_project_data(&project_name).await {
         Ok(data) => Ok(data),
         Err(err) => Err(err.to_string()),
@@ -17,7 +16,6 @@ pub async fn get_project_data(baseurl: String, username: String, apitoken: Strin
 #[tauri::command]
 pub async fn get_build_data(baseurl: String, username: String, apitoken: String, project_name: String, build_number: &str) -> Result<String, String> {
     let jenkins_client = JenkinsClient::new(&baseurl, &username, &apitoken);
-    println!("get_build_data");
     match jenkins_client.get_build_data(&project_name, build_number).await {
         Ok(data) => Ok(data),
         Err(err) => Err(err.to_string()),
@@ -27,7 +25,6 @@ pub async fn get_build_data(baseurl: String, username: String, apitoken: String,
 #[tauri::command]
 pub async fn get_testResult_data(baseurl: String, username: String, apitoken: String, project_name: String, build_number: &str) -> Result<String, String> {
     let jenkins_client = JenkinsClient::new(&baseurl, &username, &apitoken);
-    println!("get_testResult_data");
     match jenkins_client.get_testResult_data(&project_name, build_number).await {
         Ok(data) => Ok(data),
         Err(err) => Err(err.to_string()),
@@ -37,7 +34,6 @@ pub async fn get_testResult_data(baseurl: String, username: String, apitoken: St
 #[tauri::command]
 pub async fn get_console_text(baseurl: String, username: String, apitoken: String, project_name: String, build_number: &str) -> Result<String, String> {
     let jenkins_client = JenkinsClient::new(&baseurl, &username, &apitoken);
-    println!("get_console_text");
     match jenkins_client.get_console_text(&project_name, build_number).await {
         Ok(data) => Ok(data),
         Err(err) => Err(err.to_string()),
@@ -47,7 +43,6 @@ pub async fn get_console_text(baseurl: String, username: String, apitoken: Strin
 #[tauri::command]
 pub async fn authenticate_user(baseurl: String, username: String, apitoken: String) -> Result<bool, String> {
     let jenkins_client = JenkinsClient::new(&baseurl, &username, &apitoken);
-    println!("authenticate_user");
     match jenkins_client.check_authentication().await {
         Ok(_) => Ok(true),
         Err(err) => {
@@ -67,7 +62,6 @@ pub async fn authenticate_user(baseurl: String, username: String, apitoken: Stri
 #[tauri::command]
 pub async fn start_build_with_parameters(baseurl: String, username: String, apitoken: String, project_name: String, params: HashMap<String, String>) -> Result<String, String>  {
     let jenkins_client = JenkinsClient::new(&baseurl, &username, &apitoken);
-    println!("start_build_with_parameters");
     match jenkins_client.start_build_with_parameters(&project_name, params).await {
         Ok(data) => Ok(data),
         Err(err) => Err(err.to_string()),
@@ -77,7 +71,6 @@ pub async fn start_build_with_parameters(baseurl: String, username: String, apit
 #[tauri::command]
 pub async fn start_build(baseurl: String, username: String, apitoken: String, project_name: String, params: HashMap<String, String>) -> Result<String, String>  {
     let jenkins_client = JenkinsClient::new(&baseurl, &username, &apitoken);
-    println!("start_build");
     match jenkins_client.start_build(&project_name, params).await {
         Ok(data) => Ok(data),
         Err(err) => Err(err.to_string()),

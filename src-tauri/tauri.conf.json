@@ -11,8 +11,20 @@
   },
   "tauri": {
     "allowlist": {
+      "os": {
+        "all": true
+      },
+      "path": {
+        "all": true
+      },
+      "fs": {
+        "all": true,
+        "scope": [
+          "**"
+        ]
+      },
       "window": {
-        "all": true, 
+        "all": true,
         "create": true,
         "center": true,
         "requestUserAttention": true,
@@ -48,18 +60,34 @@
         "print": true
       },
       "dialog": {
-        "all": true, 
-        "ask": true, 
-        "confirm": true, 
-        "message": true, 
-        "open": true, 
-        "save": true 
+        "all": true,
+        "ask": true,
+        "confirm": true,
+        "message": true,
+        "open": true,
+        "save": true
       },
       "shell": {
         "all": true,
         "execute": true,
         "open": true,
-        "scope": [],
+        "scope": [
+          {
+            "name": "notepad",
+            "cmd": "notepad",
+            "args": [{ "validator": "\\S+" }]
+          },
+          {
+            "name": "open",
+            "cmd": "open",
+            "args": [{ "validator": "\\S+" }]
+          },
+          {
+            "name": "xdg-open",
+            "cmd": "xdg-open",
+            "args": [{ "validator": "\\S+" }]
+          }
+        ],
         "sidecar": true
       },
       "notification": {

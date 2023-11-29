@@ -40,3 +40,8 @@
   @apply h-full;
   width: calc(100% - 348px - 80px);
 }
+
+a {
+  @apply no-underline;
+  @apply hover:underline;
+}
