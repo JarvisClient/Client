@@ -18,6 +18,7 @@ import "./App.css";
 import TestReport from "../Views/TestReport/TestReport";
 import JobCardLoadingComponent from "../../components/JobCardComponent/JobCardLoadingComponent";
 import { JOBCARD_REFRESH_TIME } from "../../config/constants";
+import Logger, { onStartup } from "../../helpers/Logger";
 
 /**
  * React functional component representing the main application.
@@ -56,7 +57,7 @@ function App() {
       return jsonData;
     } catch (error) {
       alert("Error fetching project data. Please check your internet connection and try again. \n" + error);
-      console.error("Error invoking get_project_data:", error);
+      Logger.info("Error invoking get_project_data:", error);
     }
   }, [storedProjectName]);
 
@@ -84,7 +85,7 @@ function App() {
     } catch (error) {
       // Handle errors if any
       alert("Error creating job card props. Please check your internet connection and try again. \n" + error)
-      console.error("Error creating job card props:", error);
+      Logger.error("Error creating job card props:", error);
     }
   };
 
@@ -104,7 +105,7 @@ function App() {
         const response: string = await invoke("get_build_data", config);
         return JSON.parse(response);
       } catch (error) {
-        console.error("Error invoking get_build_data:", error);
+        Logger.error("Error invoking get_build_data:", error);
       }
     },
     [storedProjectName]
@@ -130,9 +131,11 @@ function App() {
 
       if (parameterDefinition) setParameterDefinition(parameterDefinition["parameterDefinitions"]);
     } catch (error) {
-      console.error("Error invoking get_project_data:", error);
+      Logger.error("Error invoking get_project_data:", error);
     }
   }, [storedProjectName]);
+
+
 
   /**
  * Updates the 'active' property in jobCardProps based on the activeJobBuildNumber.
@@ -222,7 +225,7 @@ function App() {
  */
   useEffect(() => {
     let randomNumber = Math.floor(Math.random() * 1000000);
-    console.log(randomNumber + " - BASE: Fetching project data for", storedProjectName);
+    Logger.info(randomNumber + " - BASE: Fetching project data for", storedProjectName);
   
     let intervalId: NodeJS.Timeout; // Declare intervalId outside startJarvis
   
@@ -230,25 +233,26 @@ function App() {
       // Fetch project data and create JobCardProps
       let projectData = await fetchProjectData();
       await createJobCardProps(projectData["builds"]);
+      onStartup();
   
       // Check if latest build data has changed every 10 seconds
       let prevLatestBuildData: any = null;
   
       intervalId = setInterval(async () => {
         try {
-          console.log(randomNumber + " - Fetching project data every 30 seconds for", storedProjectName);
+          Logger.info(randomNumber + " - Fetching project data every 30 seconds for", storedProjectName);
           const newData = await fetchProjectData();
           const fetchLatestBuild = newData["builds"][0]["number"];
           const latestBuildData = await fetchBuildData(fetchLatestBuild);
   
           if (!prevLatestBuildData || !deepEqual(prevLatestBuildData, latestBuildData)) {
-            console.log(randomNumber + " - Latest build data has changed. Updating state...");
+            Logger.info(randomNumber + " - Latest build data has changed. Updating state...");
             setProjectData(newData);
             createJobCardProps(newData["builds"]);
             prevLatestBuildData = latestBuildData;
           }
         } catch (error) {
-          console.error(randomNumber + " - Error fetching project data:", error);
+          Logger.error(randomNumber + " - Error fetching project data:", error);
         }
       }, JOBCARD_REFRESH_TIME);
     };
@@ -257,7 +261,7 @@ function App() {
   
     // Clean up interval when the component is unmounted
     return () => {
-      console.log(randomNumber + " - CLEANUP: Clearing interval for", storedProjectName);
+      Logger.info(randomNumber + " - CLEANUP: Clearing interval for", storedProjectName);
       clearInterval(intervalId);
     };
   }, [storedProjectName, fetchProjectData, setProjectData]);  

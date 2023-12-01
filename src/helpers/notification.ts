@@ -2,6 +2,7 @@
 import authdetails from "../config/auth";
 import { isPermissionGranted, requestPermission, sendNotification as tauriSendNotification } from '@tauri-apps/api/notification';
 import { invoke } from '@tauri-apps/api/tauri';
+import Logger from "./Logger";
 
 export const sendNotification = async (title: string, body?: string) => {
     let permissionGranted = await isPermissionGranted();
@@ -30,6 +31,6 @@ const fetchDataForBuild = async (buildNumber: any) => {
 export const registerNotification = async (buildNumber: any) => {
     let response = await fetchDataForBuild(buildNumber);
 
-    console.log(response);
+    Logger.info(response);
     
 }

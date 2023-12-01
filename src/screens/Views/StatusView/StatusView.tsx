@@ -117,6 +117,7 @@ const StatusView: React.FC<StatusViewProps> = ({ buildData }) => {
                     {buildData?.artifacts?.map((artifact: any, key: number) => {
                         return <p 
                                 className="transition text-blue-500 hover:text-blue-600 active:text-blue-700 cursor-pointer"
+                                key={key}
                                 onClick={() => openArtifact(artifact?.relativePath)}>
                                     {artifact?.fileName}
                                 </p>

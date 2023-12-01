@@ -4,6 +4,7 @@ import authdetails from "../../../config/auth";
 import { IoMdArrowDropdown } from "react-icons/io";
 
 import "./TestReport.css"
+import Logger from "../../../helpers/Logger";
 
 interface ConsoleViewProps {
   buildData: any;
@@ -22,8 +23,6 @@ const TestReport: React.FC<ConsoleViewProps> = ({ buildData }) => {
       ...authdetails,
     };
     let response: string = await invoke("get_testResult_data", config);
-
-    console.log(response);
 
     let json = await JSON.parse(response);
 
@@ -54,7 +53,7 @@ const TestReport: React.FC<ConsoleViewProps> = ({ buildData }) => {
 
         setTestReport(json);
       } catch (error) {
-        console.log(error);
+        Logger.error(error);
         setShowBanner(true);
       }
     };

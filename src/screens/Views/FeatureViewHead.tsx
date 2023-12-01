@@ -6,6 +6,7 @@ import { formatBuildDate } from "../../helpers/utils";
 
 import circleColor from "../../config/getCircleColor";
 import { FEATURE_VIEW_HEAD_REFRESH_TIME } from "../../config/constants";
+import Logger from "../../helpers/Logger";
 
 interface ConsoleViewProps {
     buildData: any;
@@ -26,7 +27,7 @@ const FeatureViewHead: React.FC<ConsoleViewProps> = ({ buildData }) => {
 
             return json;
         } catch (error) {
-            console.error("Error invoking get_build_data:", error);
+            Logger.error("Error invoking get_build_data:", error);
         }
     };
 
@@ -55,7 +56,7 @@ const FeatureViewHead: React.FC<ConsoleViewProps> = ({ buildData }) => {
                     setProjectBuildStateLED(circleColor(response));
                 }
             } catch (error) {
-                console.log(error);
+                Logger.error(error);
                 clearInterval(intervalRef.current);
                 
             }
@@ -66,7 +67,7 @@ const FeatureViewHead: React.FC<ConsoleViewProps> = ({ buildData }) => {
         return () => {
             isMounted = false;
             // Clear the interval or timeout when the component is unmounted
-            console.log("FeatureViewHead: Unmounting - Cleanup");
+            Logger.info("FeatureViewHead: Unmounting - Cleanup");
             clearInterval(intervalRef.current);
             clearTimeout(intervalRef.current);
         };

@@ -11,6 +11,7 @@ import { invoke } from "@tauri-apps/api";
 import OtherParameterDefinition from "./ParameterComponents/OtherParameterDefinition";
 import ChoiceParameterDefinition from "./ParameterComponents/ChoiceParameterDefinition";
 import { BUILD_VIEW_BANNER_CLOSE_TIME } from "../../../config/constants";
+import Logger from "../../../helpers/Logger";
 
 interface BuildViewProps {
     parameterDefinition: any[];
@@ -71,10 +72,10 @@ const BuildView: React.FC<BuildViewProps> = ({ parameterDefinition, buildData })
         try {
             let response: String
             if (SParameterDefinitions) {
-                console.log("Made request to start build with parameters: ", parameterValues);
+                Logger.info("Made request to start build with parameters: ", parameterValues);
                 response = await invoke("start_build_with_parameters", config);
             } else {
-                console.log("Made request to start build without parameters");
+                Logger.info("Made request to start build without parameters");
                 response = await invoke("start_build", config);
             }
 
@@ -87,7 +88,7 @@ const BuildView: React.FC<BuildViewProps> = ({ parameterDefinition, buildData })
                 setShowBanner(false);
             }, BUILD_VIEW_BANNER_CLOSE_TIME);
         } catch (error) {
-            console.error(error);
+            Logger.error(error);
 
             alert("An error occured while starting the build!\n" + error);
         }

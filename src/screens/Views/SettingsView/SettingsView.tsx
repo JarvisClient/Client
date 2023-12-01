@@ -6,8 +6,10 @@ import { getVersion } from '@tauri-apps/api/app';
 import Switch from "../../../components/Switch/Switch"
 import { shell } from "@tauri-apps/api";
 import { CONSOLE_VIEW_STYLE_FILE } from "../../../config/constants";
-import { editConsoleStyling } from "./ButtonEvents";
+import { editConsoleStyling, openLogs } from "./ButtonEvents";
+import Logger from "../../../helpers/Logger";
 
+import "./Settings.css"
 
 const SettingsView: React.FC<any> = () => {
 
@@ -42,7 +44,7 @@ const SettingsView: React.FC<any> = () => {
                 const version = await getVersion();
                 setAppVersion(version);
             } catch (error) {
-                console.error("Error fetching app version:", error);
+                Logger.error("Error fetching app version:", error);
             }
         };
 
@@ -147,9 +149,6 @@ const SettingsView: React.FC<any> = () => {
         window.location.reload();
     }
 
-    
-    
-
     return (
         <div className="mx-10 my-10 select-none">
             <h1 className="text-3xl font-bold">Settings</h1>
@@ -190,7 +189,7 @@ const SettingsView: React.FC<any> = () => {
 
                 <button
                     onClick={checkAuthentication}
-                    className={`w-[80px] h-[37px] text-[15px] text-white bg-background-card font-medium rounded-md text-comment-color px-3 mt-5 mr-3 active:bg-background-card-selected hover:brightness-[1.3]`}>
+                    className="button">
                     Save
                 </button>
             </div>
@@ -202,7 +201,7 @@ const SettingsView: React.FC<any> = () => {
                     <div className="bg-console-background px-5 py-3 rounded-md space-y-2">
 
                         {projects.map((project, index) => (
-                            <div className="flex space-x-5">
+                            <div className="flex space-x-5" key={index}>
                                 <p className={`hover:bg-background-card-selected px-7 py-1 rounded-lg active:brightness-[0.9] cursor-pointer  ${project === currentProject ? 'bg-background-card-selected' : ''}`} onClick={() => selectProject(project)}>{project}</p>
                             </div>
                         ))}
@@ -218,7 +217,7 @@ const SettingsView: React.FC<any> = () => {
 
                     <button
                         onClick={addNewProject}
-                        className={`w-[80px] h-[37px] text-[15px] text-white bg-background-card font-medium rounded-md text-comment-color px-3 mt-5 mr-3 active:bg-background-card-selected hover:brightness-[1.3]`}>
+                        className="button">
                         Save
                     </button>
                     <button
@@ -236,11 +235,11 @@ const SettingsView: React.FC<any> = () => {
                 </div>
                 <div className="flex flex-row space-x-10 items-center">
                     <p className="mb-2">Open Console Styling JSON</p>
-                    <button
-                        onClick={editConsoleStyling}
-                        className={` h-[37px] text-[15px] text-white bg-background-card font-medium rounded-md text-comment-color px-3 mr-3 active:bg-background-card-selected hover:brightness-[1.3]`}>
-                        Open JSON
-                    </button>
+                    <button onClick={editConsoleStyling} className="button"> Open JSON </button>
+                </div>
+                <div className="flex flex-row space-x-10 items-center">
+                    <p className="mb-2">Open Logs</p>
+                    <button onClick={openLogs} className="button"> Open Logs </button>
                 </div>
             </div>
         </div>

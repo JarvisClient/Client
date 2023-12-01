@@ -6,6 +6,7 @@ import { IStylingDict, stylingDict as sDict } from "./styleDict";
 import { FaChevronDown } from "react-icons/fa6";
 import { CONSOLE_RELOAD_TIME } from "../../../config/constants";
 import { getConsoleViewStyleDict } from "./ConsoleViewStyleDict";
+import Logger from "../../../helpers/Logger";
 
 interface ConsoleViewProps {
     buildData: any;
@@ -77,7 +78,7 @@ const ConsoleView: React.FC<ConsoleViewProps> = ({ buildData }) => {
 
             return response;
         } catch (error) {
-            console.error("Error invoking get_build_data:", error);
+            Logger.error("Error invoking get_build_data:", error);
         }
     };
 
@@ -93,12 +94,11 @@ const ConsoleView: React.FC<ConsoleViewProps> = ({ buildData }) => {
 
             return json;
         } catch (error) {
-            console.error("Error invoking get_build_data:", error);
+            Logger.error("Error invoking get_build_data:", error);
         }
     };
 
     const intervalRef = useRef<any>(null);
-
     useEffect(() => {
         let isMounted = true;
 
@@ -119,7 +119,7 @@ const ConsoleView: React.FC<ConsoleViewProps> = ({ buildData }) => {
                     intervalRef.current = timeoutId;
                 }
             } catch (error) {
-                console.error(error);
+                Logger.error(error);
                 clearInterval(intervalRef.current);
             }
         };
@@ -130,7 +130,7 @@ const ConsoleView: React.FC<ConsoleViewProps> = ({ buildData }) => {
         return () => {
             isMounted = false;
             // Clear the interval or timeout when the component is unmounted
-            console.log("ConsoleView: Unmounting - Cleanup");
+            Logger.info("ConsoleView: Unmounting - Cleanup");
             clearInterval(intervalRef.current);
             clearTimeout(intervalRef.current);
         };

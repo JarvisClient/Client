@@ -1,0 +1,13 @@
+.button {
+    @apply h-[37px];
+    @apply text-[15px];
+    @apply text-white;
+    @apply bg-background-card;
+    @apply font-medium;
+    @apply rounded-md;
+    @apply text-comment-color;
+    @apply px-5;
+    @apply mr-3;
+    @apply active:bg-background-card-selected;
+    @apply hover:brightness-[1.3];
+}
