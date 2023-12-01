@@ -8,7 +8,7 @@ import Logger from "../../../helpers/Logger";
 
 import "./Settings.css";
 
-const SettingsView: React.FC<any> = () => {
+const SettingsView: React.FC = () => {
 
 	const [authenticated, setAuthenticated] = useState<boolean | null>(null);
 

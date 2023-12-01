@@ -5,16 +5,16 @@ import { IoMdArrowDropdown } from "react-icons/io";
 
 import "./TestReport.css";
 import Logger from "../../../helpers/Logger";
+import { IBuildData } from "../../App/IBuildInterface";
 
 interface ConsoleViewProps {
-	buildData: any;
+	buildData: IBuildData;
 }
 
 const TestReport: React.FC<ConsoleViewProps> = ({ buildData }) => {
 	const [testReport, setTestReport] = useState<any>(null);
 	const [showBanner, setShowBanner] = useState(false);
 	const [collapsedSuites, setCollapsedSuites] = useState<string[]>([]);
-
 
 	const fetchTestData = async (projectName: string, buildNumber: any) => {
 		const config = {

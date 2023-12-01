@@ -1,8 +1,9 @@
 import React from "react";
 import DOMPurify from "dompurify";
+import { IBuildData } from "../../App/IBuildInterface";
 
 interface ProjectStatusViewProps {
-  buildData: any;
+  buildData: IBuildData;
 }
 
 const ProjectStatusView: React.FC<ProjectStatusViewProps> = ({ buildData }) => {
@@ -25,7 +26,7 @@ const ProjectStatusView: React.FC<ProjectStatusViewProps> = ({ buildData }) => {
 							</div>
 							<div
 								className="text-md text-comment-color overflow-hidden line-clamp-2"
-								dangerouslySetInnerHTML={renderHTML(buildData["description"])}
+								dangerouslySetInnerHTML={renderHTML(buildData["description"] || "")}
 							/>
 						</div>
 					</div>

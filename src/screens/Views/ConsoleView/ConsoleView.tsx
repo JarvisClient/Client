@@ -7,9 +7,10 @@ import { FaChevronDown } from "react-icons/fa6";
 import { CONSOLE_RELOAD_TIME } from "../../../config/constants";
 import { getConsoleViewStyleDict } from "./ConsoleViewStyleDict";
 import Logger from "../../../helpers/Logger";
+import { IBuildData } from "../../App/IBuildInterface";
 
 interface ConsoleViewProps {
-	buildData: any;
+	buildData: IBuildData;
 }
 const ConsoleView: React.FC<ConsoleViewProps> = ({ buildData }) => {
 	const consoleRef: any = useRef(null);

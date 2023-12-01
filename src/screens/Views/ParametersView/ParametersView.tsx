@@ -10,6 +10,7 @@ import TextParameterValue from "./ParameterComponents/TextParameterValue";
 import PasswordParameterValue from "./ParameterComponents/PasswordParameterValue";
 import RunParameterValue from "./ParameterComponents/RunParameterValue";
 import OtherParameterValue from "./ParameterComponents/OtherParameter";
+import { IBuildData } from "../../App/IBuildInterface";
 
 export interface JenkinsParameters {
     _class: string | null;
@@ -21,7 +22,7 @@ export interface JenkinsParameters {
 }
 
 interface StatusViewProps {
-    buildData: any;
+    buildData: IBuildData | any;
 }
 
 const ParametersView: React.FC<StatusViewProps> = ({ buildData }) => {
