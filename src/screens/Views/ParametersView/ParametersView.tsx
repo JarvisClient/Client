@@ -1,5 +1,5 @@
 // React Imports
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 // Component Imports
 import BooleanParameterValue from "./ParameterComponents/BooleanParameterValue";
@@ -22,12 +22,9 @@ export interface JenkinsParameters {
 
 interface StatusViewProps {
     buildData: any;
-    parameterDefinition: any[];
 }
 
-const ParametersView: React.FC<StatusViewProps> = ({ buildData, parameterDefinition }) => {
-	const [parametersWithDescription, setParametersWithDescription] = useState<JenkinsParameters[]>([]);
-
+const ParametersView: React.FC<StatusViewProps> = ({ buildData }) => {
 	const getParameters = (): JenkinsParameters[] => {
 		try {
 			const buildDataActions = buildData?.actions || [];
@@ -43,26 +40,6 @@ const ParametersView: React.FC<StatusViewProps> = ({ buildData, parameterDefinit
     
     
 	const buildNumber: number = buildData?.number || 0;
-
-	const findDefinitionByClass = (parameter: JenkinsParameters): any => {
-		return parameterDefinition.find((def: any) => def.name === parameter.name);
-	};
-
-	useEffect(() => {
-		if (!parameterDefinition) return;
-
-		const parametersWithDescription = parameters.map((parameter) => {
-			const definition = findDefinitionByClass(parameter);
-            
-			if (definition) {
-				parameter.description = definition.description;
-			} else {
-				parameter.description = "This Parameter has no description. It may be a default parameter or has been removed from the job.";
-			}
-			return parameter;
-		});
-		setParametersWithDescription(parametersWithDescription);
-	}, [parameters, parameterDefinition]);
 
 	// decide which component to load for which parameter by class
 	const getComponentForParameter = (parameter: JenkinsParameters): JSX.Element => {

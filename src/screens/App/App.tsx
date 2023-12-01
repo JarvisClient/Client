@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { invoke } from "@tauri-apps/api/tauri";
 import authDetails from "../../config/auth";
 import TitleBarComponent from "../../components/TitleBar/TitleBarComponent";
@@ -13,23 +13,39 @@ import FeatureViewHead from "../Views/FeatureViewHead";
 import FeatureButtonsConfig from "../../config/FeatureButtons";
 import ParametersView from "../Views/ParametersView/ParametersView";
 import BuildView from "../Views/BuildView/BuildView";
-import { arraysAreEqual, deepEqual, openLink } from "../../helpers/utils";
+import { deepEqual, openLink } from "../../helpers/utils";
 import "./App.css";
 import TestReport from "../Views/TestReport/TestReport";
 import JobCardLoadingComponent from "../../components/JobCardComponent/JobCardLoadingComponent";
 import { JOBCARD_REFRESH_TIME } from "../../config/constants";
 import Logger, { onStartup } from "../../helpers/Logger";
 
+interface FeatureButton {
+	name: string;
+	purpose: string;
+	titleBar: string;
+	hidden?: boolean;
+}
+
+interface jobCardProps {
+	buildNumber: number;
+	displayName: string;
+	description: string;
+	result: string;
+	onClick: () => void;
+	active: boolean;
+}
+
 /**
  * React functional component representing the main application.
  */
-function App() {
+function App(): React.ReactElement {
 	const [searchQuery, setSearchQuery] = useState<string>("");
-	const [featureButtons, setFeatureButtons] = useState<Array<Object>>([]);
+	const [featureButtons, setFeatureButtons] = useState<FeatureButton[]>([]);
 	const [activeJobBuildNumber, setActiveJobBuildNumber] = useState<number | null>(null);
 	const [selectedBuildData, setSelectedBuildData] = useState<any>(null);
 	const [projectData, setProjectData] = useState<any>(null);
-	const [jobCardProps, setJobCardProps] = useState<Array<Object>>([]);
+	const [jobCardProps, setJobCardProps] = useState<jobCardProps[]>([]);
 	const [activeFeature, setActiveFeature] = useState<string | null>("status_for_project");
 	const [parameterDefinition, setParameterDefinition] = useState<any>(null);
 	const [jobCardsLoading, setJobCardsLoading] = useState<boolean>(true);
@@ -326,7 +342,7 @@ function App() {
 				<div className="overflow-y-scroll small-sidebar custom-scroll grid justify-items-center  py-4">
 					{/* Dynamically generates Featurebuttons */}
 					<div className="space-y-4 mb-4">
-						{featureButtons.map((button: any, key) => (
+						{featureButtons.map((button: any, key: number) => (
 							<FeatureButtonComponent
 								key={key}
 								buildNumber={activeJobBuildNumber}
@@ -355,7 +371,7 @@ function App() {
 					)}
 					{activeFeature === "status" && <StatusView buildData={selectedBuildData} />}
 					{activeFeature === "console" && <ConsoleView buildData={selectedBuildData} />}
-					{activeFeature === "parameters" && <ParametersView buildData={selectedBuildData} parameterDefinition={parameterDefinition} />}
+					{activeFeature === "parameters" && <ParametersView buildData={selectedBuildData} />}
 					{activeFeature === "settings" && <SettingsView buildData={selectedBuildData} />}
 					{activeFeature === "status_for_project" && <ProjectStatusView buildData={projectData} />}
 					{activeFeature === "testReport" && <TestReport buildData={selectedBuildData} />}

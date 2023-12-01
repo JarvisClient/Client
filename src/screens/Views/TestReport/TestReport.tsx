@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { invoke } from "@tauri-apps/api/tauri";
 import authdetails from "../../../config/auth";
 import { IoMdArrowDropdown } from "react-icons/io";
@@ -7,7 +7,7 @@ import "./TestReport.css";
 import Logger from "../../../helpers/Logger";
 
 interface ConsoleViewProps {
-  buildData: any;
+	buildData: any;
 }
 
 const TestReport: React.FC<ConsoleViewProps> = ({ buildData }) => {
@@ -60,11 +60,10 @@ const TestReport: React.FC<ConsoleViewProps> = ({ buildData }) => {
 
 		fetchTestReport();
 	}, []);
-  
+
 	const isSuiteCollapsed = (suiteName: string) => {
 		return collapsedSuites.includes(suiteName);
 	};
-
 
 	return (
 		<>
@@ -106,67 +105,65 @@ const TestReport: React.FC<ConsoleViewProps> = ({ buildData }) => {
 						)}
 
 						{testReport &&
-              testReport["suites"] &&
-              testReport["suites"].map((suite: any) => (
-              	<div key={suite["name"]}>
-              		<div className="flex">
+							testReport["suites"] &&
+							testReport["suites"].map((suite: any) => (
+								<div key={suite["name"]}>
+									<div className="flex">
 
-              			<button
-              				className={`text-3xl font-bold mb-2 hover:scale-[1.1] transition-all active:scale-[0.95] ${
-              					isSuiteCollapsed(suite["name"]) ? "-rotate-90" : ""
-              				}`}
-              				onClick={() => toggleTestSuite(suite["name"])}
-              			>
-              				<IoMdArrowDropdown />
-              			</button>
-              			<h1 className="text-3xl font-bold mb-2">{suite["name"]}</h1>
-              		</div>
+										<button
+											className={`text-3xl font-bold mb-2 hover:scale-[1.1] transition-all active:scale-[0.95] ${isSuiteCollapsed(suite["name"]) ? "-rotate-90" : ""}`}
+											onClick={() => toggleTestSuite(suite["name"])}
+										>
+											<IoMdArrowDropdown />
+										</button>
+										<h1 className="text-3xl font-bold mb-2">{suite["name"]}</h1>
+									</div>
 
-              		<div id={`suite-${suite["name"]}`} className="test-suite">
-              			{suite["cases"] &&
-                      suite["cases"].map((testcase: any) => (
-                      	<div key={testcase["name"]} className="mt-[20px] ml-4 flex flex-col">
-                      		<div className="bg-console-background border-2 border-border rounded-t-md shadow-lg px-6 py-5 overflow-auto">
-                      			<div className="flex flex-col">
-                      				<p className="text-sm font-comment-color">Case Information:</p>
-                      				<hr className="my-2 border-2 border-border" />
-                      				<div className="flex items-center space-x-4 mb-2">
-                      					<p className="font-bold">{testcase["name"]}</p>
-                      					{testcase["status"] === "PASSED" && (
-                      						<span className="inline-flex items-center rounded-md bg-[#122a2d] px-2 py-1 text-xs font-medium text-green-300 ring-1 ring-inset ring-green-600/20">PASSED</span>
-                      					)}
-                      					{testcase["status"] === "FAILED" && (
-                      						<span className="inline-flex items-center rounded-md bg-[#28222f] px-2 py-1 text-xs font-medium text-red-300 ring-1 ring-inset ring-red-600/20">FAILED</span>
-                      					)}
-                      				</div>
-                      				<div className="flex flex-row space-x-4">
-                      					<p>
-                      						<b>Class Name: </b>
-                      						<span>{testcase["className"]}</span>
-                      					</p>
-                      				</div>
-                      				<div className="flex flex-row space-x-4">
-                      					<p>
-                      						<b>Failed since: </b>
-                      						<span>{testcase["failedSince"]}</span>
-                      					</p>
-                      					<p>
-                      						<b>Duration:</b> <span>{testcase["duration"]}</span>
-                      					</p>
-                      				</div>
-                      			</div>
-                      		</div>
-                      		<div className="bg-console-background border-2 border-border border-t-1 rounded-b-md shadow-lg px-6 py-5 overflow-auto">
-                      			<p className="text-sm font-comment-color">Standard Output:</p>
-                      			<hr className="my-2 border-2 border-border" />
-                      			<p>{testcase["stdout"] || testcase["errorDetails"] || testcase["stderr"]}</p>
-                      		</div>
-                      	</div>
-                      ))}
-              			<p className="text-center text-gray-600 mt-2">// end of Test Suite: {suite["name"]} //</p>
-              		</div>
-              	</div>
-              ))}
+									<div id={`suite-${suite["name"]}`} className="test-suite">
+										{suite["cases"] &&
+											suite["cases"].map((testcase: any) => (
+												<div key={testcase["name"]} className="mt-[20px] ml-4 flex flex-col">
+													<div className="bg-console-background border-2 border-border rounded-t-md shadow-lg px-6 py-5 overflow-auto">
+														<div className="flex flex-col">
+															<p className="text-sm font-comment-color">Case Information:</p>
+															<hr className="my-2 border-2 border-border" />
+															<div className="flex items-center space-x-4 mb-2">
+																<p className="font-bold">{testcase["name"]}</p>
+																{testcase["status"] === "PASSED" && (
+																	<span className="inline-flex items-center rounded-md bg-[#122a2d] px-2 py-1 text-xs font-medium text-green-300 ring-1 ring-inset ring-green-600/20">PASSED</span>
+																)}
+																{testcase["status"] === "FAILED" && (
+																	<span className="inline-flex items-center rounded-md bg-[#28222f] px-2 py-1 text-xs font-medium text-red-300 ring-1 ring-inset ring-red-600/20">FAILED</span>
+																)}
+															</div>
+															<div className="flex flex-row space-x-4">
+																<p>
+																	<b>Class Name: </b>
+																	<span>{testcase["className"]}</span>
+																</p>
+															</div>
+															<div className="flex flex-row space-x-4">
+																<p>
+																	<b>Failed since: </b>
+																	<span>{testcase["failedSince"]}</span>
+																</p>
+																<p>
+																	<b>Duration:</b> <span>{testcase["duration"]}</span>
+																</p>
+															</div>
+														</div>
+													</div>
+													<div className="bg-console-background border-2 border-border border-t-1 rounded-b-md shadow-lg px-6 py-5 overflow-auto">
+														<p className="text-sm font-comment-color">Standard Output:</p>
+														<hr className="my-2 border-2 border-border" />
+														<p>{testcase["stdout"] || testcase["errorDetails"] || testcase["stderr"]}</p>
+													</div>
+												</div>
+											))}
+										<p className="text-center text-gray-600 mt-2">/ end of Test Suite: {suite["name"]} /</p>
+									</div>
+								</div>
+							))}
 					</>
 				)}
 			</div>

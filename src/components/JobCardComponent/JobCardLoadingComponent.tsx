@@ -1,9 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { invoke } from "@tauri-apps/api/tauri";
-import circleColor from "../../config/getCircleColor";
-import authdetails from "../../config/auth";
+import React from "react";
 
-const JobCardLoadingComponent: React.FC<any> = () => {
+const JobCardLoadingComponent: React.FC = () => {
 
 	return (
 		<div

@@ -4,7 +4,6 @@ import BoolenParameterDefinition from "./ParameterComponents/BoolenParameterDefi
 import StringParameterDefinition from "./ParameterComponents/StringParameterDefinition";
 import TextParameterDefinition from "./ParameterComponents/TextParameterDefinition";
 
-import { CircularProgress } from "@nextui-org/react";
 import authDetails from "../../../config/auth";
 
 import { invoke } from "@tauri-apps/api";

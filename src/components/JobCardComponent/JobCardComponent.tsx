@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { invoke } from "@tauri-apps/api/tauri";
 import circleColor from "../../config/getCircleColor";
-import authdetails from "../../config/auth";
 
 interface JobCardProps {
   displayName?: string;

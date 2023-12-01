@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { appDataDir } from "@tauri-apps/api/path";
 
 import { invoke } from "@tauri-apps/api/tauri";
 import { getVersion } from "@tauri-apps/api/app";
 import Switch from "../../../components/Switch/Switch";
-import { shell } from "@tauri-apps/api";
-import { CONSOLE_VIEW_STYLE_FILE } from "../../../config/constants";
 import { editConsoleStyling, openLogs } from "./ButtonEvents";
 import Logger from "../../../helpers/Logger";
 

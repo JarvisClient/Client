@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 import { BiCube, BiCodeAlt, BiTimer, BiInfoCircle } from "react-icons/bi";
 import { openLink } from "../../../helpers/utils";
@@ -136,7 +136,13 @@ const StatusView: React.FC<StatusViewProps> = ({ buildData }) => {
 				<div className="flex flex-col pt-2">
 					<h1 className="text-2xl font-bold mb-1">Changes</h1>
 					{buildData?.changeSet?.items?.map((artifact: any) => {
-						return <p className="transition text-blue-500 hover:text-blue-600 active:text-blue-700 cursor-pointer" onClick={() => openArtifact(artifact?.relativePath)}>{artifact?.fileName}</p>;
+						return <p
+							className="transition text-blue-500 hover:text-blue-600 active:text-blue-700 cursor-pointer"
+							onClick={() => openArtifact(artifact?.relativePath)}
+							key={artifact?.relativePath}
+						>
+							{artifact?.fileName}
+						</p>;
 					})}
 
 					{buildData?.changeSet?.items?.length === 0 ? <p>No changes.</p> : null}

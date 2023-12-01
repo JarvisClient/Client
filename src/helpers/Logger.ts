@@ -1,4 +1,4 @@
-import { writeTextFile, readTextFile, BaseDirectory } from "@tauri-apps/api/fs";
+import { writeTextFile, BaseDirectory } from "@tauri-apps/api/fs";
 import { LOGS_FILE } from "../config/constants";
 
 const Logger = {

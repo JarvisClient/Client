@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { BiText } from "react-icons/bi";
 
 import { JenkinsParameters } from "../BuildView";

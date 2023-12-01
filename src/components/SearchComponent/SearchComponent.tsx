@@ -1,11 +1,11 @@
-import { useState, ChangeEvent } from "react";
+import React, { useState, ChangeEvent } from "react";
 import IcoSearch from "../../assets/icons/ico_search.svg";
 
 interface SearchComponentProps {
     onSearchChange: (value: string) => void;
 }
 
-function SearchComponent({ onSearchChange }: SearchComponentProps) {
+function SearchComponent({ onSearchChange }: SearchComponentProps): React.ReactElement<any, any> | null  {
 	const [search, setSearch] = useState<string>("");
 
 	const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {

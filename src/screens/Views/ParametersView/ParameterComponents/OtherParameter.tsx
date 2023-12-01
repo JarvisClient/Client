@@ -18,7 +18,7 @@ const OtherParameterValue: React.FC<Props> = ({ parameter }): JSX.Element => {
 				</div>
 			</div>
 			<div className='ml-[50px]'>
-				<p className='mt-2'>Jarvis isn't familiar with this Parameter Class and will display the pure API Data instead.</p>
+				<p className='mt-2'>Jarvis isn&apos;t familiar with this Parameter Class and will display the pure API Data instead.</p>
 				<div className='bg-console-background border-2 border-border rounded-md shadow-lg px-6 py-5 overflow-auto'>
 					<pre>{JSON.stringify(parameter, null, 2)}</pre>
 				</div>

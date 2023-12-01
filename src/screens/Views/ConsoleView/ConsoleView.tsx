@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { invoke } from "@tauri-apps/api/tauri";
 import authdetails from "../../../config/auth";
-import { IStylingDict, stylingDict as sDict } from "./styleDict";
+import { IStylingDict } from "./styleDict";
 
 import { FaChevronDown } from "react-icons/fa6";
 import { CONSOLE_RELOAD_TIME } from "../../../config/constants";
@@ -9,7 +9,7 @@ import { getConsoleViewStyleDict } from "./ConsoleViewStyleDict";
 import Logger from "../../../helpers/Logger";
 
 interface ConsoleViewProps {
-    buildData: any;
+	buildData: any;
 }
 const ConsoleView: React.FC<ConsoleViewProps> = ({ buildData }) => {
 	const consoleRef: any = useRef(null);
@@ -31,7 +31,7 @@ const ConsoleView: React.FC<ConsoleViewProps> = ({ buildData }) => {
 				if (stylingDict.hasOwnProperty(key)) {
 					const styles = stylingDict[key];
 					const regex = new RegExp(`(?<!<[^>]*)${key}(?![^<]*>)`, "g");
-    
+
 					styledText = styledText.replace(regex, (match: string) => {
 						return applyStyles(match, styles);
 					});

@@ -1,5 +1,5 @@
+import React from "react";
 import icoBow from "../../assets/icons/ico_bow.svg";
-import { IoInformationSharp } from "react-icons/io5";
 import { appWindow } from "@tauri-apps/api/window";
 import FeatureButtons from "../../config/FeatureButtons";
 
@@ -7,7 +7,6 @@ interface TitleBarProps {
     activeFeature?: any;
     windowTitle: any;
 }
-
 
 const TitleBarComponent: React.FC<TitleBarProps> = ({ activeFeature, windowTitle }) => {
 	const featureList = FeatureButtons[activeFeature];
