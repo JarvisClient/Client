@@ -1,7 +1,6 @@
 // AppHandle/jenkins_calls.rs
 
 use crate::jenkins::jenkins_client::JenkinsClient;
-use tauri::AppHandle;
 use std::collections::HashMap;
 
 #[tauri::command]
@@ -23,9 +22,9 @@ pub async fn get_build_data(baseurl: String, username: String, apitoken: String,
 }
 
 #[tauri::command]
-pub async fn get_testResult_data(baseurl: String, username: String, apitoken: String, project_name: String, build_number: &str) -> Result<String, String> {
+pub async fn get_test_result_data(baseurl: String, username: String, apitoken: String, project_name: String, build_number: &str) -> Result<String, String> {
     let jenkins_client = JenkinsClient::new(&baseurl, &username, &apitoken);
-    match jenkins_client.get_testResult_data(&project_name, build_number).await {
+    match jenkins_client.get_test_result_data(&project_name, build_number).await {
         Ok(data) => Ok(data),
         Err(err) => Err(err.to_string()),
     }

@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "tauri": "tauri"
+    "tauri": "tauri",
+    "lint": "npx eslint ."
   },
   "dependencies": {
     "@nextui-org/react": "^2.2.9",
@@ -27,7 +28,11 @@
     "@types/dompurify": "^3.0.5",
     "@types/react": "^18.2.15",
     "@types/react-dom": "^18.2.7",
+    "@typescript-eslint/eslint-plugin": "^6.13.1",
+    "@typescript-eslint/parser": "^6.13.1",
     "@vitejs/plugin-react": "^4.0.3",
+    "eslint": "^8.54.0",
+    "eslint-plugin-react": "^7.33.2",
     "typescript": "^5.0.2",
     "vite": "^4.4.4"
   }

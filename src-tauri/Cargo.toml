@@ -1,5 +1,5 @@
 [package]
-name = "Jarvis"
+name = "jarvis"
 version = "0.0.0"
 description = "Jarvis Jenkins Client"
 authors = ["aph"]

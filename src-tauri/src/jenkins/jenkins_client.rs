@@ -1,5 +1,5 @@
 use reqwest;
-use base64::{encode, decode};
+use base64::{Engine as _, engine::general_purpose};
 use std::collections::HashMap;
 
 pub struct JenkinsClient {
@@ -23,7 +23,7 @@ impl JenkinsClient {
         let client = reqwest::Client::new();
         let response = client
             .get(&url)
-            .header("Authorization", format!("Basic {}", base64::encode(&format!("{}:{}", self.jenkins_username, self.jenkins_api_token))))
+            .header("Authorization", format!("Basic {}", general_purpose::STANDARD_NO_PAD.encode(&format!("{}:{}", self.jenkins_username, self.jenkins_api_token))))
             .send()
             .await?;
 
@@ -40,7 +40,7 @@ impl JenkinsClient {
         let client = reqwest::Client::new();
         let response = client
             .get(&url)
-            .header("Authorization", format!("Basic {}", base64::encode(&format!("{}:{}", self.jenkins_username, self.jenkins_api_token))))
+            .header("Authorization", format!("Basic {}", general_purpose::STANDARD_NO_PAD.encode(&format!("{}:{}", self.jenkins_username, self.jenkins_api_token))))
             .send()
             .await?;
 
@@ -51,13 +51,13 @@ impl JenkinsClient {
         response.text().await
     }
 
-    pub async fn get_testResult_data(&self, job_name: &str, build_number: &str) -> Result<String, reqwest::Error> {
+    pub async fn get_test_result_data(&self, job_name: &str, build_number: &str) -> Result<String, reqwest::Error> {
         let url = format!("{}/job/{}/{}/testReport/api/json", self.base_url, job_name, build_number);    
         
         let client = reqwest::Client::new();
         let response = client
             .get(&url)
-            .header("Authorization", format!("Basic {}", base64::encode(&format!("{}:{}", self.jenkins_username, self.jenkins_api_token))))
+            .header("Authorization", format!("Basic {}", general_purpose::STANDARD_NO_PAD.encode(&format!("{}:{}", self.jenkins_username, self.jenkins_api_token))))
             .send()
             .await?;
 
@@ -70,7 +70,7 @@ impl JenkinsClient {
         let client = reqwest::Client::new();
         let response = client
             .get(&url)
-            .header("Authorization", format!("Basic {}", base64::encode(&format!("{}:{}", self.jenkins_username, self.jenkins_api_token))))
+            .header("Authorization", format!("Basic {}", general_purpose::STANDARD_NO_PAD.encode(&format!("{}:{}", self.jenkins_username, self.jenkins_api_token))))
             .send()
             .await?;
 
@@ -87,7 +87,7 @@ impl JenkinsClient {
         let client = reqwest::Client::new();
         let response = match client
             .get(&url)
-            .header("Authorization", format!("Basic {}", base64::encode(&format!("{}:{}", self.jenkins_username, self.jenkins_api_token))))
+            .header("Authorization", format!("Basic {}", general_purpose::STANDARD_NO_PAD.encode(&format!("{}:{}", self.jenkins_username, self.jenkins_api_token))))
             .send()
             .await
         {
@@ -116,7 +116,7 @@ impl JenkinsClient {
             "Authorization",
             format!(
                 "Basic {}",
-                encode(&format!("{}:{}", self.jenkins_username, self.jenkins_api_token))
+                general_purpose::STANDARD_NO_PAD.encode(&format!("{}:{}", self.jenkins_username, self.jenkins_api_token))
             ),
         )
         .form(&params)
@@ -144,7 +144,7 @@ pub async fn start_build(
         "Authorization",
         format!(
             "Basic {}",
-            encode(&format!("{}:{}", self.jenkins_username, self.jenkins_api_token))
+            general_purpose::STANDARD_NO_PAD.encode(&format!("{}:{}", self.jenkins_username, self.jenkins_api_token))
         ),
     )
     .form(&params)

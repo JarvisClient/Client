@@ -7,5 +7,5 @@ export const JOBCARD_REFRESH_TIME = 30000;
 export const BUILD_VIEW_BANNER_CLOSE_TIME = 5000;
 
 // Files
-export const CONSOLE_VIEW_STYLE_FILE = 'consoleViewStyleDict.json';
-export const LOGS_FILE = 'jarvis_logs.log';
+export const CONSOLE_VIEW_STYLE_FILE = "consoleViewStyleDict.json";
+export const LOGS_FILE = "jarvis_logs.log";

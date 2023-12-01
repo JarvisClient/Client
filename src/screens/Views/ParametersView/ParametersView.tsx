@@ -26,86 +26,86 @@ interface StatusViewProps {
 }
 
 const ParametersView: React.FC<StatusViewProps> = ({ buildData, parameterDefinition }) => {
-    const [parametersWithDescription, setParametersWithDescription] = useState<JenkinsParameters[]>([]);
+	const [parametersWithDescription, setParametersWithDescription] = useState<JenkinsParameters[]>([]);
 
-    const getParameters = (): JenkinsParameters[] => {
-        try {
-            let buildDataActions = buildData?.actions || [];
-            let parameters: JenkinsParameters[] = buildDataActions.find((action: any) => action._class === "hudson.model.ParametersAction")["parameters"];
+	const getParameters = (): JenkinsParameters[] => {
+		try {
+			const buildDataActions = buildData?.actions || [];
+			const parameters: JenkinsParameters[] = buildDataActions.find((action: any) => action._class === "hudson.model.ParametersAction")["parameters"];
 
-            return parameters;
-        } catch (error) {
-            return [];
-        }
-    }
+			return parameters;
+		} catch (error) {
+			return [];
+		}
+	};
 
-    const parameters: JenkinsParameters[] = getParameters();
+	const parameters: JenkinsParameters[] = getParameters();
     
     
-    const buildNumber: number = buildData?.number || 0;
+	const buildNumber: number = buildData?.number || 0;
 
-    const findDefinitionByClass = (parameter: JenkinsParameters): any => {
-        return parameterDefinition.find((def: any) => def.name === parameter.name);
-    }
+	const findDefinitionByClass = (parameter: JenkinsParameters): any => {
+		return parameterDefinition.find((def: any) => def.name === parameter.name);
+	};
 
-    useEffect(() => {
-        if (!parameterDefinition) return;
+	useEffect(() => {
+		if (!parameterDefinition) return;
 
-        const parametersWithDescription = parameters.map((parameter) => {
-            const definition = findDefinitionByClass(parameter);
+		const parametersWithDescription = parameters.map((parameter) => {
+			const definition = findDefinitionByClass(parameter);
             
-            if (definition) {
-                parameter.description = definition.description;
-            } else {
-                parameter.description = "This Parameter has no description. It may be a default parameter or has been removed from the job.";
-            }
-            return parameter;
-        });
-        setParametersWithDescription(parametersWithDescription);
-    }, [parameters, parameterDefinition]);
+			if (definition) {
+				parameter.description = definition.description;
+			} else {
+				parameter.description = "This Parameter has no description. It may be a default parameter or has been removed from the job.";
+			}
+			return parameter;
+		});
+		setParametersWithDescription(parametersWithDescription);
+	}, [parameters, parameterDefinition]);
 
-    // decide which component to load for which parameter by class
-    const getComponentForParameter = (parameter: JenkinsParameters): JSX.Element => {
-        switch (parameter._class) {
-            case "hudson.model.BooleanParameterValue":
-                return <BooleanParameterValue parameter={parameter} />;
+	// decide which component to load for which parameter by class
+	const getComponentForParameter = (parameter: JenkinsParameters): JSX.Element => {
+		switch (parameter._class) {
+		case "hudson.model.BooleanParameterValue":
+			return <BooleanParameterValue parameter={parameter} />;
 
-            case "hudson.model.StringParameterValue":
-            case "org.jvnet.jenkins.plugins.nodelabelparameter.NodeParameterValue":
-            case "com.cwctravel.hudson.plugins.extended_choice_parameter.ExtendedChoiceParameterValue":
-                return <StringParameterValue parameter={parameter} />;
+		case "hudson.model.StringParameterValue":
+		case "org.jvnet.jenkins.plugins.nodelabelparameter.NodeParameterValue":
+		case "com.cwctravel.hudson.plugins.extended_choice_parameter.ExtendedChoiceParameterValue":
+			return <StringParameterValue parameter={parameter} />;
 
-            case "com.cloudbees.plugins.credentials.CredentialsParameterValue":
-                return <CredentialsParameterValue parameter={parameter} />;
+		case "com.cloudbees.plugins.credentials.CredentialsParameterValue":
+			return <CredentialsParameterValue parameter={parameter} />;
 
-            case "hudson.model.FileParameterValue":
-                return <FileParameterValue buildNumber={buildNumber} parameter={parameter} />;
+		case "hudson.model.FileParameterValue":
+			return <FileParameterValue buildNumber={buildNumber} parameter={parameter} />;
 
-            case "hudson.model.TextParameterValue":
-                return <TextParameterValue parameter={parameter} />;
+		case "hudson.model.TextParameterValue":
+			return <TextParameterValue parameter={parameter} />;
 
-            case "hudson.model.PasswordParameterValue":
-                return <PasswordParameterValue parameter={parameter} />;
+		case "hudson.model.PasswordParameterValue":
+			return <PasswordParameterValue parameter={parameter} />;
 
-            case "hudson.model.RunParameterValue":
-                return <RunParameterValue parameter={parameter} />;
+		case "hudson.model.RunParameterValue":
+			return <RunParameterValue parameter={parameter} />;
 
-            default:
-                return <OtherParameterValue parameter={parameter} />;
-        }
-    }
+		default:
+			return <OtherParameterValue parameter={parameter} />;
+		}
+	};
 
-    return (
-        <div className="mx-10 my-10 select-none">
-            {buildData ? (
-                <div>
-                    {parameters.map((parameter, index) => (
-                        <div key={index} className="mb-10">{getComponentForParameter(parameter)}</div>
-                    ))}
-                </div>
-            ) : null}
-        </div>
-    )
-}
+	return (
+		<div className="mx-10 my-10 select-none">
+			{buildData ? (
+				<div>
+					{parameters.map((parameter, index) => (
+						<div key={index} className="mb-10">{getComponentForParameter(parameter)}</div>
+					))}
+				</div>
+			) : null}
+		</div>
+	);
+};
 
 export default ParametersView;
