@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from "react";
 import circleColor from "../../config/getCircleColor";
+import FeatureButtons from "../../config/FeatureButtons";
 
-interface JobCardProps {
+export interface JobCardProps {
   displayName?: string;
   description?: string;
   result?: string;
   active?: boolean;
   buildNumber?: number;
+  pinned?: boolean;
   onClick?: () => void;
 }
 
-const JobCardComponent: React.FC<JobCardProps> = ({ active = false, buildNumber, displayName, description, result, onClick }) => {
+const JobCardComponent: React.FC<JobCardProps> = ({ active = false, buildNumber, displayName, description, result, pinned, onClick }) => {
 	const [buildData, setBuildData] = useState<any>(null);
 
 	const handleClick = () => {
@@ -18,6 +20,8 @@ const JobCardComponent: React.FC<JobCardProps> = ({ active = false, buildNumber,
 			onClick();
 		}
 	};
+
+	const { secondaryIcon: IconComponent } = FeatureButtons["pin"];
 
 	useEffect(() => {
 
@@ -35,8 +39,7 @@ const JobCardComponent: React.FC<JobCardProps> = ({ active = false, buildNumber,
 	return (
 		<div
 			className={`flex items-center w-[310px] h-[80px] rounded-lg p-5 border-0 border-border transition hover:bg-background-card-selected active:scale-[0.99] select-none overflow-hidden ${active ? "bg-background-card-selected" : "bg-background-card "}`}
-			onClick={handleClick}
-		>
+			onClick={handleClick}>
 			<div className="flex-shrink-0 mr-3">
 				{/* Small circle */}
 				<span className="relative flex h-5 w-5">
@@ -48,8 +51,9 @@ const JobCardComponent: React.FC<JobCardProps> = ({ active = false, buildNumber,
 			</div>
 			<div className="flex flex-col justify-center">
 				{/* Two rows for Title and Comment */}
-				<div className="text-lg text-text-color font-bold overflow-hidden">
+				<div className="text-lg text-text-color font-bold overflow-hidden flex items-center">
 					{buildData["displayName"]}
+					{pinned && IconComponent ? <IconComponent className="inline-block ml-1" color={"ffffff"} size={20} /> : null}
 				</div>
 				<div className="text-sm text-comment-color overflow-hidden line-clamp-2">
 					{buildData["description"]}

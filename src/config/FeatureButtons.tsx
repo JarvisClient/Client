@@ -8,15 +8,17 @@ import { LuTestTube2 } from "react-icons/lu";
 import { HiHome } from "react-icons/hi";
 
 import { BsPlayFill } from "react-icons/bs";
+import { TbPin, TbPinnedFilled } from "react-icons/tb";
 
 const projectName = localStorage.getItem("projectName");
 
-interface FeatureButtonProps {
+export interface FeatureButtonProps {
   title: string;
   titleBar: string;
   bg_color: string;
   icon_color: string;
   icon: React.ElementType;
+  secondaryIcon?: React.ElementType;
   purpose: "JOB" | "PROJECT" | "BOTH";
   hidden?: boolean;
 }
@@ -80,6 +82,16 @@ const FeatureButtons: { [key: string]: FeatureButtonProps } = {
 		icon: FaGear,
 		purpose: "PROJECT",
 		hidden: true,
+	},
+	pin: {
+		title: "Pin",
+		titleBar: "Pin",
+		bg_color: "#1D2038",
+		icon_color: "#4657CE",
+		icon: TbPin,
+		secondaryIcon: TbPinnedFilled,
+		purpose: "JOB",
+		hidden: false,
 	},
 	jenkins: {
 		title: "Jenkins",

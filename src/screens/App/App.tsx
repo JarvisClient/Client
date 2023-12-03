@@ -1,40 +1,31 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { invoke } from "@tauri-apps/api/tauri";
+
 import authDetails from "../../config/auth";
-import TitleBarComponent from "../../components/TitleBar/TitleBarComponent";
-import JobCardComponent from "../../components/JobCardComponent/JobCardComponent";
-import SearchComponent from "../../components/SearchComponent/SearchComponent";
+import FeatureButtonsConfig from "../../config/FeatureButtons";
+import { JOBCARD_REFRESH_TIME } from "../../config/constants";
+
 import FeatureButtonComponent from "../../components/FeatureButtonComponent/FeatureButtonComponent";
-import StatusView from "../Views/StatusView/StatusView";
+import JobCardComponent from "../../components/JobCardComponent/JobCardComponent";
+import JobCardLoadingComponent from "../../components/JobCardComponent/JobCardLoadingComponent";
+import SearchComponent from "../../components/SearchComponent/SearchComponent";
+import TitleBarComponent from "../../components/TitleBar/TitleBarComponent";
+
+import BuildView from "../Views/BuildView/BuildView";
 import ConsoleView from "../Views/ConsoleView/ConsoleView";
+import FeatureViewHead from "../Views/FeatureViewHead";
+import ParametersView from "../Views/ParametersView/ParametersView";
 import ProjectStatusView from "../Views/ProjectStatusView/ProjectStatusView";
 import SettingsView from "../Views/SettingsView/SettingsView";
-import FeatureViewHead from "../Views/FeatureViewHead";
-import FeatureButtonsConfig from "../../config/FeatureButtons";
-import ParametersView from "../Views/ParametersView/ParametersView";
-import BuildView from "../Views/BuildView/BuildView";
-import { deepEqual, openLink } from "../../helpers/utils";
-import "./App.css";
+import StatusView from "../Views/StatusView/StatusView";
 import TestReport from "../Views/TestReport/TestReport";
-import JobCardLoadingComponent from "../../components/JobCardComponent/JobCardLoadingComponent";
-import { JOBCARD_REFRESH_TIME } from "../../config/constants";
+
+import { deepEqual, openLink } from "../../helpers/utils";
 import Logger, { onStartup } from "../../helpers/Logger";
+import { FeatureButton } from "./IBuildInterface";
+import { JobCardProps } from "../../components/JobCardComponent/JobCardComponent";
 
-interface FeatureButton {
-	name: string;
-	purpose: string;
-	titleBar: string;
-	hidden?: boolean;
-}
-
-interface jobCardProps {
-	buildNumber: number;
-	displayName: string;
-	description: string;
-	result: string;
-	onClick: () => void;
-	active: boolean;
-}
+import "./App.css";
 
 /**
  * React functional component representing the main application.
@@ -45,7 +36,7 @@ function App(): React.ReactElement {
 	const [activeJobBuildNumber, setActiveJobBuildNumber] = useState<number | null>(null);
 	const [selectedBuildData, setSelectedBuildData] = useState<any>(null);
 	const [projectData, setProjectData] = useState<any>(null);
-	const [jobCardProps, setJobCardProps] = useState<jobCardProps[]>([]);
+	const [jobCardProps, setJobCardProps] = useState<JobCardProps[]>([]);
 	const [activeFeature, setActiveFeature] = useState<string | null>("status_for_project");
 	const [parameterDefinition, setParameterDefinition] = useState<any>(null);
 	const [jobCardsLoading, setJobCardsLoading] = useState<boolean>(true);
@@ -81,6 +72,8 @@ function App(): React.ReactElement {
    * Create a JSX Element containg the JobCardProps for each build.
    */
 	const createJobCardProps = async (builds: any[]) => {
+		const pinnedJobs = JSON.parse(localStorage.getItem("pinnedJobs") || "[]");
+
 		try {
 			const jobCardProps = await Promise.all(builds.map(async (build: any) => {
 				const details = await fetchBuildData(build["number"]);
@@ -89,15 +82,16 @@ function App(): React.ReactElement {
 					displayName: details["displayName"],
 					description: details["description"],
 					result: details["result"],
+					pinned: pinnedJobs.includes(build["number"]),
 					onClick: () => handleJobCardClick(build["number"]),
 					active: false,
 				};
 			}));
-  
-			// wait 2 seconds before setting the job card props to allow the loading animation to play
-			setJobCardProps(jobCardProps);
+
+
+			await setJobCardProps(jobCardProps);
 			setJobCardsLoading(false);
-  
+
 		} catch (error) {
 			// Handle errors if any
 			alert("Error creating job card props. Please check your internet connection and try again. \n" + error);
@@ -178,6 +172,51 @@ function App(): React.ReactElement {
 	};
 
 	/**
+	 * Handles the click event on a JobCard, setting the activeJobBuildNumber and fetching data for the selected build.
+	 * Also sets the activeFeature to "status" if it is null or "settings".
+	 * @param {number} buildNumber - The build number of the selected JobCard.
+	 * @returns {Promise<void>}
+	 */
+	const onJobCardPin = async () => {
+		let pinnedJobs = JSON.parse(localStorage.getItem("pinnedJobs") || "[]");
+
+		// if the job is already pinned, remove it from the pinnedJobs array else add it
+		if (pinnedJobs.includes(activeJobBuildNumber)) {
+			pinnedJobs = pinnedJobs.filter((element: number) => element !== activeJobBuildNumber);			
+		} else {
+			pinnedJobs.push(activeJobBuildNumber);
+		}
+
+		localStorage.setItem("pinnedJobs", JSON.stringify(pinnedJobs));
+
+		updatePinnedJobCards();
+	};
+
+	const setPinStatus = (status: boolean) => {
+		console.log(status);
+	};
+		
+
+	/**
+	 * Updates the 'pinned' property in jobCardProps based on the pinnedJobCards.
+	 * @param {number} buildNumber - The build number of the selected JobCard.
+	 * @returns {Promise<void>}
+	 */
+	const updatePinnedJobCards = () => {
+		try {
+			const pinnedJobs = JSON.parse(localStorage.getItem("pinnedJobs") || "[]");
+			const updatedJobCardProps = jobCardProps.map((element: any) => ({
+				...element,
+				pinned: pinnedJobs.includes(element.buildNumber),
+			}));
+
+			setJobCardProps(updatedJobCardProps);
+		} catch (error) {
+			Logger.error("Error updating pinned job cards:", error);
+		}
+	};
+
+	/**
  * Handles the click event on a FeatureButton, setting the activeJobBuildNumber to null if the feature is "settings".
  * @param {string} feature - The feature to set as the active feature.
  */
@@ -194,6 +233,15 @@ function App(): React.ReactElement {
 			openLink(selectedBuildData["url"]);
 			return;
 			break;
+		case "pin": {
+			const activeJobCard = jobCardProps.find((element: any) => element.buildNumber === activeJobBuildNumber);
+			onJobCardPin();
+			if (activeJobCard) {
+				setPinStatus(!activeJobCard["pinned"]);
+			}
+			return;
+			break;
+		}
 		default:
 			break;
 		}
@@ -222,9 +270,9 @@ function App(): React.ReactElement {
 
 			if (
 				!element.hidden &&
-        ((element.purpose === "BOTH") ||
-          (activeJobBuildNumber && element.purpose === "JOB") ||
-          (!activeJobBuildNumber && element.purpose === "PROJECT"))
+				((element.purpose === "BOTH") ||
+					(activeJobBuildNumber && element.purpose === "JOB") ||
+					(!activeJobBuildNumber && element.purpose === "PROJECT"))
 			) {
 				featureButtons.push({
 					name: key,
@@ -242,25 +290,26 @@ function App(): React.ReactElement {
 	useEffect(() => {
 		const randomNumber = Math.floor(Math.random() * 1000000);
 		Logger.info(randomNumber + " - BASE: Fetching project data for", storedProjectName);
-  
+
 		let intervalId: NodeJS.Timeout; // Declare intervalId outside startJarvis
-  
+
 		const startJarvis = async () => {
 			// Fetch project data and create JobCardProps
 			const projectData = await fetchProjectData();
 			await createJobCardProps(projectData["builds"]);
+			Logger.info("Initial JobCardProps created");
 			onStartup();
-  
+
 			// Check if latest build data has changed every 10 seconds
 			let prevLatestBuildData: any = null;
-  
+
 			intervalId = setInterval(async () => {
 				try {
 					Logger.info(randomNumber + " - Fetching project data every 30 seconds for", storedProjectName);
 					const newData = await fetchProjectData();
 					const fetchLatestBuild = newData["builds"][0]["number"];
 					const latestBuildData = await fetchBuildData(fetchLatestBuild);
-  
+
 					if (!prevLatestBuildData || !deepEqual(prevLatestBuildData, latestBuildData)) {
 						Logger.info(randomNumber + " - Latest build data has changed. Updating state...");
 						setProjectData(newData);
@@ -272,16 +321,56 @@ function App(): React.ReactElement {
 				}
 			}, JOBCARD_REFRESH_TIME);
 		};
-  
+
 		startJarvis();
-  
+
 		// Clean up interval when the component is unmounted
 		return () => {
 			Logger.info(randomNumber + " - CLEANUP: Clearing interval for", storedProjectName);
 			clearInterval(intervalId);
 		};
-	}, [storedProjectName, fetchProjectData, setProjectData]);  
+	}, [storedProjectName, fetchProjectData, setProjectData]);
 
+
+	/**
+	 * Dynamically generates JobCards
+	 * @returns {JSX.Element[]} - An array of JobCardComponents.
+	 */
+	function renderJobCards() {
+		try {
+			const filteredJobCards = searchQuery.length > 0
+				? jobCardProps.filter((element) => element.displayName?.includes(searchQuery))
+				: jobCardProps;
+
+			// Sort the filteredJobCards array so that pinned cards come first
+			const sortedJobCards = [...filteredJobCards].sort((a, b) => (b.pinned ? 1 : -1) - (a.pinned ? 1 : -1));
+
+			return sortedJobCards.map((props, index) => (
+				<JobCardComponent key={index} {...props} />
+			));
+		} catch (error) {
+			Logger.error("Error rendering job cards:", error);
+		}
+	}
+
+	/**
+	 *  Dynamically generates Featurebuttons
+	 * @returns {JSX.Element[]} - An array of FeatureButtonComponents.
+	 */
+	function renderFeatureButtons() {
+		return featureButtons.map((element: any, index: number) => (
+			<>
+				<FeatureButtonComponent
+					key={index}
+					buildNumber={activeJobBuildNumber}
+					onClick={() => handleFeatureButtonClick(element.name)}
+					feature={element.name}
+					useSecondaryIcon={element.name === "pin" && jobCardProps.find((element: any) => element.buildNumber === activeJobBuildNumber)?.pinned}
+					active={activeFeature === element.name}
+				/>
+			</>
+		));
+	}
 
 	/**
   * useEffect Hook
@@ -317,17 +406,7 @@ function App(): React.ReactElement {
 					<SearchComponent onSearchChange={handleSearchInputChange} />
 					{!jobCardsLoading ? (
 						<>
-							{searchQuery.length > 0 ? (
-								jobCardProps
-									.filter((element: any) => element["displayName"].includes(searchQuery))
-									.map((props, index) => (
-										<JobCardComponent key={index} {...props} />
-									))
-							) : (
-								jobCardProps.map((props, index) => (
-									<JobCardComponent key={index} {...props} />
-								))
-							)}
+							{renderJobCards()}
 						</>
 					) : (
 						<>
@@ -338,18 +417,12 @@ function App(): React.ReactElement {
 					)}
 				</div>
 
+
 				{/* Feature Buttons */}
 				<div className="overflow-y-scroll small-sidebar custom-scroll grid justify-items-center  py-4">
 					{/* Dynamically generates Featurebuttons */}
 					<div className="space-y-4 mb-4">
-						{featureButtons.map((button: any, key: number) => (
-							<FeatureButtonComponent
-								key={key}
-								buildNumber={activeJobBuildNumber}
-								onClick={() => handleFeatureButtonClick(button["name"])}
-								feature={button["name"]}
-								active={activeFeature === button["name"]} />
-						))}
+						{renderFeatureButtons()}
 					</div>
 
 					{/* Settings Button */}
@@ -372,7 +445,7 @@ function App(): React.ReactElement {
 					{activeFeature === "status" && <StatusView buildData={selectedBuildData} />}
 					{activeFeature === "console" && <ConsoleView buildData={selectedBuildData} />}
 					{activeFeature === "parameters" && <ParametersView buildData={selectedBuildData} />}
-					{activeFeature === "settings" && <SettingsView buildData={selectedBuildData} />}
+					{activeFeature === "settings" && <SettingsView />}
 					{activeFeature === "status_for_project" && <ProjectStatusView buildData={projectData} />}
 					{activeFeature === "testReport" && <TestReport buildData={selectedBuildData} />}
 					{activeFeature === "build" && <BuildView buildData={selectedBuildData} parameterDefinition={parameterDefinition} />}

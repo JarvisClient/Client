@@ -50,3 +50,10 @@ export interface IBuildData {
     changeSet: ChangeLogItem;
     culprits: any[]; // You can specify a more specific type if needed
 }
+
+export interface FeatureButton {
+	name: string;
+	purpose: string;
+	titleBar: string;
+	hidden?: boolean;
+}
