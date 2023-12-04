@@ -3,7 +3,8 @@ import { invoke } from "@tauri-apps/api/tauri";
 import authdetails from "../../../config/auth";
 import { IStylingDict } from "./styleDict";
 
-import { FaChevronDown } from "react-icons/fa6";
+import { FaAngleDown } from "react-icons/fa6";
+import { RiSkipDownLine } from "react-icons/ri";
 import { CONSOLE_RELOAD_TIME } from "../../../config/constants";
 import { getConsoleViewStyleDict } from "./ConsoleViewStyleDict";
 import Logger from "../../../helpers/Logger";
@@ -16,6 +17,7 @@ const ConsoleView: React.FC<ConsoleViewProps> = ({ buildData }) => {
 	const consoleRef: any = useRef(null);
 	const [consoleData, setConsoleData] = useState<any>(null);
 	const [isLoading, setIsLoading] = useState<boolean>(true);
+	const [bottomLock, setBottomLock] = useState<boolean>(true);
 
 	const handleApplyStyledDataWebWorker = (data: string, stylingDict: IStylingDict) => {
 		const worker = new Worker(new URL("./worker", import.meta.url), { type: 'module' });
@@ -23,7 +25,7 @@ const ConsoleView: React.FC<ConsoleViewProps> = ({ buildData }) => {
 			setConsoleData(e.data);
 			worker.terminate();
 		};
-		
+
 		worker.postMessage({ data, stylingDict });
 	}
 
@@ -54,7 +56,7 @@ const ConsoleView: React.FC<ConsoleViewProps> = ({ buildData }) => {
 			const stylingDict: any = await getConsoleViewStyleDict();
 
 			// Apply styles based on the dictionary
-			handleApplyStyledDataWebWorker(formattedData, stylingDict);			
+			handleApplyStyledDataWebWorker(formattedData, stylingDict);
 
 			setIsLoading(false);
 			setConsoleData(formattedData);
@@ -119,22 +121,35 @@ const ConsoleView: React.FC<ConsoleViewProps> = ({ buildData }) => {
 		};
 	}, [consoleRef]);
 
-	useEffect(() => {
-		scrollToBottom();
-	}, [consoleData]);
-
 	const scrollToBottom = () => {
 		if (consoleRef.current) {
 			consoleRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
 		}
 	};
 
+	const bottomLockHandler = () => {
+		setBottomLock(!bottomLock);
+		if (bottomLock) {
+			scrollToBottom();
+		}
+	};
+
+	/**
+	 * Scroll to bottom when new data is added to the console
+	 */
+	useEffect(() => {
+		if (bottomLock) {
+			scrollToBottom();
+		}
+	}, [consoleData]);
+	
 	return (
 		<div className="mx-10 my-10">
 			{buildData && !isLoading ?
 				<>
-					<div className="fixed w-14 h-14 rounded-full flex justify-center items-center bottom-10 right-10 bg-opacity-50 backdrop-blur-md transition-all invert hover:scale-[1.03] active:scale-[0.99] select-none" onClick={scrollToBottom}>
-						<FaChevronDown size={22} />
+					<div className={`fixed w-14 h-14 rounded-full flex justify-center items-center bottom-10 right-10 bg-opacity-50 backdrop-blur-md transition-all invert select-none ${bottomLock ? "bg-green-500 scale-[1]" : "bg-red-500 scale-[0.85]"}`}
+						onClick={bottomLockHandler}>
+						{bottomLock ? <FaAngleDown className="text-white text-2xl" /> : <RiSkipDownLine className="text-white text-2xl transform" />}
 					</div>
 
 					{/* Console Data */}
