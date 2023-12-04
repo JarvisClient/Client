@@ -23,7 +23,6 @@ const FeatureButtonComponent: React.FC<FeatureButtonProps> = ({ onClick, feature
 	const { bg_color, icon_color } = featureDetails;
 
 	if (useSecondaryIcon) {
-		console.log("useSecondaryIcon for " + feature);
 		IconComponent = featureDetails.secondaryIcon as React.ElementType<any>;
 		active = true;
 	}

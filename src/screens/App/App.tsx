@@ -191,10 +191,6 @@ function App(): React.ReactElement {
 
 		updatePinnedJobCards();
 	};
-
-	const setPinStatus = (status: boolean) => {
-		console.log(status);
-	};
 		
 
 	/**
@@ -236,9 +232,6 @@ function App(): React.ReactElement {
 		case "pin": {
 			const activeJobCard = jobCardProps.find((element: any) => element.buildNumber === activeJobBuildNumber);
 			onJobCardPin();
-			if (activeJobCard) {
-				setPinStatus(!activeJobCard["pinned"]);
-			}
 			return;
 			break;
 		}
@@ -255,7 +248,6 @@ function App(): React.ReactElement {
  */
 	const handleSearchInputChange = (value: string) => {
 		setSearchQuery(value);
-
 	};
 
 	/**

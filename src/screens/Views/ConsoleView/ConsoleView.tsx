@@ -17,33 +17,15 @@ const ConsoleView: React.FC<ConsoleViewProps> = ({ buildData }) => {
 	const [consoleData, setConsoleData] = useState<any>(null);
 	const [isLoading, setIsLoading] = useState<boolean>(true);
 
-	const applyStyles = (text: string, styles: string[]) => {
-		return styles.reduce((result, style) => {
-			return `<span class="${style}">${result}</span>`;
-		}, text);
-	};
-
-	// Modified function to apply styles
-	const applyStyledText = (text: string, stylingDict: IStylingDict): string => {
-		try {
-			let styledText = text;
-
-			for (const key in stylingDict) {
-				if (stylingDict.hasOwnProperty(key)) {
-					const styles = stylingDict[key];
-					const regex = new RegExp(`(?<!<[^>]*)${key}(?![^<]*>)`, "g");
-
-					styledText = styledText.replace(regex, (match: string) => {
-						return applyStyles(match, styles);
-					});
-				}
-			}
-			return styledText;
-		} catch (error) {
-			alert("Error applying styles to console data. Please check your StyleDict.json file.");
-			return text;
-		}
-	};
+	const handleApplyStyledDataWebWorker = (data: string, stylingDict: IStylingDict) => {
+		const worker = new Worker(new URL("./worker", import.meta.url), { type: 'module' });
+		worker.onmessage = (e) => {
+			setConsoleData(e.data);
+			worker.terminate();
+		};
+		
+		worker.postMessage({ data, stylingDict });
+	}
 
 
 	const fetchConsoleData = async () => {
@@ -72,7 +54,7 @@ const ConsoleView: React.FC<ConsoleViewProps> = ({ buildData }) => {
 			const stylingDict: any = await getConsoleViewStyleDict();
 
 			// Apply styles based on the dictionary
-			formattedData = applyStyledText(formattedData, stylingDict);
+			handleApplyStyledDataWebWorker(formattedData, stylingDict);			
 
 			setIsLoading(false);
 			setConsoleData(formattedData);
