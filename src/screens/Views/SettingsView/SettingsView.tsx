@@ -187,7 +187,7 @@ const SettingsView: React.FC = () => {
 				<button
 					onClick={checkAuthentication}
 					className="button">
-                    Save
+					Save
 				</button>
 			</div>
 			<div className="flex items-center mt-10">
@@ -215,28 +215,44 @@ const SettingsView: React.FC = () => {
 					<button
 						onClick={addNewProject}
 						className="button">
-                        Save
+						Save
 					</button>
 					<button
 						onClick={deleteCurrentProject}
 						className={"w-[200px] h-[37px] text-[15px] text-white font-medium rounded-md px-3 mt-5 mr-3 text-white bg-red-600 hover:brightness-[0.9] active:brightness-[0.7]"}>
-                        Delete current Project
+						Delete current Project
 					</button>
 				</div>
 			</div>
 			<div className="flex flex-col mt-10 space-y-4">
 				<h2 className="text-2xl font-bold -mb-2">Features</h2>
-				<div className="flex flex-row space-x-10  items-center">
-					<p className="mb-2">Open all Links in Browser</p>
-					<Switch isChecked={isChecked} onCheckboxChange={handleCheckboxChange} />
-				</div>
-				<div className="flex flex-row space-x-10 items-center">
-					<p className="mb-2">Open Console Styling JSON</p>
-					<button onClick={editConsoleStyling} className="button"> Open JSON </button>
-				</div>
-				<div className="flex flex-row space-x-10 items-center">
-					<p className="mb-2">Open Logs</p>
-					<button onClick={openLogs} className="button"> Open Logs </button>
+
+				<div className="grid grid-cols-2 gap-4 space-y-4">
+					{/* JSON */}
+					<div className="flex flex-col">
+						<p className="mb-2 text-lg font-bold">Open Console Styling JSON</p>
+						<p className="mb-2 leading-5 text-comment-color">Open the Custom Console Styling JSON File</p>
+					</div>
+					<div>
+						<button onClick={editConsoleStyling} className="button"> Open JSON </button>
+					</div>
+
+					{/* JSON */}
+					<div className="flex flex-col">
+						<p className="mb-2 text-lg font-bold">Open Logs</p>
+						<p className="mb-2 leading-5 text-comment-color">Open the Log File for Debugging</p>
+					</div>
+					<div>
+						<button onClick={openLogs} className="button"> Open Logs </button>
+					</div>
+
+					<div className="flex flex-col">
+						<p className="mb-2 text-lg font-bold">Open all Links in Browser</p>
+						<p className="mb-2 leading-5 text-comment-color">Choose Whether Links Open in Jarvis or Your Default Browser</p>
+					</div>
+					<div>
+						<Switch isChecked={isChecked} onCheckboxChange={handleCheckboxChange} />
+					</div>
 				</div>
 			</div>
 		</div>

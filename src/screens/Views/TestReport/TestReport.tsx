@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { invoke } from "@tauri-apps/api/tauri";
 import authdetails from "../../../config/auth";
-import { IoMdArrowDropdown } from "react-icons/io";
 
 import "./TestReport.css";
 import Logger from "../../../helpers/Logger";
 import { IBuildData } from "../../App/IBuildInterface";
+
+import TestReportIndicators from "./TestReportIndicators";
+import { renderTestReportCard } from "./worker";
 
 interface ConsoleViewProps {
 	buildData: IBuildData;
@@ -16,6 +18,24 @@ const TestReport: React.FC<ConsoleViewProps> = ({ buildData }) => {
 	const [showBanner, setShowBanner] = useState(false);
 	const [collapsedSuites, setCollapsedSuites] = useState<string[]>([]);
 
+	// useState of an Object containing failCount, passCount, skipCount add types
+	const [failWidth, setFailWidth] = useState<number | null>(null);
+	const [passWidth, setPassWidth] = useState<number | null>(null);
+	const [skipWidth, setSkipWidth] = useState<number | null>(null);
+
+	const [selectAllChecked, setSelectAllChecked] = useState(true);
+
+
+
+	useEffect(() => {
+		if (testReport) {
+			const totalCount = testReport["failCount"] + testReport["passCount"] + testReport["skipCount"];
+			setFailWidth((testReport["failCount"] / totalCount) * 100);
+			setPassWidth((testReport["passCount"] / totalCount) * 100);
+			setSkipWidth((testReport["skipCount"] / totalCount) * 100);
+		}
+	}, [testReport]);
+
 	const fetchTestData = async (projectName: string, buildNumber: any) => {
 		const config = {
 			projectName: projectName,
@@ -23,10 +43,7 @@ const TestReport: React.FC<ConsoleViewProps> = ({ buildData }) => {
 			...authdetails,
 		};
 		const response: string = await invoke("get_test_result_data", config);
-
-		const json = await JSON.parse(response);
-
-		return json;
+		return response;
 	};
 
 	// Function to toggle the visibility of a test suite
@@ -34,7 +51,6 @@ const TestReport: React.FC<ConsoleViewProps> = ({ buildData }) => {
 		const suiteElement = document.getElementById(`suite-${suiteName}`);
 		if (suiteElement) {
 			suiteElement.classList.toggle("collapsed");
-
 			// Update the collapsedSuites state based on the toggle action
 			setCollapsedSuites((prevCollapsedSuites) =>
 				suiteElement.classList.contains("collapsed")
@@ -42,16 +58,60 @@ const TestReport: React.FC<ConsoleViewProps> = ({ buildData }) => {
 					: prevCollapsedSuites.filter((name) => name !== suiteName)
 			);
 		}
+
+		// Update the selectAllChecked state based on the toggle action
+		const allSuites = document.getElementsByClassName("test-suite");
+		const isAllExpanded = Array.from(allSuites).every((suite) => !suite.classList.contains("collapsed"));
+		setSelectAllChecked(isAllExpanded);
 	};
+
+	const hideAllTestSuites = () => {
+		const suites = document.getElementsByClassName("test-suite");
+		for (let i = 0; i < suites.length; i++) {
+			suites[i].classList.add("collapsed");
+		}
+		setCollapsedSuites(testReport["suites"].map((suite: any) => suite["name"]));
+	};
+	
+	const showAllTestSuites = () => {
+		const suites = document.getElementsByClassName("test-suite");
+		for (let i = 0; i < suites.length; i++) {
+			suites[i].classList.remove("collapsed");
+		}
+		setCollapsedSuites([]);
+	};
+
+	const toggleSelectAll = () => {
+		const allSuites = document.getElementsByClassName("test-suite");
+		const isAllExpanded = Array.from(allSuites).every((suite) => !suite.classList.contains("collapsed"));
+	  
+		if (isAllExpanded) {
+		  hideAllTestSuites();
+		  setSelectAllChecked(false);
+		} else {
+		  showAllTestSuites();
+		  setSelectAllChecked(true);
+		}
+	  };
+	  
+
 
 	useEffect(() => {
 		const fetchTestReport = async () => {
 			try {
 				const storedProjectName: string = localStorage.getItem("projectName") || "";
 
-				const json = await fetchTestData(storedProjectName, buildData["id"]);
+				const response = await fetchTestData(storedProjectName, buildData["id"]);
 
-				setTestReport(json);
+				if (!JSON.parse(response)) {
+					// No test cases found
+					Logger.info("No TestCases set for this build!")
+					//return setTestReport(testJson) // FOR DEBUG PURPOSES
+					setShowBanner(true);
+					return;
+				}
+
+				setTestReport(JSON.parse(response));
 			} catch (error) {
 				Logger.error(error);
 				setShowBanner(true);
@@ -77,11 +137,49 @@ const TestReport: React.FC<ConsoleViewProps> = ({ buildData }) => {
 				) : (
 					<>
 						{buildData && testReport ? (
-							<div className="mb-5">
-								<p className="font-bold">Failed: {testReport["failCount"]}</p>
-								<p className="font-bold">Passed: {testReport["passCount"]}</p>
-								<p className="font-bold">Skipped: {testReport["skipCount"]}</p>
-							</div>
+							<>
+								<div className="mb-10 mx-10 space-y-8">
+									<TestReportIndicators
+										failCount={testReport["failCount"]}
+										skipCount={testReport["skipCount"]}
+										passCount={testReport["passCount"]} />
+									<div className="flex h-2 rounded-full">
+										<div style={{ width: `${failWidth}%` }} className="bg-jenkins-job-red rounded-l-full"></div>
+										<div style={{ width: `${skipWidth}%` }} className="bg-jenkins-job-orange"></div>
+										<div style={{ width: `${passWidth}%` }} className="bg-jenkins-job-green rounded-r-full"></div>
+									</div>
+
+									<div>
+										<p className="font-bold text-xl">Test Suites:</p>
+										<div className="flex space-x-2 items-center">
+											<input
+												type="checkbox"
+												id="jarvis_closeAll"
+												checked={selectAllChecked}
+												onChange={toggleSelectAll}
+												className="w-4 h-4 rounded-full cursor-pointer accent-jenkins-job-blue"
+											/>
+											<label htmlFor="jarvis_closeAll" className="cursor-pointer">
+												{selectAllChecked ? "Collapse All" : "Expand All"}
+											</label>
+										</div>
+										<div className="ml-2">
+										{testReport && testReport["suites"] && testReport["suites"].map((suite: any) => (
+											<div key={suite["name"]}>
+												<div className="flex space-x-2 items-center">
+													<input type="checkbox"
+														id={suite["name"]}
+														checked={!isSuiteCollapsed(suite["name"])}
+														onChange={() => toggleTestSuite(suite["name"])}
+														className="w-4 h-4 rounded-full cursor-pointer accent-jenkins-job-blue" />
+													<label htmlFor={suite["name"]} className="cursor-pointer">({suite["cases"].length}) {suite["name"]}</label>
+												</div>
+											</div>
+										))}
+										</div>
+									</div>
+								</div>
+							</>
 						) : (
 							<div className="flex animate-pulse flex-col items-center justify-center">
 								<div className="mt-[20px] w-full ml-4 flex flex-col">
@@ -109,58 +207,15 @@ const TestReport: React.FC<ConsoleViewProps> = ({ buildData }) => {
 							testReport["suites"].map((suite: any) => (
 								<div key={suite["name"]}>
 									<div className="flex">
-
-										<button
-											className={`text-3xl font-bold mb-2 hover:scale-[1.1] transition-all active:scale-[0.95] ${isSuiteCollapsed(suite["name"]) ? "-rotate-90" : ""}`}
-											onClick={() => toggleTestSuite(suite["name"])}
-										>
-											<IoMdArrowDropdown />
-										</button>
-										<h1 className="text-3xl font-bold mb-2">{suite["name"]}</h1>
+										<h1 className="text-2xl font-bold mb-2 cursor-pointer"
+											onClick={() => toggleTestSuite(suite["name"])}>
+											{suite["name"]}
+											<span className="text-sm ml-1">({suite["cases"].length})</span>
+										</h1>
 									</div>
 
 									<div id={`suite-${suite["name"]}`} className="test-suite">
-										{suite["cases"] &&
-											suite["cases"].map((testcase: any) => (
-												<div key={testcase["name"]} className="mt-[20px] ml-4 flex flex-col">
-													<div className="bg-console-background border-2 border-border rounded-t-md shadow-lg px-6 py-5 overflow-auto">
-														<div className="flex flex-col">
-															<p className="text-sm font-comment-color">Case Information:</p>
-															<hr className="my-2 border-2 border-border" />
-															<div className="flex items-center space-x-4 mb-2">
-																<p className="font-bold">{testcase["name"]}</p>
-																{testcase["status"] === "PASSED" && (
-																	<span className="inline-flex items-center rounded-md bg-[#122a2d] px-2 py-1 text-xs font-medium text-green-300 ring-1 ring-inset ring-green-600/20">PASSED</span>
-																)}
-																{testcase["status"] === "FAILED" && (
-																	<span className="inline-flex items-center rounded-md bg-[#28222f] px-2 py-1 text-xs font-medium text-red-300 ring-1 ring-inset ring-red-600/20">FAILED</span>
-																)}
-															</div>
-															<div className="flex flex-row space-x-4">
-																<p>
-																	<b>Class Name: </b>
-																	<span>{testcase["className"]}</span>
-																</p>
-															</div>
-															<div className="flex flex-row space-x-4">
-																<p>
-																	<b>Failed since: </b>
-																	<span>{testcase["failedSince"]}</span>
-																</p>
-																<p>
-																	<b>Duration:</b> <span>{testcase["duration"]}</span>
-																</p>
-															</div>
-														</div>
-													</div>
-													<div className="bg-console-background border-2 border-border border-t-1 rounded-b-md shadow-lg px-6 py-5 overflow-auto">
-														<p className="text-sm font-comment-color">Standard Output:</p>
-														<hr className="my-2 border-2 border-border" />
-														<p>{testcase["stdout"] || testcase["errorDetails"] || testcase["stderr"]}</p>
-													</div>
-												</div>
-											))}
-										<p className="text-center text-gray-600 mt-2">/ end of Test Suite: {suite["name"]} /</p>
+										{renderTestReportCard(suite)}
 									</div>
 								</div>
 							))}

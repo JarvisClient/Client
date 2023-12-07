@@ -9,7 +9,7 @@
     "preview": "vite preview",
     "tauri": "tauri",
     "lint": "npx eslint .",
-    "lint fix": "npx eslint . --fix"
+    "lint_fix": "npx eslint . --fix"
   },
   "dependencies": {
     "@nextui-org/react": "^2.2.9",

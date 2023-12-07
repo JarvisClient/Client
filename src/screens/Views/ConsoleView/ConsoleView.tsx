@@ -20,14 +20,14 @@ const ConsoleView: React.FC<ConsoleViewProps> = ({ buildData }) => {
 	const [bottomLock, setBottomLock] = useState<boolean>(true);
 
 	const handleApplyStyledDataWebWorker = (data: string, stylingDict: IStylingDict) => {
-		const worker = new Worker(new URL("./worker", import.meta.url), { type: 'module' });
+		const worker = new Worker(new URL("./worker", import.meta.url), { type: "module" });
 		worker.onmessage = (e) => {
 			setConsoleData(e.data);
 			worker.terminate();
 		};
 
 		worker.postMessage({ data, stylingDict });
-	}
+	};
 
 
 	const fetchConsoleData = async () => {
@@ -51,7 +51,7 @@ const ConsoleView: React.FC<ConsoleViewProps> = ({ buildData }) => {
 			});
 
 			// Join the formatted lines back together with newline characters
-			let formattedData = formattedLines.join("\n");
+			const formattedData = formattedLines.join("\n");
 
 			const stylingDict: any = await getConsoleViewStyleDict();
 
