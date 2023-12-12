@@ -6,7 +6,7 @@ export function renderTestReportCard(suite: any): JSX.Element[] {
 			<div className="bg-console-background border-2 border-border rounded-t-md shadow-lg px-6 py-5 overflow-auto">
 				<div className="flex flex-col">
 					<div className="flex flex-row space-x-2">
-					{testcase["status"] === "PASSED" && (
+						{testcase["status"] === "PASSED" && (
 							<span className="inline-flex items-center rounded-md bg-[#122a2d] px-2 py-1 text-xs font-medium text-green-300 ring-2 ring-inset ring-green-600/20">PASSED</span>
 						)}
 						{testcase["status"] === "FAILED" && (
@@ -15,7 +15,7 @@ export function renderTestReportCard(suite: any): JSX.Element[] {
 						{testcase["skipped"] === true && (
 							<span className="inline-flex items-center rounded-md bg-[#1F2735] px-2 py-1 text-xs font-medium text-gray-300 ring-2 ring-inset ring-gray-600/20">SKIPPED</span>
 						)}
-					<p className="text-sm font-comment-color">Case Information:</p>
+						<p className="text-sm font-comment-color">Case Information:</p>
 					</div>
 					<hr className={"my-2 border-2 border-border"} />
 					<div className="flex items-center space-x-4 mb-2">

@@ -6,11 +6,12 @@ import TextParameterDefinition from "./ParameterComponents/TextParameterDefiniti
 
 import authDetails from "../../../config/auth";
 
-import { invoke } from "@tauri-apps/api";
+import { invoke, notification } from "@tauri-apps/api";
 import OtherParameterDefinition from "./ParameterComponents/OtherParameterDefinition";
 import ChoiceParameterDefinition from "./ParameterComponents/ChoiceParameterDefinition";
 import { BUILD_VIEW_BANNER_CLOSE_TIME } from "../../../config/constants";
 import Logger from "../../../helpers/Logger";
+import { useNotification } from "../../../components/NotificationManager/NotificationContext";
 
 interface BuildViewProps {
     parameterDefinition: any[];
@@ -31,10 +32,11 @@ export interface JenkinsParameters {
 
 const BuildView: React.FC<BuildViewProps> = ({ parameterDefinition, buildData }) => {
 	const [parameterValues, setParameterValues] = useState<{ [key: string]: string | boolean | number | null }>({});
-	const [showBanner, setShowBanner] = useState(false);
 	const [SParameterDefinitions, setSParameterDefinitions] = useState<JenkinsParameters[]>([]);
 	const [parameterAvailable, setParameterAvailable] = useState(false);
 	const projectName = localStorage.getItem("projectName");
+
+	const notification = useNotification();
 
 	useEffect(() => {
 		try {
@@ -82,10 +84,7 @@ const BuildView: React.FC<BuildViewProps> = ({ parameterDefinition, buildData })
 				throw new Error("Most likely a Build is already in Queue! Please wait a few seconds and try again.");
 			}
 
-			setShowBanner(true);
-			setTimeout(() => {
-				setShowBanner(false);
-			}, BUILD_VIEW_BANNER_CLOSE_TIME);
+			notification.showNotification("Build started!", "The build was successfully started!\nIt might take up to 30 seconds for it to appear.", "build");
 		} catch (error) {
 			Logger.error(error);
 
@@ -153,14 +152,6 @@ const BuildView: React.FC<BuildViewProps> = ({ parameterDefinition, buildData })
 				className={"w-[80px] h-[37px] text-[15px] text-white bg-[#3a5e4b] font-medium rounded-md text-comment-color px-3 mt-5 mr-3 active:bg-background-card-selected hover:brightness-[1.3]"}>
 				<b>Build</b>
 			</button>
-
-			{showBanner && (
-				<div className="flex mb-5 mt-5 items-center w-full p-4 bg-[#2D483A] rounded-lg shadow">
-					<div className="ms-3 text-md font-normal">
-						<strong>Build started!</strong> Please allow some time for it to appear here.
-					</div>
-				</div>
-			)}
 		</div>
 	);
 };

@@ -105,7 +105,7 @@ const TestReport: React.FC<ConsoleViewProps> = ({ buildData }) => {
 
 				if (!JSON.parse(response)) {
 					// No test cases found
-					Logger.info("No TestCases set for this build!")
+					Logger.info("No TestCases set for this build!");
 					//return setTestReport(testJson) // FOR DEBUG PURPOSES
 					setShowBanner(true);
 					return;
@@ -164,18 +164,18 @@ const TestReport: React.FC<ConsoleViewProps> = ({ buildData }) => {
 											</label>
 										</div>
 										<div className="ml-2">
-										{testReport && testReport["suites"] && testReport["suites"].map((suite: any) => (
-											<div key={suite["name"]}>
-												<div className="flex space-x-2 items-center">
-													<input type="checkbox"
-														id={suite["name"]}
-														checked={!isSuiteCollapsed(suite["name"])}
-														onChange={() => toggleTestSuite(suite["name"])}
-														className="w-4 h-4 rounded-full cursor-pointer accent-jenkins-job-blue" />
-													<label htmlFor={suite["name"]} className="cursor-pointer">({suite["cases"].length}) {suite["name"]}</label>
+											{testReport && testReport["suites"] && testReport["suites"].map((suite: any) => (
+												<div key={suite["name"]}>
+													<div className="flex space-x-2 items-center">
+														<input type="checkbox"
+															id={suite["name"]}
+															checked={!isSuiteCollapsed(suite["name"])}
+															onChange={() => toggleTestSuite(suite["name"])}
+															className="w-4 h-4 rounded-full cursor-pointer accent-jenkins-job-blue" />
+														<label htmlFor={suite["name"]} className="cursor-pointer">({suite["cases"].length}) {suite["name"]}</label>
+													</div>
 												</div>
-											</div>
-										))}
+											))}
 										</div>
 									</div>
 								</div>

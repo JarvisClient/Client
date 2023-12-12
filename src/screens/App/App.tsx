@@ -25,7 +25,9 @@ import Logger, { onStartup } from "../../helpers/Logger";
 import { FeatureButton } from "./IBuildInterface";
 import { JobCardProps } from "../../components/JobCardComponent/JobCardComponent";
 
+
 import "./App.css";
+import { useNotification } from "../../components/NotificationManager/NotificationContext";
 
 /**
  * React functional component representing the main application.
@@ -42,7 +44,7 @@ function App(): React.ReactElement {
 	const [jobCardsLoading, setJobCardsLoading] = useState<boolean>(true);
 	const storedProjectName: string = localStorage.getItem("projectName") || "";
 
-
+	const notification = useNotification();
 
 	/**
    * Memoized function to fetch project data.
@@ -182,9 +184,11 @@ function App(): React.ReactElement {
 
 		// if the job is already pinned, remove it from the pinnedJobs array else add it
 		if (pinnedJobs.includes(activeJobBuildNumber)) {
-			pinnedJobs = pinnedJobs.filter((element: number) => element !== activeJobBuildNumber);			
+			pinnedJobs = pinnedJobs.filter((element: number) => element !== activeJobBuildNumber);
+			notification.showNotification("Job Unpinned", "The job has been unpinned.", "pin");
 		} else {
 			pinnedJobs.push(activeJobBuildNumber);
+			notification.showNotification("Job Pinned", "The job has been pinned to the top of the list.", "pin");
 		}
 
 		localStorage.setItem("pinnedJobs", JSON.stringify(pinnedJobs));
@@ -389,8 +393,6 @@ function App(): React.ReactElement {
 							: `Project Information for ${storedProjectName}`
 				}
 			/>
-
-
 			{/* Main Content Area */}
 			<div className="flex flex-grow overflow-y-scroll custom-scroll ml-[1px]">
 				{/* Job Cards & Search List */}
