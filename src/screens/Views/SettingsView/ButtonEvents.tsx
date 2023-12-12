@@ -49,3 +49,14 @@ export const openLogs = async () => {
 		Logger.error("Error opening the file:", error);
 	}
 };
+
+export const clearAllData = async () => {
+	try {
+		localStorage.clear();
+		window.location.reload();
+	}
+	catch (error) {
+		alert("Error clearing data! \n" + error);
+		Logger.error("Error clearing data:", error);
+	}	
+}

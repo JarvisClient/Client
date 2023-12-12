@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import circleColor from "../../config/getCircleColor";
 import FeatureButtons from "../../config/FeatureButtons";
+import { notification } from "@tauri-apps/api";
+import { IoIosNotifications } from "react-icons/io";
 
 export interface JobCardProps {
   displayName?: string;
@@ -9,10 +11,11 @@ export interface JobCardProps {
   active?: boolean;
   buildNumber?: number;
   pinned?: boolean;
+  notification_set?: boolean;
   onClick?: () => void;
 }
 
-const JobCardComponent: React.FC<JobCardProps> = ({ active = false, buildNumber, displayName, description, result, pinned, onClick }) => {
+const JobCardComponent: React.FC<JobCardProps> = ({ active = false, buildNumber, displayName, description, result, pinned, notification_set, onClick }) => {
 	const [buildData, setBuildData] = useState<any>(null);
 
 	const handleClick = () => {
@@ -54,6 +57,7 @@ const JobCardComponent: React.FC<JobCardProps> = ({ active = false, buildNumber,
 				<div className="text-lg text-text-color font-bold overflow-hidden flex items-center">
 					{buildData["displayName"]}
 					{pinned && IconComponent ? <IconComponent className="inline-block ml-1" color={"ffffff"} size={20} /> : null}
+					{notification_set && <IoIosNotifications className="inline-block ml-1" color={"ffffff"} size={20} />}
 				</div>
 				<div className="text-sm text-comment-color overflow-hidden line-clamp-2">
 					{buildData["description"]}

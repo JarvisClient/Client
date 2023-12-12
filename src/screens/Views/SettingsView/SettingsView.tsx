@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { invoke } from "@tauri-apps/api/tauri";
 import { getVersion } from "@tauri-apps/api/app";
 import Switch from "../../../components/Switch/Switch";
-import { editConsoleStyling, openLogs } from "./ButtonEvents";
+import { clearAllData, editConsoleStyling, openLogs } from "./ButtonEvents";
 import Logger from "../../../helpers/Logger";
 
 import "./Settings.css";
@@ -219,8 +219,8 @@ const SettingsView: React.FC = () => {
 					</button>
 					<button
 						onClick={deleteCurrentProject}
-						className={"w-[200px] h-[37px] text-[15px] text-white font-medium rounded-md px-3 mt-5 mr-3 text-white bg-red-600 hover:brightness-[0.9] active:brightness-[0.7]"}>
-						Delete current Project
+						className={"w-[300px] h-[37px] text-[15px] text-white font-medium rounded-md px-3 mt-5 mr-3 text-white bg-red-600 hover:brightness-[0.9] active:brightness-[0.7]"}>
+						Remove current Project from Jarvis
 					</button>
 				</div>
 			</div>
@@ -246,12 +246,22 @@ const SettingsView: React.FC = () => {
 						<button onClick={openLogs} className="button"> Open Logs </button>
 					</div>
 
+					{/* Browser */}
 					<div className="flex flex-col">
 						<p className="mb-2 text-lg font-bold">Open all Links in Browser</p>
 						<p className="mb-2 leading-5 text-comment-color">Choose Whether Links Open in Jarvis or Your Default Browser</p>
 					</div>
 					<div>
 						<Switch isChecked={isChecked} onCheckboxChange={handleCheckboxChange} />
+					</div>
+
+					{/* Clear Local Storage */}
+					<div className="flex flex-col">
+						<p className="mb-2 text-lg font-bold">Clear Local Storage</p>
+						<p className="mb-2 leading-5 text-comment-color">Clear all Data like: Pinned Jobs, Notification Jobs, Tokens, Projects...</p>
+					</div>
+					<div>
+						<button onClick={clearAllData} className="button text-white bg-red-600 hover:brightness-[0.9] active:brightness-[0.7]"> Delete </button>
 					</div>
 				</div>
 			</div>

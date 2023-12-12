@@ -96,12 +96,12 @@ const FeatureButtons: { [key: string]: FeatureButtonProps } = {
 	notification: {
 		title: "Notification",
 		titleBar: "Notification",
-		bg_color: "#1D2038",
-		icon_color: "#4657CE",
-		icon: IoIosNotifications,
-		secondaryIcon: IoIosNotificationsOutline,
+		bg_color: "#3B2E42",
+		icon_color: "#DB9DFF",
+		icon: IoIosNotificationsOutline,
+		secondaryIcon: IoIosNotifications,
 		purpose: "JOB",
-		hidden: false,
+		hidden: true,
 	},
 	jenkins: {
 		title: "Jenkins",

@@ -1,11 +1,12 @@
-import React, { useState, ChangeEvent } from "react";
+import React, { useState, ChangeEvent, useEffect } from "react";
 import IcoSearch from "../../assets/icons/ico_search.svg";
 
 interface SearchComponentProps {
     onSearchChange: (value: string) => void;
+	outSearchQuerry?: string;
 }
 
-function SearchComponent({ onSearchChange }: SearchComponentProps): React.ReactElement<any, any> | null  {
+function SearchComponent({ onSearchChange, outSearchQuerry }: SearchComponentProps): React.ReactElement<any, any> | null  {
 	const [search, setSearch] = useState<string>("");
 
 	const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -14,6 +15,14 @@ function SearchComponent({ onSearchChange }: SearchComponentProps): React.ReactE
 		// Pass the search value to the parent component
 		onSearchChange(value);
 	};
+
+	useEffect(() => {
+		console.log("outSearchQuerry", outSearchQuerry);
+		
+		if (outSearchQuerry) {
+			setSearch(outSearchQuerry);
+		}
+	}, [outSearchQuerry]);
 
 	return (
 		<div className="relative select-none">

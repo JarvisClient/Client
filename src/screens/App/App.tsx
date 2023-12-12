@@ -74,35 +74,37 @@ function App(): React.ReactElement {
    * Create a JSX Element containg the JobCardProps for each build.
    */
 	const createJobCardProps = async (builds: any[]) => {
-		const pinnedJobs: any[] = JSON.parse(localStorage.getItem("pinnedJobs") || "[]");
-		
-		if (!storedProjectName) throw new Error("No project name found in localStorage");
+		const pinnedJobs: any[] = JSON.parse(localStorage.getItem("pinnedJobs") || "{}");
+		const notificationSetJobs: any[] = JSON.parse(localStorage.getItem("notificationSetJobs") || "{}");
+	
+		console.log(pinnedJobs);
 	
 		try {
+			if (!storedProjectName) throw new Error("No project name found in localStorage");
 			const jobCardProps = await Promise.all(builds.map(async (build: any) => {
 				const details = await fetchBuildData(build["number"]);
+				const projectName = storedProjectName as any;
 				return {
 					buildNumber: build["number"],
 					displayName: details["displayName"],
 					description: details["description"],
 					result: details["result"],
-					pinned: pinnedJobs[storedProjectName as any].includes(build["number"]),
+					pinned: (pinnedJobs[projectName] || []).includes(build["number"]),
+					notification_set: (notificationSetJobs[projectName] || []).includes(build["number"]),
 					onClick: () => handleJobCardClick(build["number"]),
 					active: false,
 				};
 			}));
-
-
+	
 			await setJobCardProps(jobCardProps);
 			setJobCardsLoading(false);
-
 		} catch (error) {
 			// Handle errors if any
 			alert("Error creating job card props. Please check your internet connection and try again. \n" + error);
 			Logger.error("Error creating job card props:", error);
 		}
 	};
-
+	
 	/**
  * Memoized function to fetch build data for a specific build number.
  * @param {number} buildNumber - The build number for which to fetch data.
@@ -183,8 +185,8 @@ function App(): React.ReactElement {
 	 */
 	const onJobCardPin = async () => {
 		let pinnedJobs = JSON.parse(localStorage.getItem("pinnedJobs") || "{}");
-		if (typeof pinnedJobs !== "object") pinnedJobs = {};
-		
+		if (Array.isArray(pinnedJobs)) pinnedJobs = {};
+
 		if (storedProjectName) {
 			// if the job is already pinned, remove it from the pinnedJobs object else add it
 			if (pinnedJobs[storedProjectName] && pinnedJobs[storedProjectName].includes(activeJobBuildNumber)) {
@@ -200,14 +202,14 @@ function App(): React.ReactElement {
 		} else {
 			notification.showNotification("Error", "Please select a project first.", "jenkins");
 		}
-		
+
 		console.log(localStorage.getItem("pinnedJobs"));
 		localStorage.setItem("pinnedJobs", JSON.stringify(pinnedJobs));
-		
+
 		updatePinnedJobCards();
 	};
-	
-	
+
+
 
 	/**
 	 * Handles the click event on a JobCard, setting the activeJobBuildNumber and fetching data for the selected build.
@@ -216,11 +218,31 @@ function App(): React.ReactElement {
 	 * @returns {Promise<void>}
 	 */
 	const onNotificationSetter = async () => {
-		console.log("notification");
-		
+		let notificationSetJobs = JSON.parse(localStorage.getItem("notificationSetJobs") || "{}");
+		if (typeof notificationSetJobs !== "object") notificationSetJobs = {};
+
+		if (storedProjectName) {
+			// if the job is already pinned, remove it from the notificationSetJobs object else add it
+			if (notificationSetJobs[storedProjectName] && notificationSetJobs[storedProjectName].includes(activeJobBuildNumber)) {
+				notificationSetJobs[storedProjectName] = notificationSetJobs[storedProjectName].filter((element: any) => element !== activeJobBuildNumber);
+				notification.showNotification("Notification Unset", "The job has been unset for notification.", "notification");
+			} else {
+				if (!notificationSetJobs[storedProjectName]) {
+					notificationSetJobs[storedProjectName] = [];
+				}
+				notificationSetJobs[storedProjectName].push(activeJobBuildNumber);
+				notification.showNotification("Notification Set", "The job has been set for notification.", "notification");
+			}
+		} else {
+			notification.showNotification("Error", "Please select a project first.", "jenkins");
+		}
+
+		localStorage.setItem("notificationSetJobs", JSON.stringify(notificationSetJobs));
+
+		updateNotificationSetJobCards();
 	};
 
-		
+
 
 	/**
 	 * Updates the 'pinned' property in jobCardProps based on the pinnedJobCards.
@@ -241,37 +263,51 @@ function App(): React.ReactElement {
 		}
 	};
 
+	const updateNotificationSetJobCards = () => {
+		try {
+			const notificationSetJobs = JSON.parse(localStorage.getItem("notificationSetJobs") || "{}");
+			const updatedJobCardProps = jobCardProps.map((element: any) => ({
+				...element,
+				notification_set: notificationSetJobs[storedProjectName as any].includes(element.buildNumber),
+			}));
+
+			setJobCardProps(updatedJobCardProps);
+		} catch (error) {
+			Logger.error("Error updating notification set job cards:", error);
+		}
+	}
+
 	/**
  * Handles the click event on a FeatureButton, setting the activeJobBuildNumber to null if the feature is "settings".
  * @param {string} feature - The feature to set as the active feature.
  */
 	const handleFeatureButtonClick = (feature: string) => {
 		switch (feature) {
-		case "settings":
-			setActiveJobBuildNumber(null);
-			break;
-		case "status_for_project":
-			setActiveJobBuildNumber(null);
-			setSelectedBuildData(null);
-			break;
-		case "jenkins":
-			openLink(selectedBuildData["url"]);
-			return;
-			break;
-		case "pin": {
-			const activeJobCard = jobCardProps.find((element: any) => element.buildNumber === activeJobBuildNumber);
-			onJobCardPin();
-			return;
-			break;
-		}
-		case "notification": {
-			const activeJobCard = jobCardProps.find((element: any) => element.buildNumber === activeJobBuildNumber);
-			onNotificationSetter();
-			return;
-			break;
-		}
-		default:
-			break;
+			case "settings":
+				setActiveJobBuildNumber(null);
+				break;
+			case "status_for_project":
+				setActiveJobBuildNumber(null);
+				setSelectedBuildData(null);
+				break;
+			case "jenkins":
+				openLink(selectedBuildData["url"]);
+				return;
+				break;
+			case "pin": {
+				const activeJobCard = jobCardProps.find((element: any) => element.buildNumber === activeJobBuildNumber);
+				onJobCardPin();
+				return;
+				break;
+			}
+			case "notification": {
+				const activeJobCard = jobCardProps.find((element: any) => element.buildNumber === activeJobBuildNumber);
+				onNotificationSetter();
+				return;
+				break;
+			}
+			default:
+				break;
 		}
 
 		setActiveFeature(feature);
@@ -359,22 +395,99 @@ function App(): React.ReactElement {
 	}, [storedProjectName, fetchProjectData, setProjectData]);
 
 
+	function NotifyForFinishedBuilds (changedBuilds: any[]) {
+		let notificationSetJobs = JSON.parse(localStorage.getItem("notificationSetJobs") || "{}");
+		if (typeof notificationSetJobs !== "object") notificationSetJobs = {};
+
+		// check if any of the notification set jobs are finished if so alert
+		console.log(changedBuilds);
+	}
+
 	/**
 	 * Dynamically generates JobCards
 	 * @returns {JSX.Element[]} - An array of JobCardComponents.
 	 */
 	function renderJobCards() {
+
+		const renderNoJobsFound = () => {
+			return (
+				<div className="text-comment-color mx-8 pt-4 select-none">
+					<p className="text-center text-3xl mb-2">😭</p>
+					<p className="text-center text-lg font-bold">No jobs found. Please try a different search term.</p>
+					<br />
+					<div className="text-center mx-auto pt-4">
+						<p className="text-left"><span className="font-bold underline">Tipp:</span> You can also use the following search terms:</p>
+						<ul className="list-disc list-inside text-left flex flex-col ml-4">
+							<li className="cursor-pointer" onClick={() => setSearchQuery("%failed%")}>%failed%</li>
+							<li className="cursor-pointer" onClick={() => setSearchQuery("%unstable%")}>%unstable%</li>
+							<li className="cursor-pointer" onClick={() => setSearchQuery("%success%")}>%success%</li>
+							<li className="cursor-pointer" onClick={() => setSearchQuery("%aborted%")}>%aborted%</li>
+							<li className="cursor-pointer" onClick={() => setSearchQuery("%pinned%")}>%pinned%</li>
+							<li className="cursor-pointer" onClick={() => setSearchQuery("%notification_set%")}>%notification_set%</li>
+						</ul>
+					</div>
+				</div>
+			);
+		}
+
 		try {
-			const filteredJobCards = searchQuery.length > 0
-				? jobCardProps.filter((element) => element.displayName?.includes(searchQuery))
-				: jobCardProps;
+			switch (searchQuery) {
+				case "%failed%":
+					const failedJobCards = jobCardProps.filter((element: any) => element.result === "FAILURE");
+					if (failedJobCards.length === 0) return renderNoJobsFound();
 
-			// Sort the filteredJobCards array so that pinned cards come first
-			const sortedJobCards = [...filteredJobCards].sort((a, b) => (b.pinned ? 1 : -1) - (a.pinned ? 1 : -1));
+					return failedJobCards.map((props, index) => (
+						<JobCardComponent key={index} {...props} />
+					));
+				case "%unstable%":
+					const unstableJobCards = jobCardProps.filter((element: any) => element.result === "UNSTABLE");
+					if (unstableJobCards.length === 0) return renderNoJobsFound();
 
-			return sortedJobCards.map((props, index) => (
-				<JobCardComponent key={index} {...props} />
-			));
+					return unstableJobCards.map((props, index) => (
+						<JobCardComponent key={index} {...props} />
+					));
+				case "%success%":
+					const successJobCards = jobCardProps.filter((element: any) => element.result === "SUCCESS");
+					if (successJobCards.length === 0) return renderNoJobsFound();
+
+					return successJobCards.map((props, index) => (
+						<JobCardComponent key={index} {...props} />
+					));
+				case "%aborted%":
+					const abortedJobCards = jobCardProps.filter((element: any) => element.result === "ABORTED");
+					if (abortedJobCards.length === 0) return renderNoJobsFound();
+
+					return abortedJobCards.map((props, index) => (
+						<JobCardComponent key={index} {...props} />
+					));
+				case "%pinned%":
+					const pinnedJobCards = jobCardProps.filter((element: any) => element.pinned);
+					if (pinnedJobCards.length === 0) return renderNoJobsFound();
+
+					return pinnedJobCards.map((props, index) => (
+						<JobCardComponent key={index} {...props} />
+					));
+				case "%notification_set%":
+					const notificationSetJobCards = jobCardProps.filter((element: any) => element.notification_set);
+					if (notificationSetJobCards.length === 0) return renderNoJobsFound();
+
+					return notificationSetJobCards.map((props, index) => (
+						<JobCardComponent key={index} {...props} />
+					));
+				default:
+					const filteredJobCards = searchQuery.length > 0
+						? jobCardProps.filter((element) => element.displayName?.includes(searchQuery))
+						: jobCardProps;
+
+					// Sort the filteredJobCards array so that pinned cards come first
+					const sortedJobCards = [...filteredJobCards].sort((a, b) => (b.pinned ? 1 : -1) - (a.pinned ? 1 : -1));
+
+					if (sortedJobCards.length === 0 && searchQuery) return renderNoJobsFound();
+
+					return sortedJobCards.map((props, index) => (
+						<JobCardComponent key={index} {...props} />
+					));
+			}
 		} catch (error) {
 			Logger.error("Error rendering job cards:", error);
 		}
@@ -392,7 +505,9 @@ function App(): React.ReactElement {
 					buildNumber={activeJobBuildNumber}
 					onClick={() => handleFeatureButtonClick(element.name)}
 					feature={element.name}
-					useSecondaryIcon={element.name === "pin" && jobCardProps.find((element: any) => element.buildNumber === activeJobBuildNumber)?.pinned}
+					useSecondaryIcon={
+						element.name === "pin" && jobCardProps.find((element: any) => element.buildNumber === activeJobBuildNumber)?.pinned ||
+						element.name === "notification" && jobCardProps.find((element: any) => element.buildNumber === activeJobBuildNumber)?.notification_set}
 					active={activeFeature === element.name}
 				/>
 			</>
@@ -428,7 +543,7 @@ function App(): React.ReactElement {
 			<div className="flex flex-grow overflow-y-scroll custom-scroll ml-[1px]">
 				{/* Job Cards & Search List */}
 				<div className="overflow-y-scroll overflow-x-hidden big-sidebar custom-scroll grid content-start justify-items-center space-y-4 py-4 relative">
-					<SearchComponent onSearchChange={handleSearchInputChange} />
+					<SearchComponent onSearchChange={handleSearchInputChange} outSearchQuerry={searchQuery} />
 					{!jobCardsLoading ? (
 						<>
 							{renderJobCards()}
