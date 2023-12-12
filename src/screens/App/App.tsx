@@ -42,7 +42,7 @@ function App(): React.ReactElement {
 	const [activeFeature, setActiveFeature] = useState<string | null>("status_for_project");
 	const [parameterDefinition, setParameterDefinition] = useState<any>(null);
 	const [jobCardsLoading, setJobCardsLoading] = useState<boolean>(true);
-	const storedProjectName: string = localStorage.getItem("projectName") || "";
+	const storedProjectName: string | null = localStorage.getItem("projectName");
 
 	const notification = useNotification();
 
@@ -74,8 +74,10 @@ function App(): React.ReactElement {
    * Create a JSX Element containg the JobCardProps for each build.
    */
 	const createJobCardProps = async (builds: any[]) => {
-		const pinnedJobs = JSON.parse(localStorage.getItem("pinnedJobs") || "[]");
-
+		const pinnedJobs: any[] = JSON.parse(localStorage.getItem("pinnedJobs") || "[]");
+		
+		if (!storedProjectName) throw new Error("No project name found in localStorage");
+	
 		try {
 			const jobCardProps = await Promise.all(builds.map(async (build: any) => {
 				const details = await fetchBuildData(build["number"]);
@@ -84,7 +86,7 @@ function App(): React.ReactElement {
 					displayName: details["displayName"],
 					description: details["description"],
 					result: details["result"],
-					pinned: pinnedJobs.includes(build["number"]),
+					pinned: pinnedJobs[storedProjectName as any].includes(build["number"]),
 					onClick: () => handleJobCardClick(build["number"]),
 					active: false,
 				};
@@ -180,21 +182,44 @@ function App(): React.ReactElement {
 	 * @returns {Promise<void>}
 	 */
 	const onJobCardPin = async () => {
-		let pinnedJobs = JSON.parse(localStorage.getItem("pinnedJobs") || "[]");
-
-		// if the job is already pinned, remove it from the pinnedJobs array else add it
-		if (pinnedJobs.includes(activeJobBuildNumber)) {
-			pinnedJobs = pinnedJobs.filter((element: number) => element !== activeJobBuildNumber);
-			notification.showNotification("Job Unpinned", "The job has been unpinned.", "pin");
+		let pinnedJobs = JSON.parse(localStorage.getItem("pinnedJobs") || "{}");
+		if (typeof pinnedJobs !== "object") pinnedJobs = {};
+		
+		if (storedProjectName) {
+			// if the job is already pinned, remove it from the pinnedJobs object else add it
+			if (pinnedJobs[storedProjectName] && pinnedJobs[storedProjectName].includes(activeJobBuildNumber)) {
+				pinnedJobs[storedProjectName] = pinnedJobs[storedProjectName].filter((element: any) => element !== activeJobBuildNumber);
+				notification.showNotification("Job Unpinned", "The job has been unpinned.", "pin");
+			} else {
+				if (!pinnedJobs[storedProjectName]) {
+					pinnedJobs[storedProjectName] = [];
+				}
+				pinnedJobs[storedProjectName].push(activeJobBuildNumber);
+				notification.showNotification("Job Pinned", "The job has been pinned to the top of the list.", "pin");
+			}
 		} else {
-			pinnedJobs.push(activeJobBuildNumber);
-			notification.showNotification("Job Pinned", "The job has been pinned to the top of the list.", "pin");
+			notification.showNotification("Error", "Please select a project first.", "jenkins");
 		}
-
+		
+		console.log(localStorage.getItem("pinnedJobs"));
 		localStorage.setItem("pinnedJobs", JSON.stringify(pinnedJobs));
-
+		
 		updatePinnedJobCards();
 	};
+	
+	
+
+	/**
+	 * Handles the click event on a JobCard, setting the activeJobBuildNumber and fetching data for the selected build.
+	 * Also sets the activeFeature to "status" if it is null or "settings".
+	 * @param {number} buildNumber - The build number of the selected JobCard.
+	 * @returns {Promise<void>}
+	 */
+	const onNotificationSetter = async () => {
+		console.log("notification");
+		
+	};
+
 		
 
 	/**
@@ -204,10 +229,10 @@ function App(): React.ReactElement {
 	 */
 	const updatePinnedJobCards = () => {
 		try {
-			const pinnedJobs = JSON.parse(localStorage.getItem("pinnedJobs") || "[]");
+			const pinnedJobs = JSON.parse(localStorage.getItem("pinnedJobs") || "{}");
 			const updatedJobCardProps = jobCardProps.map((element: any) => ({
 				...element,
-				pinned: pinnedJobs.includes(element.buildNumber),
+				pinned: pinnedJobs[storedProjectName as any].includes(element.buildNumber),
 			}));
 
 			setJobCardProps(updatedJobCardProps);
@@ -236,6 +261,12 @@ function App(): React.ReactElement {
 		case "pin": {
 			const activeJobCard = jobCardProps.find((element: any) => element.buildNumber === activeJobBuildNumber);
 			onJobCardPin();
+			return;
+			break;
+		}
+		case "notification": {
+			const activeJobCard = jobCardProps.find((element: any) => element.buildNumber === activeJobBuildNumber);
+			onNotificationSetter();
 			return;
 			break;
 		}

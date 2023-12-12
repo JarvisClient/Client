@@ -1,6 +1,6 @@
 import { FaGear } from "react-icons/fa6";
 
-import { IoMdListBox, IoIosSwitch } from "react-icons/io";
+import { IoMdListBox, IoIosSwitch, IoIosNotificationsOutline, IoIosNotifications } from "react-icons/io";
 import { BiSolidTerminal } from "react-icons/bi";
 import { MdOutlineOpenInBrowser } from "react-icons/md";
 import { LuTestTube2 } from "react-icons/lu";
@@ -90,6 +90,16 @@ const FeatureButtons: { [key: string]: FeatureButtonProps } = {
 		icon_color: "#4657CE",
 		icon: TbPin,
 		secondaryIcon: TbPinnedFilled,
+		purpose: "JOB",
+		hidden: false,
+	},
+	notification: {
+		title: "Notification",
+		titleBar: "Notification",
+		bg_color: "#1D2038",
+		icon_color: "#4657CE",
+		icon: IoIosNotifications,
+		secondaryIcon: IoIosNotificationsOutline,
 		purpose: "JOB",
 		hidden: false,
 	},
