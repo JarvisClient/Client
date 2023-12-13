@@ -2,8 +2,8 @@ import React from "react";
 
 export function renderTestReportCard(suite: any): JSX.Element[] {
 	return suite["cases"].map((testcase: any) => (
-		<div key={testcase["name"]} className="mt-[20px] ml-4 flex flex-col">
-			<div className="bg-console-background border-2 border-border rounded-t-md shadow-lg px-6 py-5 overflow-auto">
+		<div key={testcase["name"]} className="mt-[20px] ml-4 flex flex-col border-2 border-border border-t-1 rounded-md">
+			<div className="bg-console-background border-b-2 border-border shadow-lg px-6 py-5 overflow-auto rounded-t-md">
 				<div className="flex flex-col">
 					<div className="flex flex-row space-x-2">
 						{testcase["status"] === "PASSED" && (
@@ -43,11 +43,35 @@ export function renderTestReportCard(suite: any): JSX.Element[] {
 					</div>
 				</div>
 			</div>
-			<div className="bg-console-background border-2 border-border border-t-1 rounded-b-md shadow-lg px-6 py-5 overflow-auto">
-				<p className="text-sm font-comment-color">Standard Output:</p>
-				<hr className="my-2 border-2 border-border" />
-				<p>{testcase["stdout"] || testcase["errorDetails"] || testcase["stderr"] || testcase["skippedMessage"]}</p>
-			</div>
+			{testcase["stdout"] && (
+				<div className="bg-console-background shadow-lg px-6 py-5 overflow-auto">
+					<p className="text-sm font-comment-color">Standard Error:</p>
+					<hr className="my-2 border-2 border-border" />
+					<p>{testcase["stdout"]}</p>
+					</div>
+			)}
+			{testcase["errorDetails"] && (
+				<div className="bg-console-background shadow-lg px-6 py-5 overflow-auto">
+					<p className="text-sm font-comment-color">Error Details:</p>
+					<hr className="my-2 border-2 border-border" />
+					<p>{testcase["errorDetails"]}</p>
+					</div>
+			)}
+			{testcase["skippedMessage"] && (
+				<div className="bg-console-background shadow-lg px-6 py-5 overflow-auto">
+					<p className="text-sm font-comment-color">Skipped Message:</p>
+					<hr className="my-2 border-2 border-border" />
+					<p>{testcase["skippedMessage"]}</p>
+					</div>
+			)}
+			{testcase["errorStackTrace"] && (
+				<div className="bg-console-background shadow-lg px-6 py-5 overflow-auto">
+					<p className="text-sm font-comment-color">Error Stack Trace:</p>
+					<hr className="my-2 border-2 border-border" />
+					<p>{testcase["errorStackTrace"]}</p>
+					</div>	
+			)}
+			{}
 		</div>
 	));
 }

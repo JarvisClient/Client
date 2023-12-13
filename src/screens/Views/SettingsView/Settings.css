@@ -1,13 +1,27 @@
 .button {
     @apply h-[37px];
     @apply text-[15px];
-    @apply text-white;
-    @apply bg-background-card;
     @apply font-medium;
     @apply rounded-md;
     @apply text-comment-color;
     @apply px-5;
     @apply mr-3;
-    @apply active:bg-background-card-selected;
-    @apply hover:brightness-[1.3];
+    @apply bg-background-card;
+    @apply text-comment-color;
+    @apply hover:bg-background-card-selected;
+    @apply hover:text-white;
+}
+
+.button_danger_zone {
+    @apply h-[37px];
+    @apply text-white;
+    @apply font-medium;
+    @apply rounded-md;
+    @apply px-3;
+    @apply mt-5;
+    @apply mr-3;
+    @apply text-white;
+    @apply bg-red-600;
+    @apply hover:brightness-[0.9];
+    @apply active:brightness-[0.7]
 }

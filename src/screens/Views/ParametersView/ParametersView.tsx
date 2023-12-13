@@ -10,7 +10,7 @@ import TextParameterValue from "./ParameterComponents/TextParameterValue";
 import PasswordParameterValue from "./ParameterComponents/PasswordParameterValue";
 import RunParameterValue from "./ParameterComponents/RunParameterValue";
 import OtherParameterValue from "./ParameterComponents/OtherParameter";
-import { IBuildData } from "../../App/IBuildInterface";
+import { IBuildData } from "../../Jarvis/IBuildInterface";
 
 export interface JenkinsParameters {
     _class: string | null;

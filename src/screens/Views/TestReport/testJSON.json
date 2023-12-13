@@ -1,0 +1,142 @@
+{
+    "_class": "hudson.tasks.junit.TestResult",
+    "testActions": [],
+    "duration": 10.0,
+    "empty": true,
+    "failCount": 3,
+    "passCount": 2,
+    "skipCount": 2,
+    "suites": [
+        {
+            "cases": [
+                {
+                    "testActions": [],
+                    "age": 0,
+                    "className": "example.classname",
+                    "duration": 1.0,
+                    "errorDetails": "AssertionError",
+                    "errorStackTrace": "at com.example.TestClass.failedTestMethod1(TestClass.java:42)",
+                    "failedSince": 1,
+                    "name": "failedTestCase1",
+                    "skipped": false,
+                    "skippedMessage": null,
+                    "status": "FAILED",
+                    "stderr": null,
+                    "stdout": "Failed test output here"
+                },
+                {
+                    "testActions": [],
+                    "age": 0,
+                    "className": "example.classname",
+                    "duration": 0.7,
+                    "errorDetails": "NullPointerException",
+                    "errorStackTrace": "at com.example.TestClass.nullPointerTestMethod1(TestClass.java:58)",
+                    "failedSince": 1,
+                    "name": "failedTestCase2",
+                    "skipped": false,
+                    "skippedMessage": null,
+                    "status": "FAILED",
+                    "stderr": null,
+                    "stdout": "Failed test output here"
+                },
+                {
+                    "testActions": [],
+                    "age": 0,
+                    "className": "example.classname",
+                    "duration": 1.2,
+                    "errorDetails": null,
+                    "errorStackTrace": null,
+                    "failedSince": 0,
+                    "name": "passedTestCase1",
+                    "skipped": false,
+                    "skippedMessage": null,
+                    "status": "PASSED",
+                    "stderr": null,
+                    "stdout": "Passed test output here"
+                },
+                {
+                    "testActions": [],
+                    "age": 0,
+                    "className": "example.classname",
+                    "duration": 0.5,
+                    "errorDetails": null,
+                    "errorStackTrace": null,
+                    "failedSince": 0,
+                    "name": "skippedTestCase1",
+                    "skipped": true,
+                    "skippedMessage": "Test case skipped due to a precondition",
+                    "status": "SKIPPED",
+                    "stderr": null,
+                    "stdout": null
+                }
+            ],
+            "duration": 3.4,
+            "enclosingBlockNames": [],
+            "enclosingBlocks": [],
+            "id": null,
+            "name": "Suite 1",
+            "nodeId": null,
+            "stderr": null,
+            "stdout": null,
+            "timestamp": null
+        },
+        {
+            "cases": [
+                {
+                    "testActions": [],
+                    "age": 0,
+                    "className": "example.classname",
+                    "duration": 1.5,
+                    "errorDetails": "AssertionError",
+                    "errorStackTrace": "at com.example.TestClass.failedTestMethod2(TestClass.java:42)",
+                    "failedSince": 1,
+                    "name": "failedTestCase3",
+                    "skipped": false,
+                    "skippedMessage": null,
+                    "status": "FAILED",
+                    "stderr": null,
+                    "stdout": "Failed test output here"
+                },
+                {
+                    "testActions": [],
+                    "age": 0,
+                    "className": "example.classname",
+                    "duration": 0.9,
+                    "errorDetails": null,
+                    "errorStackTrace": null,
+                    "failedSince": 0,
+                    "name": "passedTestCase2",
+                    "skipped": false,
+                    "skippedMessage": null,
+                    "status": "PASSED",
+                    "stderr": null,
+                    "stdout": "Passed test output here"
+                },
+                {
+                    "testActions": [],
+                    "age": 0,
+                    "className": "example.classname",
+                    "duration": 0.6,
+                    "errorDetails": null,
+                    "errorStackTrace": null,
+                    "failedSince": 0,
+                    "name": "skippedTestCase2",
+                    "skipped": true,
+                    "skippedMessage": "Test case skipped due to a precondition",
+                    "status": "SKIPPED",
+                    "stderr": null,
+                    "stdout": null
+                }
+            ],
+            "duration": 3.0,
+            "enclosingBlockNames": [],
+            "enclosingBlocks": [],
+            "id": null,
+            "name": "Suite 2",
+            "nodeId": null,
+            "stderr": null,
+            "stdout": null,
+            "timestamp": null
+        }
+    ]
+}

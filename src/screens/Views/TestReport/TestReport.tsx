@@ -4,10 +4,12 @@ import authdetails from "../../../config/auth";
 
 import "./TestReport.css";
 import Logger from "../../../helpers/Logger";
-import { IBuildData } from "../../App/IBuildInterface";
+import { IBuildData } from "../../Jarvis/IBuildInterface";
 
 import TestReportIndicators from "./TestReportIndicators";
 import { renderTestReportCard } from "./worker";
+
+import testJSON from "./testJSON.json";
 
 interface ConsoleViewProps {
 	buildData: IBuildData;
@@ -102,16 +104,21 @@ const TestReport: React.FC<ConsoleViewProps> = ({ buildData }) => {
 				const storedProjectName: string = localStorage.getItem("projectName") || "";
 
 				const response = await fetchTestData(storedProjectName, buildData["id"]);
+				let testReport = JSON.parse(response);
 
 				if (!JSON.parse(response)) {
 					// No test cases found
 					Logger.info("No TestCases set for this build!");
-					//return setTestReport(testJson) // FOR DEBUG PURPOSES
 					setShowBanner(true);
 					return;
 				}
 
-				setTestReport(JSON.parse(response));
+				if(testReport["empty"] === true) {
+					setShowBanner(true);
+				}
+					
+
+				setTestReport(testReport);
 			} catch (error) {
 				Logger.error(error);
 				setShowBanner(true);
@@ -214,7 +221,7 @@ const TestReport: React.FC<ConsoleViewProps> = ({ buildData }) => {
 										</h1>
 									</div>
 
-									<div id={`suite-${suite["name"]}`} className="test-suite">
+									<div id={`suite-${suite["name"]}`} className="test-suite mb-8">
 										{renderTestReportCard(suite)}
 									</div>
 								</div>

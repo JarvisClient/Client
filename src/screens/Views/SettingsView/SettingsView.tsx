@@ -3,13 +3,17 @@ import React, { useEffect, useState } from "react";
 import { invoke } from "@tauri-apps/api/tauri";
 import { getVersion } from "@tauri-apps/api/app";
 import Switch from "../../../components/Switch/Switch";
-import { clearAllData, editConsoleStyling, openLogs } from "./ButtonEvents";
+import { clearAllData, editConsoleStyling, openLogs, checkAuthentication as checkAuthenticationHelper, signOut, selectProject } from "./ButtonEvents";
 import Logger from "../../../helpers/Logger";
+import { useNotification } from "../../../components/NotificationManager/NotificationContext";
+import { useNavigate } from "react-router-dom";
 
 import "./Settings.css";
+import LoadingScreenComponent from "../../../components/LoadingScreenComponent/LoadingScreenComponent";
 
 const SettingsView: React.FC = () => {
 
+	const navigate = useNavigate();
 	const [authenticated, setAuthenticated] = useState<boolean | null>(null);
 
 	const [baseurl, setBaseurl] = useState<string>("");
@@ -23,6 +27,10 @@ const SettingsView: React.FC = () => {
 	const [appVersion, setAppVersion] = useState<string>("");
 
 	const [isChecked, setIsChecked] = useState(false);
+
+	const [isLoadingPage, setIsLoadingPage] = useState(true);
+
+	const notification = useNotification();
 
 	const handleCheckboxChange = () => {
 		localStorage.setItem("openInBrowser", (!isChecked).toString());
@@ -46,6 +54,7 @@ const SettingsView: React.FC = () => {
 		};
 
 		fetchAppVersion();
+		setIsLoadingPage(false);
 	}, []);
 
 
@@ -74,32 +83,24 @@ const SettingsView: React.FC = () => {
 
 	const checkAuthentication = async () => {
 		try {
-			if (!baseurl || !username || !apiToken) return alert("Please fill in all fields!");
-			new URL(baseurl);
-
-			const response: boolean = await invoke("authenticate_user", {
-				baseurl: baseurl,
-				username: username,
-				apitoken: apiToken
-			});
-
-			setAuthenticated(response);
-
+			setIsLoadingPage(true);
+			let response = await checkAuthenticationHelper(baseurl, username, apiToken);
 			if (response) {
-				alert("Successfully authenticated!");
-				window.location.reload();
-			} else {
-				alert("Authentication failed! Incorrect Username or API Token?");
+				setAuthenticated(response);
+				notification.showNotification("Successfully authenticated!", "Reloading App in 3 seconds...", "settings");
+
+				// reload page after 3 seconds
+				setTimeout(() => {
+					window.location.reload();
+				}, 3000);
+
 			}
-
-			localStorage.setItem("baseurl", baseurl);
-			localStorage.setItem("username", username);
-			localStorage.setItem("apiToken", apiToken);
-
-			return response;
 		} catch (error) {
-			alert("Authentication failed!\n" + error);
+			Logger.error("Error checking authentication:", error);
+			notification.showNotification("Authentication failed!", "Incorrect Username or API Token?", "settings");
 		}
+		setIsLoadingPage(false);
+		
 	};
 
 	const addNewProject = async () => {
@@ -141,62 +142,82 @@ const SettingsView: React.FC = () => {
 		window.location.reload();
 	};
 
-	const selectProject = async (project: string) => {
-		localStorage.setItem("projectName", project);
-		window.location.reload();
-	};
-
 	return (
 		<div className="mx-10 my-10 select-none">
+		{ isLoadingPage ? (
+			<LoadingScreenComponent/>
+		
+		) : (
+			<>
 			<h1 className="text-3xl font-bold">Settings</h1>
 			<p>Jarvis v{appVersion}</p>
-			<div className="flex items-center mt-10">
-				<h2 className="text-2xl font-bold">Authentication</h2>
-				{authenticated ?
-					<span className="inline-flex items-center rounded-md bg-[#122a2d] px-2 py-1 text-xs font-medium text-green-300 ring-1 ring-inset ring-green-600/20">Authenticated</span>
-					:
-					<span className="inline-flex items-center rounded-md bg-[#28222f] px-2 py-1 text-xs font-medium text-red-300 ring-1 ring-inset ring-red-600/20">Not Authenticated</span>
-				}
+
+			{/* Projects */}
+			<div className="space-y-16">
+			<div className="flex flex-col mt-10 space-y-8">
+
+				<div className="flex flex-row space-x-2">
+					<h2 className="text-2xl font-bold -mb-2">Authentication</h2>
+					{authenticated ?
+						<span className="inline-flex items-center rounded-md bg-[#122a2d] px-2 py-1 text-xs font-medium text-green-300 ring-1 ring-inset ring-green-600/20">Authenticated</span>
+						:
+						<span className="inline-flex items-center rounded-md bg-[#28222f] px-2 py-1 text-xs font-medium text-red-300 ring-1 ring-inset ring-red-600/20">Not Authenticated</span>
+					}
+				</div>
+
+
+
+
+				<div className="flex flex-col space-y-2 w-[400px]">
+					<input
+						type="url"
+						value={baseurl}
+						onChange={(e) => setBaseurl(e.target.value)}
+						placeholder="Base URL"
+						className="h-[37px] text-[15px] bg-background-card font-medium border border-border rounded-md placeholder-comment-color text-comment-color px-3 mr-3"
+					/>
+
+					<input
+						type="text"
+						value={username}
+						onChange={(e) => setUsername(e.target.value)}
+						placeholder="Jenkins Username"
+						className="h-[37px] text-[15px] bg-background-card font-medium border border-border rounded-md placeholder-comment-color text-comment-color px-3 mr-3"
+					/>
+
+					<input
+						type="password"
+						value={apiToken}
+						onChange={(e) => setApiToken(e.target.value)}
+						placeholder="Jenkins (Personal) API Token"
+						className="h-[37px] text-[15px] bg-background-card font-medium border border-border rounded-md placeholder-comment-color text-comment-color px-3 mr-3"
+					/>
+
+					<div className="flex flex-row">
+					<button
+						onClick={checkAuthentication}
+						className="button w-full">
+						Save
+					</button>
+					<button
+						onClick={signOut}
+						className="button w-full">
+						Sign Out
+					</button>
+					</div>
+				</div>
+
+
 			</div>
 
-			<div>
-				<input
-					type="url"
-					value={baseurl}
-					onChange={(e) => setBaseurl(e.target.value)}
-					placeholder="Base URL"
-					className="w-[200px] h-[37px] text-[15px] bg-background-card font-medium border border-border rounded-md placeholder-comment-color text-comment-color px-3 mr-3"
-				/>
+			<hr className="border-background-card-selected border-[1.5px]"/>
 
-				<input
-					type="text"
-					value={username}
-					onChange={(e) => setUsername(e.target.value)}
-					placeholder="Jenkins Username"
-					className="w-[200px] h-[37px] text-[15px] bg-background-card font-medium border border-border rounded-md placeholder-comment-color text-comment-color px-3 mr-3"
-				/>
+			{/* Projects */}
+			<div className="flex flex-col mt-10 space-y-4">
+				<h2 className="text-2xl font-bold -mb-2">Projects / Jenkins Builds</h2>
 
-				<input
-					type="password"
-					value={apiToken}
-					onChange={(e) => setApiToken(e.target.value)}
-					placeholder="Jenkins (Personal) API Token"
-					className="w-[310px] h-[37px] text-[15px] bg-background-card font-medium border border-border rounded-md placeholder-comment-color text-comment-color px-3 mr-3"
-				/>
-
-				<button
-					onClick={checkAuthentication}
-					className="button">
-					Save
-				</button>
-			</div>
-			<div className="flex items-center mt-10">
-				<h2 className="text-2xl font-bold">Projects / Jenkins Builds</h2>
-			</div>
-			<div>
-				<div className="mt-5">
+				<div className=" gap-4 space-y-4">
 					<div className="bg-console-background px-5 py-3 rounded-md space-y-2">
-
 						{projects.map((project, index) => (
 							<div className="flex space-x-5" key={index}>
 								<p className={`hover:bg-background-card-selected px-7 py-1 rounded-lg active:brightness-[0.9] cursor-pointer  ${project === currentProject ? "bg-background-card-selected" : ""}`} onClick={() => selectProject(project)}>{project}</p>
@@ -214,16 +235,21 @@ const SettingsView: React.FC = () => {
 
 					<button
 						onClick={addNewProject}
-						className="button">
+						className="button button_default">
 						Save
 					</button>
 					<button
 						onClick={deleteCurrentProject}
-						className={"w-[300px] h-[37px] text-[15px] text-white font-medium rounded-md px-3 mt-5 mr-3 text-white bg-red-600 hover:brightness-[0.9] active:brightness-[0.7]"}>
+						className={"w-[300px] h-[37px] text-[15px] button_danger_zone"}>
 						Remove current Project from Jarvis
 					</button>
+
 				</div>
 			</div>
+
+			<hr className="border-background-card-selected border-[1.5px]"/>
+
+			{/* Features */}
 			<div className="flex flex-col mt-10 space-y-4">
 				<h2 className="text-2xl font-bold -mb-2">Features</h2>
 
@@ -261,10 +287,24 @@ const SettingsView: React.FC = () => {
 						<p className="mb-2 leading-5 text-comment-color">Clear all Data like: Pinned Jobs, Notification Jobs, Tokens, Projects...</p>
 					</div>
 					<div>
-						<button onClick={clearAllData} className="button text-white bg-red-600 hover:brightness-[0.9] active:brightness-[0.7]"> Delete </button>
+						<button onClick={clearAllData} className="button_danger_zone"> Delete </button>
+					</div>
+
+					{/* Clear Local Storage */}
+					<div className="flex flex-col">
+						<p className="mb-2 text-lg font-bold">[DEBUG] Onboarding Restart</p>
+						<p className="mb-2 leading-5 text-comment-color">Return to the Onboarding.</p>
+					</div>
+					<div>
+						<button onClick={() => {
+							navigate("/onboarding");
+						}} className="button_danger_zone"> Go back </button>
 					</div>
 				</div>
 			</div>
+		</div>
+		</>
+		)}
 		</div>
 	);
 };

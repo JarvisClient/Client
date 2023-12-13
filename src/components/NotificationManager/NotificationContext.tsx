@@ -4,6 +4,7 @@ import FeatureButtons, { FeatureButtonProps } from "../../config/FeatureButtons"
 import notifcationSoundAsset from "../../assets/sounds/notification.ogg";
 import { motion } from "framer-motion";
 import { NOTIFICATION_CLOSE_TIME } from "../../config/constants";
+import Logger from "../../helpers/Logger";
 const notificationSound = new Audio(notifcationSoundAsset);
 
 interface Notification {
@@ -22,11 +23,16 @@ interface NotificationContextType {
 const NotificationContext = createContext<NotificationContextType | undefined>(undefined);
 
 export function useNotification() {
-	const context = useContext(NotificationContext);
-	if (!context) {
-		throw new Error("useNotification must be used within a NotificationProvider");
+	try {
+		const context = useContext(NotificationContext);
+		if (!context) {
+			throw new Error("useNotification must be used within a NotificationProvider");
+		}
+		return context;
+	} catch (error) {
+		Logger.error("Error using notification:", error);
+		return { showNotification: () => {}, hideNotification: () => {}};
 	}
-	return context;
 }
 
 let notificationIdCounter = 0;
@@ -39,6 +45,9 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({ chil
 	const [notifications, setNotifications] = useState<Notification[]>([]);
 
 	const showNotification = (title: string, message: string, icon: string) => {
+
+		if (!children) return showNotificationAsAlert(title, message, icon);
+
 		const id = notificationIdCounter++;
 		const featureButtonData = FeatureButtons[icon];
 
@@ -51,6 +60,11 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({ chil
 		setTimeout(() => {
 			hideNotification(id);
 		}, NOTIFICATION_CLOSE_TIME);
+	};
+
+	const showNotificationAsAlert = (title: string, message: string, icon: string) => {
+		const featureButtonData = FeatureButtons[icon];
+		alert(title + "\n\n" + message);
 	};
 
 	const hideNotification = (id: number) => {

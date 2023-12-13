@@ -9,7 +9,6 @@ import authDetails from "../../../config/auth";
 import { invoke, notification } from "@tauri-apps/api";
 import OtherParameterDefinition from "./ParameterComponents/OtherParameterDefinition";
 import ChoiceParameterDefinition from "./ParameterComponents/ChoiceParameterDefinition";
-import { BUILD_VIEW_BANNER_CLOSE_TIME } from "../../../config/constants";
 import Logger from "../../../helpers/Logger";
 import { useNotification } from "../../../components/NotificationManager/NotificationContext";
 

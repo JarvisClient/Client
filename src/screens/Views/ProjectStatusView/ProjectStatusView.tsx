@@ -1,6 +1,6 @@
 import React from "react";
 import DOMPurify from "dompurify";
-import { IBuildData } from "../../App/IBuildInterface";
+import { IBuildData } from "../../Jarvis/IBuildInterface";
 
 interface ProjectStatusViewProps {
   buildData: IBuildData;

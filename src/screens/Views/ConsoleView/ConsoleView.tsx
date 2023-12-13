@@ -8,7 +8,7 @@ import { RiSkipDownLine } from "react-icons/ri";
 import { CONSOLE_RELOAD_TIME } from "../../../config/constants";
 import { getConsoleViewStyleDict } from "./ConsoleViewStyleDict";
 import Logger from "../../../helpers/Logger";
-import { IBuildData } from "../../App/IBuildInterface";
+import { IBuildData } from "../../Jarvis/IBuildInterface";
 
 interface ConsoleViewProps {
 	buildData: IBuildData;

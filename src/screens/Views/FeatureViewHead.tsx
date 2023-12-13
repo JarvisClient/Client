@@ -7,7 +7,7 @@ import { formatBuildDate } from "../../helpers/utils";
 import circleColor from "../../config/getCircleColor";
 import { FEATURE_VIEW_HEAD_REFRESH_TIME } from "../../config/constants";
 import Logger from "../../helpers/Logger";
-import { IBuildData } from "../App/IBuildInterface";
+import { IBuildData } from "../Jarvis/IBuildInterface";
 
 interface ConsoleViewProps {
     buildData: IBuildData;

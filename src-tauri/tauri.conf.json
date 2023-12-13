@@ -115,8 +115,8 @@
         "resizable": true,
         "decorations": false,
         "title": "Jarvis - Jenkins Client",
-        "minWidth": 1400,
-        "minHeight": 800
+        "minWidth": 1080,
+        "minHeight": 600
       }
     ]
   }

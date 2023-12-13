@@ -10,3 +10,7 @@ export const NOTIFICATION_CLOSE_TIME = 5000;
 // Files
 export const CONSOLE_VIEW_STYLE_FILE = "consoleViewStyleDict.json";
 export const LOGS_FILE = "jarvis_logs.log";
+
+// WINDOW
+export const DEFAULT_WINDOW_WIDTH = 1400;
+export const DEFAULT_WINDOW_HEIGHT = 800;
