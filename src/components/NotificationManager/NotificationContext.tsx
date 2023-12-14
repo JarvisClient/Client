@@ -77,6 +77,7 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({ chil
 				{notifications.map((notification) => (
 					<motion.div
 						id="toast-interactive"
+						key={notification.id}
 						className={"w-full max-w-lg p-4 rounded-lg shadow bg-background-sidebar text-gray-400 opacity-0 transition-opacity duration-300"}
 						initial={{ opacity: 0, y: 50, scale: 0.3 }}
 						animate={{ opacity: 1, y: 0, scale: 1 }}

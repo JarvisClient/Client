@@ -47,8 +47,11 @@ export interface IBuildData {
     timestamp: number;
     url: string;
     builtOn: string;
+    color: string;
     changeSet: ChangeLogItem;
+    lastSuccessfulBuild: any; // You can specify a more specific type if needed
     culprits: any[]; // You can specify a more specific type if needed
+    healthReport: any[]; // You can specify a more specific type if needed
 }
 
 export interface FeatureButton {

@@ -19,7 +19,8 @@ async fn main() {
                                                  app_handle::jenkins_calls::authenticate_user,
                                                  app_handle::jenkins_calls::start_build_with_parameters,
                                                  app_handle::jenkins_calls::start_build,
-                                                 app_handle::jenkins_calls::get_test_result_data
+                                                 app_handle::jenkins_calls::get_test_result_data,
+                                                 app_handle::jenkins_calls::get_jenkins_data
                                                  ])
         .run(tauri::generate_context!())
         .expect("Failed to run Tauri application.");

@@ -18,3 +18,24 @@
   height: 64px;
   /* Add any other styling you need for your buttons */
 }
+
+.error-custom-scroll::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+  @apply bg-background-sidebar;
+}
+
+.error-custom-scroll::-webkit-scrollbar-thumb {
+  @apply bg-console-background;
+  @apply rounded-full
+}
+
+.error-custom-scroll::-webkit-scrollbar-track {
+  @apply bg-background-sidebar;
+@apply rounded-full
+}
+
+.error-custom-scroll::-webkit-scrollbar-corner {
+  @apply bg-background-sidebar;
+@apply rounded-full
+}

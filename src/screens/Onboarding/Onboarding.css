@@ -12,14 +12,12 @@
     @apply hover:brightness-[1.3];
 }
 
-::backdrop {
-    @apply backdrop-filter;
-    @apply backdrop-blur-[10px];
-    @apply bg-opacity-50;
-    @apply bg-background-card;
-  }
+.onboarding-custom-scroll::-webkit-scrollbar {
+    width: 4px;
+    @apply bg-console-background;
+}
 
-  .custom-scroll::-webkit-scrollbar {
-    width: 0;
-    background: transparent;
+.onboarding-custom-scroll::-webkit-scrollbar-thumb {
+  @apply bg-background-sidebar;
+  @apply rounded-full
 }

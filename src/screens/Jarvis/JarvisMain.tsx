@@ -30,6 +30,7 @@ import StorageManager from "../../helpers/StorageManager";
 import "./App.css";
 import { useNotification } from "../../components/NotificationManager/NotificationContext";
 import { LogicalSize, appWindow } from "@tauri-apps/api/window";
+import SwitchProjectView from "../Views/SwitchProjectView/SwitchProjectView";
 
 /**
  * React functional component representing the main application.
@@ -63,7 +64,6 @@ function JarvisMain(): React.ReactElement {
 			const jsonData = JSON.parse(response);
 
 			setProjectData(jsonData);
-			setJobCardsLoading(false);
 
 			return jsonData;
 		} catch (error) {
@@ -97,7 +97,6 @@ function JarvisMain(): React.ReactElement {
 			}));
 	
 			await setJobCardProps(jobCardProps);
-			setJobCardsLoading(false);
 		} catch (error) {
 			// Handle errors if any
 			notification.showNotification("Error", "Error creating job card props. Please check your internet connection and try again.", "jenkins");
@@ -351,7 +350,7 @@ function JarvisMain(): React.ReactElement {
  */
 	useEffect(() => {
 		const randomNumber = Math.floor(Math.random() * 1000000);
-		let everUndefined = false;
+
 		Logger.info(randomNumber + " - BASE: Fetching project data for", storedProjectName);
 
 		let intervalId: NodeJS.Timeout; // Declare intervalId outside startJarvis
@@ -359,13 +358,16 @@ function JarvisMain(): React.ReactElement {
 		const startJarvis = async () => {
 			// Fetch project data and create JobCardProps
 			const projectData = await fetchProjectData();
-			await createJobCardProps(projectData["builds"]);
+			await createJobCardProps(projectData["builds"])
+			.then(() => {
+				setJobCardsLoading(false);
+			});
 			Logger.info("Initial JobCardProps created");
 			onStartup();
 
 			// Check if latest build data has changed every 10 seconds
 			let prevLatestBuildData: any = null;
-
+			
 			intervalId = setInterval(async () => {
 				try {
 					Logger.info(randomNumber + " - Fetching project data every 30 seconds for", storedProjectName);
@@ -525,6 +527,18 @@ function JarvisMain(): React.ReactElement {
 		fetchParameterDefinition();
 	}, [activeJobBuildNumber]);
 
+	const decideWindowTitle = () => {
+		if (activeFeature && activeFeature !== "status_for_project") {
+			return FeatureButtonsConfig[activeFeature]["titleBar"];
+		} else if (activeFeature === "settings") {
+			return "Jarvis Settings";
+		} else if (activeFeature === "status_for_project") {
+			return `Project Information for ${storedProjectName}`;
+		} else {
+			return "Jarvis";
+		}
+	}
+
 	/**
  * Render
  */
@@ -532,13 +546,7 @@ function JarvisMain(): React.ReactElement {
 		<div className="h-screen flex flex-col">
 			<TitleBarComponent
 				activeFeature={activeFeature}
-				windowTitle={
-					activeJobBuildNumber && activeFeature
-						? FeatureButtonsConfig[activeFeature]["titleBar"]
-						: activeFeature === "settings"
-							? "Jarvis Settings"
-							: `Project Information for ${storedProjectName}`
-				}
+				windowTitle={decideWindowTitle()}
 			/>
 			{/* Main Content Area */}
 			<div className="flex flex-grow overflow-y-scroll custom-scroll ml-[1px]">
@@ -580,14 +588,15 @@ function JarvisMain(): React.ReactElement {
 
 				{/* Feature View */}
 				<div className="overflow-y-scroll general-view custom-scroll">
-					{activeFeature !== "settings" && activeFeature !== "status_for_project" && activeFeature !== "build" && (
-						<FeatureViewHead buildData={selectedBuildData} />
+					{activeFeature !== "settings" && activeFeature !== "status_for_project" && activeFeature !== "build" && activeFeature != "switch_project" && (
+						<FeatureViewHead buildData={selectedBuildData}/>
 					)}
+					{activeFeature === "switch_project" && <SwitchProjectView />}
 					{activeFeature === "status" && <StatusView buildData={selectedBuildData} />}
 					{activeFeature === "console" && <ConsoleView buildData={selectedBuildData} />}
 					{activeFeature === "parameters" && <ParametersView buildData={selectedBuildData} />}
 					{activeFeature === "settings" && <SettingsView />}
-					{activeFeature === "status_for_project" && <ProjectStatusView buildData={projectData} />}
+					{activeFeature === "status_for_project" && <ProjectStatusView buildData={projectData}/>}
 					{activeFeature === "testReport" && <TestReport buildData={selectedBuildData} />}
 					{activeFeature === "build" && <BuildView buildData={selectedBuildData} parameterDefinition={parameterDefinition} />}
 				</div>

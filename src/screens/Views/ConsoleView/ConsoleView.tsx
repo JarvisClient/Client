@@ -160,7 +160,6 @@ const ConsoleView: React.FC<ConsoleViewProps> = ({ buildData }) => {
 							ref={consoleRef}
 							dangerouslySetInnerHTML={{ __html: consoleData }}>
 						</pre>
-
 					</div>
 				</>
 				: <>

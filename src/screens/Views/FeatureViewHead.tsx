@@ -79,7 +79,6 @@ const FeatureViewHead: React.FC<ConsoleViewProps> = ({ buildData }) => {
 	return (
 
 		<div className="mx-10 my-10">
-			{/* Job Card */}
 			<div className={"flex items-center rounded-lg p-5 mb-10 transition select-none overflow-hidden"}>
 				<div className="flex-shrink-0 mr-3">
 					<span className="relative flex h-[37px] w-[37px]">

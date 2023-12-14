@@ -39,6 +39,29 @@ impl JenkinsClient {
             Err(err) => Err(format!("Request error: {:?}", err)),
         }
     }
+
+    pub async fn get_jenkins_data(&self) -> Result<String, String> {
+        let url = format!("{}/api/json", self.base_url);
+    
+        let client = reqwest::Client::new();
+        let response = client
+            .get(&url)
+            .header("Authorization", format!("Basic {}", general_purpose::STANDARD_NO_PAD.encode(&format!("{}:{}", self.jenkins_username, self.jenkins_api_token))))
+            .send()
+            .await;
+    
+        match response {
+            Ok(response) => {
+                if response.status().is_success() {
+                    let text = response.text().await.map_err(|e| format!("Error parsing response: {:?}", e))?;
+                    Ok(text)
+                } else {
+                    Err(format!("Error getting job data: {}", response.status()))
+                }
+            }
+            Err(err) => Err(format!("Request error: {:?}", err)),
+        }
+    }
     
 
     pub async fn get_build_data(&self, job_name: &str, build_number: &str) -> Result<String, reqwest::Error> {
@@ -166,3 +189,4 @@ response.text().await
 }
 
 }
+

@@ -162,7 +162,7 @@ const OnboardingStep1: React.FC = () => {
                 transition={{ duration: 0.1 }}
                 exit={{ opacity: 0 }}
                 className="absolute w-full h-full backdrop-blur-sm bg-black/70 transition flex justify-center items-center">
-                <div className="bg-background-sidebar p-10 w-[90%] h-[90%] rounded-md relative overflow-y-scroll overflow-x-hidden custom-scroll scrollbar-hidden">
+                <div className="bg-background-sidebar p-10 w-[90%] h-[90%] rounded-md relative overflow-y-scroll overflow-x-hidden custom-scroll">
                     <div
                         onClick={() => setShowHelpModal(false)}
                         className="absolute top-4 right-4 cursor-pointer"

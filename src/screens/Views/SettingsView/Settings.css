@@ -5,7 +5,6 @@
     @apply rounded-md;
     @apply text-comment-color;
     @apply px-5;
-    @apply mr-3;
     @apply bg-background-card;
     @apply text-comment-color;
     @apply hover:bg-background-card-selected;
@@ -18,8 +17,6 @@
     @apply font-medium;
     @apply rounded-md;
     @apply px-3;
-    @apply mt-5;
-    @apply mr-3;
     @apply text-white;
     @apply bg-jenkins-job-red;
     @apply hover:brightness-[0.9];

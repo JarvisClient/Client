@@ -1,5 +1,8 @@
 import { writeTextFile, BaseDirectory } from "@tauri-apps/api/fs";
+import { appDataDir } from '@tauri-apps/api/path';
+import { arch, platform } from '@tauri-apps/api/os';
 import { LOGS_FILE } from "../config/constants";
+import { ErrorInfo } from "react";
 
 const Logger = {
 	log: (...messages: any[]) => logMessage("LOG", "color: #;", ...messages),
@@ -34,23 +37,69 @@ async function writeToLog(level: string, ...messages: any[]) {
 	}
 }
 
+export async function writeEmergencyLog(error: Error, errorInfo: ErrorInfo): Promise<string> {
+	let emergency_log_file_name = `emergency_log_${Math.floor(Date.now() / 1000)}.log`
+	try {
+		let raw_logs = `
+			==================== JARVIS EMERGENCY LOG ====================
+			Created at: ${getCurrentDateTime()}
+			File Name: ${emergency_log_file_name}
+			OS - Arch: ${await platform()}-${await arch()}
+			==================== JARVIS EMERGENCY LOG ====================
+
+			==================== ERROR INFO ====================
+			${JSON.stringify(errorInfo.componentStack)}
+
+			${JSON.stringify(errorInfo.digest)}
+			==================== ERROR INFO ====================
+
+			==================== ERROR ====================
+			${JSON.stringify(error.name)}: ${JSON.stringify(error.message)}
+
+			${JSON.stringify(error.stack)}
+
+			==================== ERROR ====================
+		`
+
+		await writeTextFile(emergency_log_file_name, raw_logs, {
+			dir: BaseDirectory.AppData,
+			append: true,
+		});
+
+		writeToLog("EMERGENCY", "An Emergency Log was created. Check the file: " + emergency_log_file_name + " for more details.")
+
+	} catch (error) {
+		alert("An Error occured while trying to write an Emergency Log: " + JSON.stringify(error))
+		Logger.error("An Error occured while trying to write an Emergency Log: ", error)
+	}
+	return await appDataDir() + emergency_log_file_name
+}
+
 export async function onStartup() {
 	await writeToLog("SYSTEM", "==================== JARVIS STARTUP ====================");
 }
 
 function logMessage(level: string, css: string, ...messages: any[]) {
-	const stack = new Error().stack;
-	const stackLines = stack?.split("\n") || [];
-	let callerLine = stackLines[3]; // Adjust the index if necessary
+	try {
+		const stack = new Error().stack;
+		const stackLines = stack?.split("\n") || [];
+		let callerLine = stackLines[3]; // Adjust the index if necessary
+	
+		// Cleaning up the string to extract file name, line, etc.
+		callerLine = callerLine.replace(/^\s*at\s*/, ""); // Removes the 'at ' from the start
+	
+		if (level === "FATAL" || level === "ERROR" || level === "WARNING") {
+			console.error(`%c[${level}] ${callerLine}:\n`, css, ...messages);
+			writeToLog(level, ...messages);
+		} else {
+			console.log(`%c[${level}] ${callerLine}:\n`, css, ...messages);
+		}
+	} catch (error) {
+		let error_msg = "An Error occured while trying to use Logger: " + JSON.stringify(error)
+		console.error("Logger Error: ", error_msg)
+		console.log("Logged Message: ", ...messages)
 
-	// Cleaning up the string to extract file name, line, etc.
-	callerLine = callerLine.replace(/^\s*at\s*/, ""); // Removes the 'at ' from the start
-
-	if (level === "FATAL" || level === "ERROR" || level === "WARNING") {
-		console.error(`%c[${level}] ${callerLine}:\n`, css, ...messages);
-		writeToLog(level, ...messages);
-	} else {
-		console.log(`%c[${level}] ${callerLine}:\n`, css, ...messages);
+		writeToLog("ERROR", error_msg)
 	}
 }
 

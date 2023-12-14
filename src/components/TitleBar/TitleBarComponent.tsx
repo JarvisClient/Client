@@ -50,7 +50,7 @@ const TitleBarComponent: React.FC<TitleBarProps> = ({ activeFeature, windowTitle
 							) : (
 								<p></p>
 							)}
-							<b className='text-md ml-2'>{windowTitle}</b>
+							<b className='text-md ml-2 line-clamp-1 break-all'>{windowTitle}</b>
 							<div className="flex ml-auto mr-2">
 								<div onClick={maxWindow} className="w-3 h-3 z-50 bg-green-500 rounded-full flex items-center justify-center cursor-pointer hover:bg-green-600 active:bg-green-700 transition duration-200 ml-2" />
 								<div onClick={minWindow} className="w-3 h-3 z-50 bg-yellow-500 rounded-full flex items-center justify-center cursor-pointer hover:bg-yellow-600 active:bg-yellow-700 transition duration-200 ml-2" />

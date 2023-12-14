@@ -1,13 +1,13 @@
 import { FaGear } from "react-icons/fa6";
 
-import { IoMdListBox, IoIosSwitch, IoIosNotificationsOutline, IoIosNotifications } from "react-icons/io";
+import { IoMdListBox, IoIosSwitch, IoIosNotificationsOutline, IoIosNotifications, IoIosList } from "react-icons/io";
 import { BiSolidTerminal } from "react-icons/bi";
 import { MdOutlineOpenInBrowser } from "react-icons/md";
 import { LuTestTube2 } from "react-icons/lu";
 
 import { HiHome } from "react-icons/hi";
 
-import { BsPlayFill } from "react-icons/bs";
+import { BsList, BsPlayFill } from "react-icons/bs";
 import { TbPin, TbPinnedFilled } from "react-icons/tb";
 
 import StorageManager from "../helpers/StorageManager";
@@ -35,6 +35,15 @@ const FeatureButtons: { [key: string]: FeatureButtonProps } = {
 		icon: HiHome,
 		hidden: !projectName,
 		purpose: "BOTH",
+	},
+	"switch_project": {
+		title: "Switch Projects",
+		titleBar: "Switch Projects",
+		bg_color: "#292929",
+		icon_color: "#ffffff",
+		icon: IoIosList,
+		hidden: !projectName,
+		purpose: "PROJECT",
 	},
 	status: {
 		title: "Build Status",

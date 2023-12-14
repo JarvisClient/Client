@@ -1,5 +1,6 @@
 import { open } from "@tauri-apps/api/shell";
 import StorageManager from "./StorageManager";
+import DOMPurify from "dompurify";
 
 export const formatBuildDate = (timestamp: number) => {
 	const date = new Date(timestamp);
@@ -68,3 +69,8 @@ export const isValidJson = (str: string) => {
 	}
 	return true;
 }
+
+export const renderHTML = (html: string) => {
+	const sanitizedHTML = DOMPurify.sanitize(html);
+	return { __html: sanitizedHTML };
+};

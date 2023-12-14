@@ -45,7 +45,7 @@ export function renderTestReportCard(suite: any): JSX.Element[] {
 			</div>
 			{testcase["stdout"] && (
 				<div className="bg-console-background shadow-lg px-6 py-5 overflow-auto">
-					<p className="text-sm font-comment-color">Standard Error:</p>
+					<p className="text-sm font-comment-color">Standard Ouput:</p>
 					<hr className="my-2 border-2 border-border" />
 					<p>{testcase["stdout"]}</p>
 					</div>
