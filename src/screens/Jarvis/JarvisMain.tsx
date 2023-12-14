@@ -68,7 +68,7 @@ function JarvisMain(): React.ReactElement {
 			return jsonData;
 		} catch (error) {
 			notification.showNotification("Error", "Error fetching project data. Please check your internet connection and try again.", "jenkins");
-			Logger.info("Error invoking get_project_data:", error);
+			Logger.info("%JM02 Error invoking get_project_data:", error);
 		}
 	}, [storedProjectName]);
 
@@ -147,7 +147,7 @@ function JarvisMain(): React.ReactElement {
 
 			if (parameterDefinition) setParameterDefinition(parameterDefinition["parameterDefinitions"]);
 		} catch (error) {
-			Logger.error("Error invoking get_project_data:", error);
+			Logger.error("%JM03 Error invoking get_project_data:", error);
 		}
 	}, [storedProjectName]);
 

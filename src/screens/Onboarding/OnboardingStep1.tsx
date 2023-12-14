@@ -3,19 +3,23 @@ import { appWindow, LogicalSize } from '@tauri-apps/api/window';
 import icon from "../../assets/icons/ico_bow.svg";
 
 import "./Onboarding.css";
-import { DEFAULT_WINDOW_HEIGHT, DEFAULT_WINDOW_WIDTH } from "../../config/constants";
 import { useNavigate } from "react-router-dom";
 import { checkAuthentication } from "../Views/SettingsView/ButtonEvents";
 import { useNotification } from "../../components/NotificationManager/NotificationContext";
 import { motion } from "framer-motion";
 
 import StorageManager from "../../helpers/StorageManager";
+import { IoClose } from "react-icons/io5";
+
+import baseURLIMG from "../../assets/faq/faq_baseURL.webp";
+import usernameIMG from "../../assets/faq/faq_username.webp";
 
 
 const OnboardingStep1: React.FC = () => {
     const [baseUrl, setBaseUrl] = useState(StorageManager.get("baseurl") || '');
     const [username, setUsername] = useState(StorageManager.get("username") || '');
     const [apiToken, setApiToken] = useState(StorageManager.get("apiToken") || '');
+    const [showHelpModal, setShowHelpModal] = useState(false); 
 
 
     const navigate = useNavigate();
@@ -23,7 +27,7 @@ const OnboardingStep1: React.FC = () => {
 
     useEffect(() => {
         // Set screen size to 300px width and 400px height
-        let size = new LogicalSize(600, 450);
+        let size = new LogicalSize(700, 550);
         appWindow.setSize(size).then(() => appWindow.center());
     }, []);
 
@@ -97,9 +101,11 @@ const OnboardingStep1: React.FC = () => {
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.5, delay: 1 }}
                 >
-                    <label htmlFor="userName" className="block text-sm font-medium text-comment-color">
-                        User Name
-                    </label>
+                    <div className="flex flex-row">
+                        <label htmlFor="userName" className="block text-sm font-medium text-comment-color">
+                            User Name
+                        </label>
+                    </div>
                     <input
                         type="text"
                         id="userName"
@@ -142,6 +148,57 @@ const OnboardingStep1: React.FC = () => {
                 }}>
                 Continue
             </motion.button>
+
+            {/* Help Modal */}
+            <p onClick={() => setShowHelpModal(true)}
+                className="absolute bottom-4 right-8 text-sm text-comment-color transition hover:brightness-75 active:brightness-90">
+                Need help?
+            </p>
+
+            {showHelpModal && (
+                <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.1 }}
+                exit={{ opacity: 0 }}
+                className="absolute w-full h-full backdrop-blur-sm bg-black/70 transition flex justify-center items-center">
+                <div className="bg-background-sidebar p-10 w-[90%] h-[90%] rounded-md relative overflow-y-scroll overflow-x-hidden custom-scroll scrollbar-hidden">
+                    <div
+                        onClick={() => setShowHelpModal(false)}
+                        className="absolute top-4 right-4 cursor-pointer"
+                    >
+                        <IoClose
+                            size={32}
+                            className="transition hover:brightness-75 hover:scale-105 active:brightness-105 active:scale-95"
+                        />
+                    </div>
+                        <h1 className="text-2xl font-bold mb-4">Setup Guide</h1>
+                        <details open>
+                            <summary className="font-medium text-lg">Where do i find the Base URL?</summary>
+                            <div className="ml-4 text-comment-color">
+                                <p>The Base URL is the URL you use to access Jenkins.</p>
+                                <img className="hover:scale-[1.1] transition mt-4 mb-8" src={baseURLIMG} alt="Base URL" />
+                            </div>
+                        </details>
+                        <details>
+                            <summary className="font-medium text-lg">What is my Username?</summary>
+                            <div className="ml-4 text-comment-color">
+                                <p>The Username is the same Username you use to login to Jenkins.</p>
+                                <img className="hover:scale-[1.1] transition mt-4 mb-8" src={usernameIMG} alt="Username" />
+                            </div>
+                        </details>
+                        <details>
+                            <summary className="font-medium text-lg">How do i create the API Token?</summary>
+                            <div className="ml-4 text-comment-color">
+                                <p>You can create an API Token by goint to</p>
+                                <p>Profile {">"} Configure {">"} API Token {">"} Add new Token</p>
+                            </div>
+                        </details>
+                    </div>
+                </motion.div>
+            )}
+
+            {/* End Help Modal */}
         </div>
     );
 }

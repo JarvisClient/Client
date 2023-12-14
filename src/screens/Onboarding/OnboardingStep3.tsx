@@ -16,7 +16,7 @@ const OnboardingStep3: React.FC = () => {
 
     useEffect(() => {
         // Set screen size to 300px width and 400px height
-        let size = new LogicalSize(600, 500);
+        let size = new LogicalSize(700, 550);
         appWindow.setSize(size).then(() => appWindow.center());
     }, []);
 

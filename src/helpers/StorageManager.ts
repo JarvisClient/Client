@@ -17,8 +17,6 @@ const StorageManager = {
     get: (key: string): string | null => {
         const value = localStorage.getItem(key);
 
-        Logger.info(`StorageManager: Getting ${key} from localStorage`);
-
         if (value) {
             return value;
         }

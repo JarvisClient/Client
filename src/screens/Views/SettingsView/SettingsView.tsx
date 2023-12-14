@@ -168,6 +168,7 @@ const SettingsView: React.FC = () => {
 				</div>
 
 				<div className="flex flex-col space-y-2 w-[400px]">
+					<label className="text-sm font-medium text-comment-color">Jenkins Base URL</label>
 					<input
 						type="url"
 						value={baseurl}
@@ -176,6 +177,7 @@ const SettingsView: React.FC = () => {
 						className="h-[37px] text-[15px] bg-background-card font-medium border border-border rounded-md placeholder-comment-color text-comment-color px-3 mr-3"
 					/>
 
+					<label className="text-sm font-medium text-comment-color">Jenkins Username</label>
 					<input
 						type="text"
 						value={username}
@@ -184,6 +186,7 @@ const SettingsView: React.FC = () => {
 						className="h-[37px] text-[15px] bg-background-card font-medium border border-border rounded-md placeholder-comment-color text-comment-color px-3 mr-3"
 					/>
 
+					<label className="text-sm font-medium text-comment-color">Jenkins (Personal) API Token</label>
 					<input
 						type="password"
 						value={apiToken}

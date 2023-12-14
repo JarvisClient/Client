@@ -8,17 +8,20 @@ import { checkProjectValidity } from "../Views/SettingsView/ButtonEvents";
 import { useNotification } from "../../components/NotificationManager/NotificationContext";
 import { motion } from "framer-motion";
 import StorageManager from "../../helpers/StorageManager";
+import { IoClose } from "react-icons/io5";
 
+import projectURLIMG from "../../assets/faq/faq_projectURL.webp";
 
 const OnboardingStep1: React.FC = () => {
     const [projectURL, setProjectURL] = useState('');
+    const [showHelpModal, setShowHelpModal] = useState(false); 
 
     const navigate = useNavigate();
     const notification = useNotification();
 
     useEffect(() => {
         // Set screen size to 300px width and 400px height
-        let size = new LogicalSize(600, 450);
+        let size = new LogicalSize(700, 550);
         appWindow.setSize(size).then(() => appWindow.center());
     }, []);
 
@@ -115,7 +118,7 @@ const OnboardingStep1: React.FC = () => {
                         id="projectURL"
                         value={projectURL}
                         onChange={(e) => setProjectURL(e.target.value)}
-                        placeholder="Base URL"
+                        placeholder="Project URL (e.g. https://jenkins.example.com/job/MyProject)"
                         autoComplete="off"
                         className="h-[37px] w-[340px] text-[15px] bg-background-card font-medium border border-border rounded-md placeholder-comment-color text-comment-color px-3 mr-3"/>
                 </div>
@@ -139,6 +142,43 @@ const OnboardingStep1: React.FC = () => {
                     </button>
                 )}
             </motion.div>
+
+            {/* Help Modal */}
+            <p onClick={() => setShowHelpModal(true)}
+                className="absolute bottom-4 right-8 text-sm text-comment-color transition hover:brightness-75 active:brightness-90">
+                Need help?
+            </p>
+
+            {showHelpModal && (
+                <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.1 }}
+                exit={{ opacity: 0 }}
+                className="absolute w-full h-full backdrop-blur-sm bg-black/70 transition flex justify-center items-center">
+                <div className="bg-background-sidebar p-10 w-[90%] h-[90%] rounded-md relative overflow-y-scroll overflow-x-hidden custom-scroll scrollbar-hidden">
+                    <div
+                        onClick={() => setShowHelpModal(false)}
+                        className="absolute top-4 right-4 cursor-pointer"
+                    >
+                        <IoClose
+                            size={32}
+                            className="transition hover:brightness-75 hover:scale-105 active:brightness-105 active:scale-95"
+                        />
+                    </div>
+                        <h1 className="text-2xl font-bold mb-4">Setup Guide</h1>
+                        <details open>
+                            <summary className="font-medium text-lg">Where do i find the Base URL?</summary>
+                            <div className="ml-4 text-comment-color">
+                                <p>The Base URL is the URL you use to access Jenkins.</p>
+                                <img className="hover:scale-[1.1] transition mt-4 mb-8" src={projectURLIMG} alt="Base URL" />
+                            </div>
+                        </details>
+                    </div>
+                </motion.div>
+            )}
+
+            {/* End Help Modal */}
         </div>
     );
 }
