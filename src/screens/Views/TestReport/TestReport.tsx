@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { invoke } from "@tauri-apps/api/tauri";
-import authdetails from "../../../config/auth";
+import { getAuthDetails } from "../../../config/auth";
 
 import "./TestReport.css";
 import Logger from "../../../helpers/Logger";
@@ -10,6 +10,7 @@ import TestReportIndicators from "./TestReportIndicators";
 import { renderTestReportCard } from "./worker";
 
 import testJSON from "./testJSON.json";
+import { isValidJson } from "../../../helpers/utils";
 
 interface ConsoleViewProps {
 	buildData: IBuildData;
@@ -42,7 +43,7 @@ const TestReport: React.FC<ConsoleViewProps> = ({ buildData }) => {
 		const config = {
 			projectName: projectName,
 			buildNumber: String(buildNumber),
-			...authdetails,
+			...getAuthDetails(),
 		};
 		const response: string = await invoke("get_test_result_data", config);
 		return response;
@@ -95,7 +96,6 @@ const TestReport: React.FC<ConsoleViewProps> = ({ buildData }) => {
 		  setSelectAllChecked(true);
 		}
 	  };
-	  
 
 
 	useEffect(() => {
@@ -106,7 +106,7 @@ const TestReport: React.FC<ConsoleViewProps> = ({ buildData }) => {
 				const response = await fetchTestData(storedProjectName, buildData["id"]);
 				let testReport = JSON.parse(response);
 
-				if (!JSON.parse(response)) {
+				if (isValidJson(testReport)) {
 					// No test cases found
 					Logger.info("No TestCases set for this build!");
 					setShowBanner(true);

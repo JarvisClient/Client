@@ -4,7 +4,7 @@ import BoolenParameterDefinition from "./ParameterComponents/BoolenParameterDefi
 import StringParameterDefinition from "./ParameterComponents/StringParameterDefinition";
 import TextParameterDefinition from "./ParameterComponents/TextParameterDefinition";
 
-import authDetails from "../../../config/auth";
+import { getAuthDetails } from "../../../config/auth";
 
 import { invoke, notification } from "@tauri-apps/api";
 import OtherParameterDefinition from "./ParameterComponents/OtherParameterDefinition";
@@ -64,7 +64,7 @@ const BuildView: React.FC<BuildViewProps> = ({ parameterDefinition, buildData })
 
 	const buildButtonClick = async () => {
 		const config = {
-			...authDetails,
+			...getAuthDetails(),
 			projectName: projectName,
 			params: parameterValues
 		};

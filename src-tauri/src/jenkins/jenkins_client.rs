@@ -17,7 +17,7 @@ impl JenkinsClient {
         }
     }
 
-    pub async fn get_project_data(&self, job_name: &str) -> Result<String, reqwest::Error> {
+    pub async fn get_project_data(&self, job_name: &str) -> Result<String, String> {
         let url = format!("{}/job/{}/api/json", self.base_url, job_name);
     
         let client = reqwest::Client::new();
@@ -25,14 +25,21 @@ impl JenkinsClient {
             .get(&url)
             .header("Authorization", format!("Basic {}", general_purpose::STANDARD_NO_PAD.encode(&format!("{}:{}", self.jenkins_username, self.jenkins_api_token))))
             .send()
-            .await?;
-
-        if !response.status().is_success() {
-            panic!("Error getting job data: {}", response.status());
+            .await;
+    
+        match response {
+            Ok(response) => {
+                if response.status().is_success() {
+                    let text = response.text().await.map_err(|e| format!("Error parsing response: {:?}", e))?;
+                    Ok(text)
+                } else {
+                    Err(format!("Error getting job data: {}", response.status()))
+                }
+            }
+            Err(err) => Err(format!("Request error: {:?}", err)),
         }
-
-        response.text().await
     }
+    
 
     pub async fn get_build_data(&self, job_name: &str, build_number: &str) -> Result<String, reqwest::Error> {
         let url = format!("{}/job/{}/{}/api/json", self.base_url, job_name, build_number);    

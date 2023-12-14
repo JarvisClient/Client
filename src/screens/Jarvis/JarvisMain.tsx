@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { invoke } from "@tauri-apps/api/tauri";
 
-import authDetails from "../../config/auth";
+import { getAuthDetails } from "../../config/auth";
 import FeatureButtonsConfig from "../../config/FeatureButtons";
 import { DEFAULT_WINDOW_HEIGHT, DEFAULT_WINDOW_WIDTH, JOBCARD_REFRESH_TIME } from "../../config/constants";
 
@@ -55,7 +55,7 @@ function JarvisMain(): React.ReactElement {
 		try {
 			const config = {
 				projectName: storedProjectName,
-				...authDetails,
+				...getAuthDetails(),
 			};
 
 			const response: string = await invoke("get_project_data", config);
@@ -66,7 +66,7 @@ function JarvisMain(): React.ReactElement {
 
 			return jsonData;
 		} catch (error) {
-			alert("Error fetching project data. Please check your internet connection and try again. \n" + error);
+			notification.showNotification("Error", "Error fetching project data. Please check your internet connection and try again.", "jenkins");
 			Logger.info("Error invoking get_project_data:", error);
 		}
 	}, [storedProjectName]);
@@ -77,8 +77,6 @@ function JarvisMain(): React.ReactElement {
 	const createJobCardProps = async (builds: any[]) => {
 		const pinnedJobs: any[] = JSON.parse(localStorage.getItem("pinnedJobs") || "{}");
 		const notificationSetJobs: any[] = JSON.parse(localStorage.getItem("notificationSetJobs") || "{}");
-	
-		console.log(pinnedJobs);
 	
 		try {
 			if (!storedProjectName) throw new Error("No project name found in localStorage");
@@ -101,7 +99,7 @@ function JarvisMain(): React.ReactElement {
 			setJobCardsLoading(false);
 		} catch (error) {
 			// Handle errors if any
-			alert("Error creating job card props. Please check your internet connection and try again. \n" + error);
+			notification.showNotification("Error", "Error creating job card props. Please check your internet connection and try again.", "jenkins");
 			Logger.error("Error creating job card props:", error);
 		}
 	};
@@ -117,7 +115,7 @@ function JarvisMain(): React.ReactElement {
 				const config = {
 					projectName: storedProjectName,
 					buildNumber: buildNumber.toString(),
-					...authDetails,
+					...getAuthDetails()
 				};
 				const response: string = await invoke("get_build_data", config);
 				return JSON.parse(response);
@@ -136,7 +134,7 @@ function JarvisMain(): React.ReactElement {
 		try {
 			const config = {
 				projectName: storedProjectName,
-				...authDetails,
+				...getAuthDetails(),
 			};
 
 			const response: string = await invoke("get_project_data", config);
@@ -204,7 +202,6 @@ function JarvisMain(): React.ReactElement {
 			notification.showNotification("Error", "Please select a project first.", "jenkins");
 		}
 
-		console.log(localStorage.getItem("pinnedJobs"));
 		localStorage.setItem("pinnedJobs", JSON.stringify(pinnedJobs));
 
 		updatePinnedJobCards();
@@ -353,6 +350,7 @@ function JarvisMain(): React.ReactElement {
  */
 	useEffect(() => {
 		const randomNumber = Math.floor(Math.random() * 1000000);
+		let everUndefined = false;
 		Logger.info(randomNumber + " - BASE: Fetching project data for", storedProjectName);
 
 		let intervalId: NodeJS.Timeout; // Declare intervalId outside startJarvis
@@ -386,11 +384,11 @@ function JarvisMain(): React.ReactElement {
 			}, JOBCARD_REFRESH_TIME);
 		};
 
-		startJarvis();
-
 		// Set Window Size
 		appWindow.setSize(new LogicalSize(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT));
 		appWindow.center();
+
+		startJarvis();
 
 		// Clean up interval when the component is unmounted
 		return () => {
@@ -403,9 +401,6 @@ function JarvisMain(): React.ReactElement {
 	function NotifyForFinishedBuilds (changedBuilds: any[]) {
 		let notificationSetJobs = JSON.parse(localStorage.getItem("notificationSetJobs") || "{}");
 		if (typeof notificationSetJobs !== "object") notificationSetJobs = {};
-
-		// check if any of the notification set jobs are finished if so alert
-		console.log(changedBuilds);
 	}
 
 	/**

@@ -2,6 +2,7 @@
 import React from "react";
 import { JenkinsParameters } from "../ParametersView";
 import { BiTestTube } from "react-icons/bi";
+import { getAuthDetails } from "../../../../config/auth";
 
 interface Props {
     parameter: JenkinsParameters;
@@ -10,7 +11,7 @@ interface Props {
 const RunParameterValue: React.FC<Props> = ({ parameter }): JSX.Element => {
 
 	const openTest = () => {
-		const baseurl = localStorage.getItem("baseurl");
+		const baseurl = getAuthDetails()?.baseurl;
 
 		const url = `${baseurl}job/${parameter.jobName}/${parameter.number}`;
 

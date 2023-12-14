@@ -73,13 +73,14 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({ chil
 
 	return (
 		<NotificationContext.Provider value={{ showNotification, hideNotification }}>
-			<div className='absolute bottom-[30px] right-[30px] space-y-2 w-[300px]'>
+			<div className='absolute bottom-[30px] right-[30px] space-y-2 w-[300px] z-50'>
 				{notifications.map((notification) => (
 					<motion.div
 						id="toast-interactive"
 						className={"w-full max-w-lg p-4 rounded-lg shadow bg-background-sidebar text-gray-400 opacity-0 transition-opacity duration-300"}
 						initial={{ opacity: 0, y: 50, scale: 0.3 }}
 						animate={{ opacity: 1, y: 0, scale: 1 }}
+						onClick={hideNotification.bind(null, notification.id)}
 					>
 						<div className="flex">
 							<div className={`inline-flex items-center justify-center flex-shrink-0 w-8 h-8 rounded-lg bg-[${notification.featureButtonData.bg_color}]`}>

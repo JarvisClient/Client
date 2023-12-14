@@ -5,6 +5,7 @@ import icon from "../../assets/icons/ico_bow.svg";
 import "./Onboarding.css";
 import { DEFAULT_WINDOW_HEIGHT, DEFAULT_WINDOW_WIDTH } from "../../config/constants";
 import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 
 
 const OnboardingMain: React.FC = () => {
@@ -17,20 +18,35 @@ const OnboardingMain: React.FC = () => {
     }, []);
 
     const continueOnboarding = () => {
-        navigate("/onboarding/complete");
+        navigate("/onboarding/step_1");
     }
 
     return (
-        <div className="flex flex-col bg-background-sidebar items-center justify-center h-screen select-none">
+        <div className="flex flex-col bg-background-view items-center justify-center h-screen select-none">
             <div className="flex flex-col items-center text-center mb-10">
-                <img src={icon} alt="Welcome icon" className="w-16 h-16 mb-4" />
-                <h1 className="text-2xl font-medium mb-4">Welcome to <br/><span className="font-bold">Jarvis</span></h1>
+                <motion.img 
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ duration: 0.5 }}
+                    src={icon} 
+                    alt="Welcome icon" 
+                    className="w-16 h-16 mb-4" />
+                <motion.h1 
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.5, delay: 0.5 }}
+                    className="text-2xl font-medium mb-4">
+                        Welcome to <br/><span className="font-bold">Jarvis</span>
+                </motion.h1>
             </div>
-            <button 
+            <motion.button 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5, delay: 1 }}
                 className="button absolute bottom-[35px]"
                 onClick={() => continueOnboarding()}>
                 Continue
-            </button>
+            </motion.button>
         </div>
     );
 }

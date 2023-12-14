@@ -1,5 +1,5 @@
 
-import authdetails from "../config/auth";
+import { getAuthDetails } from "../config/auth";
 import { isPermissionGranted, requestPermission, sendNotification as tauriSendNotification } from "@tauri-apps/api/notification";
 import { invoke } from "@tauri-apps/api/tauri";
 import Logger from "./Logger";
@@ -19,7 +19,7 @@ const fetchDataForBuild = async (buildNumber: any) => {
 	const config = {
 		projectName: localStorage.getItem("projectName"),
 		buildNumber: buildNumber.toString(),
-		...authdetails
+		...getAuthDetails()
 	};
 
 	const response: string = await invoke("get_build_data", config);

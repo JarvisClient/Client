@@ -157,16 +157,13 @@ const SettingsView: React.FC = () => {
 			<div className="flex flex-col mt-10 space-y-8">
 
 				<div className="flex flex-row space-x-2">
-					<h2 className="text-2xl font-bold -mb-2">Authentication</h2>
+					<h2 className="text-2xl font-bold">Authentication</h2>
 					{authenticated ?
 						<span className="inline-flex items-center rounded-md bg-[#122a2d] px-2 py-1 text-xs font-medium text-green-300 ring-1 ring-inset ring-green-600/20">Authenticated</span>
 						:
 						<span className="inline-flex items-center rounded-md bg-[#28222f] px-2 py-1 text-xs font-medium text-red-300 ring-1 ring-inset ring-red-600/20">Not Authenticated</span>
 					}
 				</div>
-
-
-
 
 				<div className="flex flex-col space-y-2 w-[400px]">
 					<input
@@ -214,7 +211,7 @@ const SettingsView: React.FC = () => {
 
 			{/* Projects */}
 			<div className="flex flex-col mt-10 space-y-4">
-				<h2 className="text-2xl font-bold -mb-2">Projects / Jenkins Builds</h2>
+				<h2 className="text-2xl font-bold">Projects / Jenkins Builds</h2>
 
 				<div className=" gap-4 space-y-4">
 					<div className="bg-console-background px-5 py-3 rounded-md space-y-2">
@@ -251,7 +248,7 @@ const SettingsView: React.FC = () => {
 
 			{/* Features */}
 			<div className="flex flex-col mt-10 space-y-4">
-				<h2 className="text-2xl font-bold -mb-2">Features</h2>
+				<h2 className="text-2xl font-bold">Features</h2>
 
 				<div className="grid grid-cols-2 gap-4 space-y-4">
 					{/* JSON */}
@@ -280,7 +277,13 @@ const SettingsView: React.FC = () => {
 					<div>
 						<Switch isChecked={isChecked} onCheckboxChange={handleCheckboxChange} />
 					</div>
+				</div>
+			</div>
+			<div className="flex flex-col mt-10 space-y-4">
+				<h2 className="text-2xl font-bold text-jenkins-job-red">DANGER ZONE</h2>
 
+				<div className="grid grid-cols-2 gap-4 space-y-4">
+					
 					{/* Clear Local Storage */}
 					<div className="flex flex-col">
 						<p className="mb-2 text-lg font-bold">Clear Local Storage</p>
@@ -290,7 +293,7 @@ const SettingsView: React.FC = () => {
 						<button onClick={clearAllData} className="button_danger_zone"> Delete </button>
 					</div>
 
-					{/* Clear Local Storage */}
+					{/* Redo Onboarding */}
 					<div className="flex flex-col">
 						<p className="mb-2 text-lg font-bold">[DEBUG] Onboarding Restart</p>
 						<p className="mb-2 leading-5 text-comment-color">Return to the Onboarding.</p>

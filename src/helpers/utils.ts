@@ -58,3 +58,12 @@ export function deepEqual(obj1: any, obj2: any) {
 
 	return true;
 }
+
+export const isValidJson = (str: string) => {
+	try {
+		JSON.parse(str);
+	} catch (e) {
+		return false;
+	}
+	return true;
+}

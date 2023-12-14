@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { invoke } from "@tauri-apps/api/tauri";
-import authdetails from "../../../config/auth";
+import { getAuthDetails } from "../../../config/auth";
 import { IStylingDict } from "./styleDict";
 
 import { FaAngleDown } from "react-icons/fa6";
@@ -35,7 +35,7 @@ const ConsoleView: React.FC<ConsoleViewProps> = ({ buildData }) => {
 			const config = {
 				projectName: localStorage.getItem("projectName"),
 				buildNumber: buildData["id"].toString(),
-				...authdetails,
+				...getAuthDetails()
 			};
 
 			const response: string = await invoke("get_console_text", config);
@@ -72,7 +72,7 @@ const ConsoleView: React.FC<ConsoleViewProps> = ({ buildData }) => {
 			const config = {
 				projectName: localStorage.getItem("projectName"),
 				buildNumber: buildData["id"].toString(),
-				...authdetails
+				...getAuthDetails()
 			};
 			const response: string = await invoke("get_build_data", config);
 			const json = await JSON.parse(response);

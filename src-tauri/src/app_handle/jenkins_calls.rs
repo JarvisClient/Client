@@ -8,7 +8,7 @@ pub async fn get_project_data(baseurl: String, username: String, apitoken: Strin
     let jenkins_client = JenkinsClient::new(&baseurl, &username, &apitoken);
     match jenkins_client.get_project_data(&project_name).await {
         Ok(data) => Ok(data),
-        Err(err) => Err(err.to_string()),
+        Err(err) => Ok(err.to_string()),
     }
 }
 

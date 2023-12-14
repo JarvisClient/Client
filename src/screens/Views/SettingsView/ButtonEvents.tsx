@@ -90,3 +90,21 @@ export const selectProject = async (project: string) => {
 	localStorage.setItem("projectName", project);
 	window.location.reload();
 };
+
+
+export const checkProjectValidity = async (baseurl: any, username: any, apiToken: any, project: any) => {
+	if (!baseurl || !username || !apiToken || !project) throw new Error("Please fill in all fields!");
+	if (!checkAuthentication(baseurl, username, apiToken)) throw new Error("Authentication failed!");
+
+	const response: string = await invoke("get_project_data", {
+		baseurl: baseurl,
+		username: username,
+		apitoken: apiToken,
+		projectName: project
+	});
+
+	if (response == "Error getting job data: 404 Not Found") return false;
+	
+
+	return true;
+}

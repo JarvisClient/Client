@@ -21,7 +21,7 @@
     @apply mt-5;
     @apply mr-3;
     @apply text-white;
-    @apply bg-red-600;
+    @apply bg-jenkins-job-red;
     @apply hover:brightness-[0.9];
     @apply active:brightness-[0.7]
 }
