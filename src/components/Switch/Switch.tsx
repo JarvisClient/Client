@@ -16,14 +16,10 @@ const Switch: React.FC<SwitchProps> = ({ isChecked, onCheckboxChange }) => {
 						onChange={onCheckboxChange}
 						className='sr-only'
 					/>
-					<div
-						className={"box block h-8 w-14 rounded-full bg-background-card"}
-					></div>
-					<div
-						className={`absolute left-1 top-1 flex h-6 w-6 items-center justify-center rounded-full bg-white transition ${
-							isChecked ? "translate-x-full" : ""
-						}`}
-					></div>
+					<div className={"box block h-8 w-14 rounded-full bg-background-card"}></div>
+					<div className={`absolute left-1 top-1 flex h-6 w-6 items-center justify-center rounded-full transition 
+					${isChecked ? "translate-x-full bg-green-300" : "bg-red-300"}`
+					}></div>
 				</div>
 			</label>
 		</>
