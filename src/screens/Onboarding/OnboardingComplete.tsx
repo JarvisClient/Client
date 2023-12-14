@@ -7,10 +7,12 @@ import { relaunch } from '@tauri-apps/api/process';
 import "./Onboarding.css";
 import { DEFAULT_WINDOW_HEIGHT, DEFAULT_WINDOW_WIDTH } from "../../config/constants";
 
+import StorageManager from "../../helpers/StorageManager";
+
 
 const OnboardingComplete: React.FC = () => {
     useEffect(() => {
-        localStorage.setItem("onboardState", "true");
+        StorageManager.save("onboardState", "true");
         appWindow.setSize(new LogicalSize(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT));
         appWindow.maximize();
     }, []);

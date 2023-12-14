@@ -12,6 +12,8 @@ import { renderTestReportCard } from "./worker";
 import testJSON from "./testJSON.json";
 import { isValidJson } from "../../../helpers/utils";
 
+import StorageManager from "../../../helpers/StorageManager";
+
 interface ConsoleViewProps {
 	buildData: IBuildData;
 }
@@ -101,7 +103,7 @@ const TestReport: React.FC<ConsoleViewProps> = ({ buildData }) => {
 	useEffect(() => {
 		const fetchTestReport = async () => {
 			try {
-				const storedProjectName: string = localStorage.getItem("projectName") || "";
+				const storedProjectName: string = StorageManager.get("projectName") || "";
 
 				const response = await fetchTestData(storedProjectName, buildData["id"]);
 				let testReport = JSON.parse(response);

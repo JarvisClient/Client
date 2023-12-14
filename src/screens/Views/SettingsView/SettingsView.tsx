@@ -8,6 +8,8 @@ import Logger from "../../../helpers/Logger";
 import { useNotification } from "../../../components/NotificationManager/NotificationContext";
 import { useNavigate } from "react-router-dom";
 
+import StorageManager from "../../../helpers/StorageManager";
+
 import "./Settings.css";
 import LoadingScreenComponent from "../../../components/LoadingScreenComponent/LoadingScreenComponent";
 
@@ -33,15 +35,15 @@ const SettingsView: React.FC = () => {
 	const notification = useNotification();
 
 	const handleCheckboxChange = () => {
-		localStorage.setItem("openInBrowser", (!isChecked).toString());
+		StorageManager.save("openInBrowser", (!isChecked).toString());
 		setIsChecked(!isChecked);
 	};
 
 	useEffect(() => {
 		checkIfAlreadyAuthenticated();
-		setProjects(JSON.parse(localStorage.getItem("projects") || "[]"));
-		setCurrentProject(localStorage.getItem("projectName") || "");
-		setIsChecked(JSON.parse(localStorage.getItem("openInBrowser") || "false"));
+		setProjects(JSON.parse(StorageManager.get("projects") || "[]"));
+		setCurrentProject(StorageManager.get("projectName") || "");
+		setIsChecked(JSON.parse(StorageManager.get("openInBrowser") || "false"));
 
 		// Fetch Tauri app version and set it to the state
 		const fetchAppVersion = async () => {
@@ -62,9 +64,9 @@ const SettingsView: React.FC = () => {
 	}, [projects]);
 
 	const checkIfAlreadyAuthenticated = async () => {
-		const baseurl = localStorage.getItem("baseurl");
-		const username = localStorage.getItem("username");
-		const apiToken = localStorage.getItem("apiToken");
+		const baseurl = StorageManager.get("baseurl");
+		const username = StorageManager.get("username");
+		const apiToken = StorageManager.get("apiToken");
 
 		if (baseurl && username && apiToken) {
 			setBaseurl(baseurl);
@@ -104,7 +106,7 @@ const SettingsView: React.FC = () => {
 	};
 
 	const addNewProject = async () => {
-		const currentProjectsInStorage: string[] = JSON.parse(localStorage.getItem("projects") || "[]");
+		const currentProjectsInStorage: string[] = JSON.parse(StorageManager.get("projects") || "[]");
 
 		// check if project already exists
 		if (currentProjectsInStorage.includes(draftNewProject)) return alert("Project already exists!");
@@ -113,30 +115,30 @@ const SettingsView: React.FC = () => {
 		currentProjectsInStorage.push(draftNewProject);
 
 		// save new projects to storage
-		localStorage.setItem("projects", JSON.stringify(currentProjectsInStorage));
+		StorageManager.save("projects", JSON.stringify(currentProjectsInStorage));
 
 		// update state
-		setProjects(JSON.parse(localStorage.getItem("projects") || "[]"));
+		setProjects(JSON.parse(StorageManager.get("projects") || "[]"));
 	};
 
 	const deleteCurrentProject = async () => {
 
-		const currentProject = localStorage.getItem("projectName");
-		let currentProjectsInStorage: string[] = JSON.parse(localStorage.getItem("projects") || "[]");
+		const currentProject = StorageManager.get("projectName");
+		let currentProjectsInStorage: string[] = JSON.parse(StorageManager.get("projects") || "[]");
 
 		currentProjectsInStorage = currentProjectsInStorage.filter(project => project !== currentProject);
 
 		// save new projects to storage
-		localStorage.setItem("projects", JSON.stringify(currentProjectsInStorage));
+		StorageManager.save("projects", JSON.stringify(currentProjectsInStorage));
 
 		// update state
-		setProjects(JSON.parse(localStorage.getItem("projects") || "[]"));
+		setProjects(JSON.parse(StorageManager.get("projects") || "[]"));
 
 		// if there are still projects left, select the first one else set project to null
 		if (currentProjectsInStorage.length > 0) {
-			localStorage.setItem("projectName", currentProjectsInStorage[0]);
+			StorageManager.save("projectName", currentProjectsInStorage[0]);
 		} else {
-			localStorage.setItem("projectName", "");
+			StorageManager.save("projectName", "");
 		}
 
 		window.location.reload();

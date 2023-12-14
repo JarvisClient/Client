@@ -3,6 +3,8 @@ import React from "react";
 import { BiCube, BiCodeAlt, BiTimer, BiInfoCircle } from "react-icons/bi";
 import { openLink } from "../../../helpers/utils";
 
+import StorageManager from "../../../helpers/StorageManager";
+
 interface StatusViewProps {
     buildData: any;
 }
@@ -10,15 +12,15 @@ interface StatusViewProps {
 const StatusView: React.FC<StatusViewProps> = ({ buildData }) => {
 
 	const openArtifact = async (artifact: string = "") => {
-		const baseURL: string = localStorage.getItem("baseurl") || "";
-		const projectName: string = localStorage.getItem("projectName") || "";
+		const baseURL: string = StorageManager.get("baseurl") || "";
+		const projectName: string = StorageManager.get("projectName") || "";
 		const artifactURL = `${baseURL}job/${projectName}/${buildData["id"]}/artifact/${artifact}`;
 
 		await openLink(artifactURL, true);
 	};
 
 	const openUser = async (user: string) => {
-		const baseURL: string = localStorage.getItem("baseurl") || "";
+		const baseURL: string = StorageManager.get("baseurl") || "";
 		const userURL = `${baseURL}user/${user}`;
 
 		await openLink(userURL);
@@ -32,8 +34,8 @@ const StatusView: React.FC<StatusViewProps> = ({ buildData }) => {
 	);
 
 	const openBuildTimeTrend = async () => {
-		const baseURL: string = localStorage.getItem("baseurl") || "";
-		const projectName: string = localStorage.getItem("projectName") || "";
+		const baseURL: string = StorageManager.get("baseurl") || "";
+		const projectName: string = StorageManager.get("projectName") || "";
 		const buildTimeTrendURL = `${baseURL}job/${projectName}/buildTimeTrend`;
 
 		await openLink(buildTimeTrendURL);

@@ -25,6 +25,7 @@ import Logger, { onStartup } from "../../helpers/Logger";
 import { FeatureButton } from "./IBuildInterface";
 import { JobCardProps } from "../../components/JobCardComponent/JobCardComponent";
 
+import StorageManager from "../../helpers/StorageManager";
 
 import "./App.css";
 import { useNotification } from "../../components/NotificationManager/NotificationContext";
@@ -43,7 +44,7 @@ function JarvisMain(): React.ReactElement {
 	const [activeFeature, setActiveFeature] = useState<string | null>("status_for_project");
 	const [parameterDefinition, setParameterDefinition] = useState<any>(null);
 	const [jobCardsLoading, setJobCardsLoading] = useState<boolean>(true);
-	const storedProjectName: string | null = localStorage.getItem("projectName");
+	const storedProjectName: string | null = StorageManager.get("projectName");
 
 	const notification = useNotification();
 
@@ -75,11 +76,11 @@ function JarvisMain(): React.ReactElement {
    * Create a JSX Element containg the JobCardProps for each build.
    */
 	const createJobCardProps = async (builds: any[]) => {
-		const pinnedJobs: any[] = JSON.parse(localStorage.getItem("pinnedJobs") || "{}");
-		const notificationSetJobs: any[] = JSON.parse(localStorage.getItem("notificationSetJobs") || "{}");
+		const pinnedJobs: any[] = JSON.parse(StorageManager.get("pinnedJobs") || "{}");
+		const notificationSetJobs: any[] = JSON.parse(StorageManager.get("notificationSetJobs") || "{}");
 	
 		try {
-			if (!storedProjectName) throw new Error("No project name found in localStorage");
+			if (!storedProjectName) throw new Error("No project name found in StorageManager");
 			const jobCardProps = await Promise.all(builds.map(async (build: any) => {
 				const details = await fetchBuildData(build["number"]);
 				const projectName = storedProjectName as any;
@@ -183,7 +184,7 @@ function JarvisMain(): React.ReactElement {
 	 * @returns {Promise<void>}
 	 */
 	const onJobCardPin = async () => {
-		let pinnedJobs = JSON.parse(localStorage.getItem("pinnedJobs") || "{}");
+		let pinnedJobs = JSON.parse(StorageManager.get("pinnedJobs") || "{}");
 		if (Array.isArray(pinnedJobs)) pinnedJobs = {};
 
 		if (storedProjectName) {
@@ -202,7 +203,7 @@ function JarvisMain(): React.ReactElement {
 			notification.showNotification("Error", "Please select a project first.", "jenkins");
 		}
 
-		localStorage.setItem("pinnedJobs", JSON.stringify(pinnedJobs));
+		StorageManager.save("pinnedJobs", JSON.stringify(pinnedJobs));
 
 		updatePinnedJobCards();
 	};
@@ -216,7 +217,7 @@ function JarvisMain(): React.ReactElement {
 	 * @returns {Promise<void>}
 	 */
 	const onNotificationSetter = async () => {
-		let notificationSetJobs = JSON.parse(localStorage.getItem("notificationSetJobs") || "{}");
+		let notificationSetJobs = JSON.parse(StorageManager.get("notificationSetJobs") || "{}");
 		if (typeof notificationSetJobs !== "object") notificationSetJobs = {};
 
 		if (storedProjectName) {
@@ -235,7 +236,7 @@ function JarvisMain(): React.ReactElement {
 			notification.showNotification("Error", "Please select a project first.", "jenkins");
 		}
 
-		localStorage.setItem("notificationSetJobs", JSON.stringify(notificationSetJobs));
+		StorageManager.save("notificationSetJobs", JSON.stringify(notificationSetJobs));
 
 		updateNotificationSetJobCards();
 	};
@@ -249,7 +250,7 @@ function JarvisMain(): React.ReactElement {
 	 */
 	const updatePinnedJobCards = () => {
 		try {
-			const pinnedJobs = JSON.parse(localStorage.getItem("pinnedJobs") || "{}");
+			const pinnedJobs = JSON.parse(StorageManager.get("pinnedJobs") || "{}");
 			const updatedJobCardProps = jobCardProps.map((element: any) => ({
 				...element,
 				pinned: pinnedJobs[storedProjectName as any].includes(element.buildNumber),
@@ -263,7 +264,7 @@ function JarvisMain(): React.ReactElement {
 
 	const updateNotificationSetJobCards = () => {
 		try {
-			const notificationSetJobs = JSON.parse(localStorage.getItem("notificationSetJobs") || "{}");
+			const notificationSetJobs = JSON.parse(StorageManager.get("notificationSetJobs") || "{}");
 			const updatedJobCardProps = jobCardProps.map((element: any) => ({
 				...element,
 				notification_set: notificationSetJobs[storedProjectName as any].includes(element.buildNumber),
@@ -399,7 +400,7 @@ function JarvisMain(): React.ReactElement {
 
 
 	function NotifyForFinishedBuilds (changedBuilds: any[]) {
-		let notificationSetJobs = JSON.parse(localStorage.getItem("notificationSetJobs") || "{}");
+		let notificationSetJobs = JSON.parse(StorageManager.get("notificationSetJobs") || "{}");
 		if (typeof notificationSetJobs !== "object") notificationSetJobs = {};
 	}
 

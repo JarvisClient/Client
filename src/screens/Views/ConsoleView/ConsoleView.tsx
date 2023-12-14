@@ -10,6 +10,8 @@ import { getConsoleViewStyleDict } from "./ConsoleViewStyleDict";
 import Logger from "../../../helpers/Logger";
 import { IBuildData } from "../../Jarvis/IBuildInterface";
 
+import StorageManager from "../../../helpers/StorageManager";
+
 interface ConsoleViewProps {
 	buildData: IBuildData;
 }
@@ -33,7 +35,7 @@ const ConsoleView: React.FC<ConsoleViewProps> = ({ buildData }) => {
 	const fetchConsoleData = async () => {
 		try {
 			const config = {
-				projectName: localStorage.getItem("projectName"),
+				projectName: StorageManager.get("projectName"),
 				buildNumber: buildData["id"].toString(),
 				...getAuthDetails()
 			};
@@ -70,7 +72,7 @@ const ConsoleView: React.FC<ConsoleViewProps> = ({ buildData }) => {
 	const fetchDataForBuild = async () => {
 		try {
 			const config = {
-				projectName: localStorage.getItem("projectName"),
+				projectName: StorageManager.get("projectName"),
 				buildNumber: buildData["id"].toString(),
 				...getAuthDetails()
 			};

@@ -4,6 +4,7 @@ import icon from "../../assets/icons/ico_bow.svg";
 import { useNavigate } from "react-router-dom";
 import loading_anim from "../../assets/icons/loading_anim.webm";
 import Logger from "../../helpers/Logger";
+import StorageManager from "../../helpers/StorageManager";
 
 const App: React.FC = () => {
     const navigate = useNavigate();
@@ -48,7 +49,7 @@ const App: React.FC = () => {
       ];
 
     const decideOnboarding = () => {
-        let onboardState = localStorage.getItem("onboardState");
+        let onboardState = StorageManager.get("onboardState");
 
         if (onboardState !== "true") {
             Logger.info("Onboarding not completed, redirecting to onboarding");

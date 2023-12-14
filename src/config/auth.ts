@@ -1,4 +1,5 @@
 import Logger from "../helpers/Logger";
+import StorageManager from "../helpers/StorageManager";
 
 // Define the AuthDetails interface
 interface AuthDetails {
@@ -9,9 +10,9 @@ interface AuthDetails {
 
 export const getAuthDetails = (): AuthDetails | null => {
   let authDetails: AuthDetails = {
-    baseurl: localStorage.getItem("baseurl"),
-    username: localStorage.getItem("username"),
-    apitoken: localStorage.getItem("apiToken"),
+    baseurl: StorageManager.get("baseurl"),
+    username: StorageManager.get("username"),
+    apitoken: StorageManager.get("apiToken"),
   };
 
   if (!authDetails.baseurl || !authDetails.username || !authDetails.apitoken) {

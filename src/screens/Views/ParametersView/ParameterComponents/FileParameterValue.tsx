@@ -4,6 +4,8 @@ import { JenkinsParameters } from "../ParametersView";
 import { BiFile } from "react-icons/bi";
 import { openLink } from "../../../../helpers/utils";
 
+import StorageManager from "../../../../helpers/StorageManager";
+
 interface Props {
     parameter: JenkinsParameters;
     buildNumber: number;
@@ -12,8 +14,8 @@ interface Props {
 
 const FileParameterValue: React.FC<Props> = ({ parameter, buildNumber }): JSX.Element => {
 	const openFile = (view: boolean = false) => {
-		const baseurl = localStorage.getItem("baseurl");
-		const projectName = localStorage.getItem("projectName");
+		const baseurl = StorageManager.get("baseurl");
+		const projectName = StorageManager.get("projectName");
 		const buildnumber = buildNumber;
 		let url = `${baseurl}job/${projectName}/${buildnumber}/parameters/parameter/${parameter.name}/${parameter.name}`;
 

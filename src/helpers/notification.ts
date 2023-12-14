@@ -3,6 +3,7 @@ import { getAuthDetails } from "../config/auth";
 import { isPermissionGranted, requestPermission, sendNotification as tauriSendNotification } from "@tauri-apps/api/notification";
 import { invoke } from "@tauri-apps/api/tauri";
 import Logger from "./Logger";
+import StorageManager from "./StorageManager";
 
 export const sendNotification = async (title: string, body?: string) => {
 	let permissionGranted = await isPermissionGranted();
@@ -17,7 +18,7 @@ export const sendNotification = async (title: string, body?: string) => {
 
 const fetchDataForBuild = async (buildNumber: any) => {
 	const config = {
-		projectName: localStorage.getItem("projectName"),
+		projectName: StorageManager.get("projectName"),
 		buildNumber: buildNumber.toString(),
 		...getAuthDetails()
 	};

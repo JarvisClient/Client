@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { checkProjectValidity } from "../Views/SettingsView/ButtonEvents";
 import { useNotification } from "../../components/NotificationManager/NotificationContext";
 import { motion } from "framer-motion";
+import StorageManager from "../../helpers/StorageManager";
 
 
 const OnboardingStep1: React.FC = () => {
@@ -32,10 +33,10 @@ const OnboardingStep1: React.FC = () => {
 
     const continueOnboarding = async () => {
         try {
-            let baseUrl = localStorage.getItem("baseurl");
-            let username = localStorage.getItem("username");
-            let apiToken = localStorage.getItem("apiToken");
-            let projects = localStorage.getItem("projects");
+            let baseUrl = StorageManager.get("baseurl");
+            let username = StorageManager.get("username");
+            let apiToken = StorageManager.get("apiToken");
+            let projects = StorageManager.get("projects");
             let projectName;
 
             // validate input
@@ -47,7 +48,7 @@ const OnboardingStep1: React.FC = () => {
             }
 
             // Current Projects in Storage
-            const currentProjectsInStorage: string[] = JSON.parse(localStorage.getItem("projects") || "[]");
+            const currentProjectsInStorage: string[] = JSON.parse(StorageManager.get("projects") || "[]");
 
 
             // check if project already exists
@@ -66,8 +67,8 @@ const OnboardingStep1: React.FC = () => {
 
             // add project to storage
             currentProjectsInStorage.push(projectName);
-            localStorage.setItem("projects", JSON.stringify(currentProjectsInStorage));
-            localStorage.setItem("projectName", projectName);
+            StorageManager.save("projects", JSON.stringify(currentProjectsInStorage));
+            StorageManager.save("projectName", projectName);
             navigate("/onboarding/step_3");
         } catch (error) {
             notification.showNotification("Error", String(error), "jenkins");
@@ -75,7 +76,7 @@ const OnboardingStep1: React.FC = () => {
     }
 
     const skipToStep3 = () => {
-        const currentProjectsInStorage: string[] = JSON.parse(localStorage.getItem("projects") || "[]");
+        const currentProjectsInStorage: string[] = JSON.parse(StorageManager.get("projects") || "[]");
 
         if (currentProjectsInStorage.length > 0) {
             navigate("/onboarding/step_3");
@@ -85,7 +86,7 @@ const OnboardingStep1: React.FC = () => {
     }
 
     const checkIfSkipAvailable = () => {
-        const currentProjectsInStorage: string[] = JSON.parse(localStorage.getItem("projects") || "[]");
+        const currentProjectsInStorage: string[] = JSON.parse(StorageManager.get("projects") || "[]");
 
         if (currentProjectsInStorage.length > 0) {
             return true;

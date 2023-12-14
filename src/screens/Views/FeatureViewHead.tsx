@@ -9,6 +9,8 @@ import { FEATURE_VIEW_HEAD_REFRESH_TIME } from "../../config/constants";
 import Logger from "../../helpers/Logger";
 import { IBuildData } from "../Jarvis/IBuildInterface";
 
+import StorageManager from "../../helpers/StorageManager";
+
 interface ConsoleViewProps {
     buildData: IBuildData;
 }
@@ -19,7 +21,7 @@ const FeatureViewHead: React.FC<ConsoleViewProps> = ({ buildData }) => {
 	const fetchDataForBuild = async () => {
 		try {
 			const config = {
-				projectName: localStorage.getItem("projectName"),
+				projectName: StorageManager.get("projectName"),
 				buildNumber: buildData["id"].toString(),
 				...getAuthDetails()
 			};

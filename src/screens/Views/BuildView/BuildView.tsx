@@ -12,6 +12,8 @@ import ChoiceParameterDefinition from "./ParameterComponents/ChoiceParameterDefi
 import Logger from "../../../helpers/Logger";
 import { useNotification } from "../../../components/NotificationManager/NotificationContext";
 
+import StorageManager from "../../../helpers/StorageManager";
+
 interface BuildViewProps {
     parameterDefinition: any[];
     buildData: any;
@@ -33,7 +35,7 @@ const BuildView: React.FC<BuildViewProps> = ({ parameterDefinition, buildData })
 	const [parameterValues, setParameterValues] = useState<{ [key: string]: string | boolean | number | null }>({});
 	const [SParameterDefinitions, setSParameterDefinitions] = useState<JenkinsParameters[]>([]);
 	const [parameterAvailable, setParameterAvailable] = useState(false);
-	const projectName = localStorage.getItem("projectName");
+	const projectName = StorageManager.get("projectName");
 
 	const notification = useNotification();
 

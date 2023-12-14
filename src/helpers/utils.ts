@@ -1,4 +1,5 @@
 import { open } from "@tauri-apps/api/shell";
+import StorageManager from "./StorageManager";
 
 export const formatBuildDate = (timestamp: number) => {
 	const date = new Date(timestamp);
@@ -14,7 +15,7 @@ export const formatBuildDate = (timestamp: number) => {
 };
 
 export const openLink = async (url: string, forceBrowser: boolean = false) => {
-	const openInBrowser = localStorage.getItem("openInBrowser");
+	const openInBrowser = StorageManager.get("openInBrowser");
 
 	if (openInBrowser === "true" || forceBrowser) {
 		return await open(url);

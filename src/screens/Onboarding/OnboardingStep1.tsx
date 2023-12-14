@@ -9,11 +9,13 @@ import { checkAuthentication } from "../Views/SettingsView/ButtonEvents";
 import { useNotification } from "../../components/NotificationManager/NotificationContext";
 import { motion } from "framer-motion";
 
+import StorageManager from "../../helpers/StorageManager";
+
 
 const OnboardingStep1: React.FC = () => {
-    const [baseUrl, setBaseUrl] = useState(localStorage.getItem("baseurl") || '');
-    const [username, setUsername] = useState(localStorage.getItem("username") || '');
-    const [apiToken, setApiToken] = useState(localStorage.getItem("apiToken") || '');
+    const [baseUrl, setBaseUrl] = useState(StorageManager.get("baseurl") || '');
+    const [username, setUsername] = useState(StorageManager.get("username") || '');
+    const [apiToken, setApiToken] = useState(StorageManager.get("apiToken") || '');
 
 
     const navigate = useNavigate();
@@ -58,9 +60,9 @@ const OnboardingStep1: React.FC = () => {
             notification.showNotification("Authentication failed", "Please check your Credentials.", "jenkins");
             return;
         } else {
-            localStorage.setItem("baseurl", baseUrl);
-            localStorage.setItem("username", username);
-            localStorage.setItem("apiToken", apiToken);
+            StorageManager.save("baseurl", baseUrl);
+            StorageManager.save("username", username);
+            StorageManager.save("apiToken", apiToken);
             navigate("/onboarding/step_2");
         }
     }

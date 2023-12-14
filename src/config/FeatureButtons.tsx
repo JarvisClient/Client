@@ -10,7 +10,10 @@ import { HiHome } from "react-icons/hi";
 import { BsPlayFill } from "react-icons/bs";
 import { TbPin, TbPinnedFilled } from "react-icons/tb";
 
-const projectName = localStorage.getItem("projectName");
+import StorageManager from "../helpers/StorageManager";
+
+
+const projectName = StorageManager.get("projectName");
 
 export interface FeatureButtonProps {
   title: string;

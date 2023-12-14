@@ -7,6 +7,8 @@ import { invoke } from "@tauri-apps/api/tauri";
 import { getConsoleViewStyleDict } from "../ConsoleView/ConsoleViewStyleDict";
 import Logger from "../../../helpers/Logger";
 
+import StorageManager from "../../../helpers/StorageManager";
+
 export const editConsoleStyling = async () => {
 	try {
 		await getConsoleViewStyleDict();
@@ -53,7 +55,7 @@ export const openLogs = async () => {
 
 export const clearAllData = async () => {
 	try {
-		localStorage.clear();
+		StorageManager.clearAll();
 		window.location.reload();
 	}
 	catch (error) {
@@ -72,22 +74,22 @@ export const checkAuthentication = async (baseurl: any, username: any, apiToken:
 			apitoken: apiToken
 		});
 
-		localStorage.setItem("baseurl", baseurl);
-		localStorage.setItem("username", username);
-		localStorage.setItem("apiToken", apiToken);
+		StorageManager.save("baseurl", baseurl);
+		StorageManager.save("username", username);
+		StorageManager.save("apiToken", apiToken);
 
 		return response || false;
 };
 
 export const signOut = async () => {	
-	localStorage.removeItem("baseurl");
-	localStorage.removeItem("username");
-	localStorage.removeItem("apiToken");
+	StorageManager.removeItem("baseurl");
+	StorageManager.removeItem("username");
+	StorageManager.removeItem("apiToken");
 	window.location.reload();
 }
 
 export const selectProject = async (project: string) => {
-	localStorage.setItem("projectName", project);
+	StorageManager.save("projectName", project);
 	window.location.reload();
 };
 
