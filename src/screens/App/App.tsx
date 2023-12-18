@@ -1,23 +1,54 @@
 import React, { useEffect } from "react"
 import { appWindow, LogicalSize } from '@tauri-apps/api/window';
-import icon from "../../assets/icons/ico_bow.svg";
+import { WebviewWindow } from '@tauri-apps/api/window'
 import { useNavigate } from "react-router-dom";
 import loading_anim from "../../assets/icons/loading_anim.webm";
 import Logger from "../../helpers/Logger";
 import StorageManager from "../../helpers/StorageManager";
+import { checkForUpdates } from "./updateChecker/updateChecker";
+import { DEFAULT_WINDOW_HEIGHT, DEFAULT_WINDOW_WIDTH } from "../../config/constants";
 
 const App: React.FC = () => {
     const navigate = useNavigate();
     const [specificLoadingMessage, setSpecificLoadingMessage] = React.useState<string>("");
 
     useEffect(() => {
+        const initUpdateChecker = async () => {
+            let updateState = await checkForUpdates();
+            if (updateState) {
+                Logger.info("Update available, opening update window");
+                const webview = new WebviewWindow('theUniqueLabel', {
+                    url: '/updateAvailable',
+                    title: 'Update Available',
+                    width: DEFAULT_WINDOW_WIDTH,
+                    height: DEFAULT_WINDOW_HEIGHT,
+                    resizable: false,
+                    decorations: false,
+                })
+
+                webview.center();
+
+
+
+                webview.once('tauri://created', (e) => {
+                    Logger.info("Webview created");
+                })
+
+                webview.once('tauri://error', (e) => {
+                    Logger.error("Error in webview: " + e);
+                })
+            }
+
+        }
+
         Logger.info("App started");
         appWindow.setSize(new LogicalSize(270, 350));
         appWindow.center();
 
         // Check for Jarvis Home Connection
         setSpecificLoadingMessage("Checking for Updates...")
-        
+        initUpdateChecker();
+
         setTimeout(() => {
             setSpecificLoadingMessage("Checking Setup...")
             navigate(decideOnboarding());
@@ -46,7 +77,7 @@ const App: React.FC = () => {
         "Perfecting the art of discreet coughing",
         "Synchronizing Jarvis' impeccable timing",
         "Reviewing the etiquette rulebook",
-      ];
+    ];
 
     const decideOnboarding = () => {
         let onboardState = StorageManager.get("onboardState");
@@ -60,12 +91,12 @@ const App: React.FC = () => {
         }
     }
 
-    const selectRandomLoadingMessage =  (messages: string[]) => {
+    const selectRandomLoadingMessage = (messages: string[]) => {
         return messages[Math.floor(Math.random() * messages.length)];
     }
 
     return (
-        <div className="flex flex-col bg-background-sidebar items-center justify-center h-screen select-none">
+        <div className="flex flex-col bg-background-sidebar items-center justify-center h-screen select-none" data-tauri-drag-region>
             <video autoPlay loop muted className="w-20 h-20 mb-12">
                 <source src={loading_anim} type="video/webm" />
             </video>

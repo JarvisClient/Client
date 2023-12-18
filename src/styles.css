@@ -30,6 +30,14 @@
   @apply border-r border-border
 }
 
+.big-sidebar_light {
+  /* Tailwind */
+  @apply bg-background-sidebar;
+  @apply w-[140px];
+  @apply h-full;
+  @apply border-r border-border
+}
+
 .small-sidebar {
   @apply bg-background-sidebar;
   @apply w-[80px];
@@ -41,6 +49,12 @@
   @apply bg-background-view;
   @apply h-full;
   width: calc(100% - 348px - 80px);
+}
+
+.general-view_light {
+  @apply bg-background-sidebar;
+  @apply h-full;
+  @apply pl-[40px];
 }
 
 a {
