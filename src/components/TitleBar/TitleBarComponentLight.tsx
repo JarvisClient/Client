@@ -2,11 +2,8 @@ import React from "react";
 import icoBow from "../../assets/icons/ico_bow.svg";
 import { appWindow } from "@tauri-apps/api/window";
 
-interface TitleBarProps {
-    windowTitle: any;
-}
 
-const TitleBarComponentLight: React.FC<TitleBarProps> = ({ windowTitle }) => {
+const TitleBarComponentLight: React.FC = () => {
     const closeWindow = async () => {
         appWindow.close();
     };
