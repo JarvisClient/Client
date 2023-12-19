@@ -36,6 +36,8 @@ const OnboardingStep1: React.FC = () => {
                 return;
             }
 
+            StorageManager.save("projectName", currentProjects[0]);
+
             navigate("/onboarding/step_3");
         } catch (error) {
             notification.showNotification("Error", String(error), "jenkins");

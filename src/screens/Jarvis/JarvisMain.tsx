@@ -78,7 +78,7 @@ function JarvisMain(): React.ReactElement {
 	const createJobCardProps = async (builds: any[]) => {
 		const pinnedJobs: any[] = JSON.parse(StorageManager.get("pinnedJobs") || "{}");
 		const notificationSetJobs: any[] = JSON.parse(StorageManager.get("notificationSetJobs") || "{}");
-	
+
 		try {
 			if (!storedProjectName) throw new Error("No project name found in StorageManager");
 			const jobCardProps = await Promise.all(builds.map(async (build: any) => {
@@ -95,7 +95,7 @@ function JarvisMain(): React.ReactElement {
 					active: false,
 				};
 			}));
-	
+
 			await setJobCardProps(jobCardProps);
 		} catch (error) {
 			// Handle errors if any
@@ -103,7 +103,7 @@ function JarvisMain(): React.ReactElement {
 			Logger.error("Error creating job card props:", error);
 		}
 	};
-	
+
 	/**
  * Memoized function to fetch build data for a specific build number.
  * @param {number} buildNumber - The build number for which to fetch data.
@@ -349,6 +349,7 @@ function JarvisMain(): React.ReactElement {
  * Runs once after the component is mounted to fetch data for the active project.
  */
 	useEffect(() => {
+
 		const randomNumber = Math.floor(Math.random() * 1000000);
 
 		Logger.info(randomNumber + " - BASE: Fetching project data for", storedProjectName);
@@ -359,15 +360,15 @@ function JarvisMain(): React.ReactElement {
 			// Fetch project data and create JobCardProps
 			const projectData = await fetchProjectData();
 			await createJobCardProps(projectData["builds"])
-			.then(() => {
-				setJobCardsLoading(false);
-			});
+				.then(() => {
+					setJobCardsLoading(false);
+				});
 			Logger.info("Initial JobCardProps created");
 			onStartup();
 
 			// Check if latest build data has changed every 10 seconds
 			let prevLatestBuildData: any = null;
-			
+
 			intervalId = setInterval(async () => {
 				try {
 					Logger.info(randomNumber + " - Fetching project data every 30 seconds for", storedProjectName);
@@ -387,9 +388,6 @@ function JarvisMain(): React.ReactElement {
 			}, JOBCARD_REFRESH_TIME);
 		};
 
-		// Set Window Size
-		appWindow.setSize(new LogicalSize(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT));
-		appWindow.center();
 
 		startJarvis();
 
@@ -400,8 +398,19 @@ function JarvisMain(): React.ReactElement {
 		};
 	}, [storedProjectName, fetchProjectData, setProjectData]);
 
+	useEffect(() => {
+		const setWindowSize = async () => {
+			// Set Window Size
+			await appWindow.setSize(new LogicalSize(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT));
+			await appWindow.center();
+		}
 
-	function NotifyForFinishedBuilds (changedBuilds: any[]) {
+		setWindowSize();
+	}, []);
+
+
+
+	function NotifyForFinishedBuilds(changedBuilds: any[]) {
 		let notificationSetJobs = JSON.parse(StorageManager.get("notificationSetJobs") || "{}");
 		if (typeof notificationSetJobs !== "object") notificationSetJobs = {};
 	}
@@ -589,14 +598,14 @@ function JarvisMain(): React.ReactElement {
 				{/* Feature View */}
 				<div className="overflow-y-scroll general-view custom-scroll">
 					{activeFeature !== "settings" && activeFeature !== "status_for_project" && activeFeature !== "build" && activeFeature != "switch_project" && (
-						<FeatureViewHead buildData={selectedBuildData}/>
+						<FeatureViewHead buildData={selectedBuildData} />
 					)}
 					{activeFeature === "switch_project" && <SwitchProjectView />}
 					{activeFeature === "status" && <StatusView buildData={selectedBuildData} />}
 					{activeFeature === "console" && <ConsoleView buildData={selectedBuildData} />}
 					{activeFeature === "parameters" && <ParametersView buildData={selectedBuildData} />}
 					{activeFeature === "settings" && <SettingsView />}
-					{activeFeature === "status_for_project" && <ProjectStatusView buildData={projectData}/>}
+					{activeFeature === "status_for_project" && <ProjectStatusView buildData={projectData} />}
 					{activeFeature === "testReport" && <TestReport buildData={selectedBuildData} />}
 					{activeFeature === "build" && <BuildView buildData={selectedBuildData} parameterDefinition={parameterDefinition} />}
 				</div>
