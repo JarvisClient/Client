@@ -1,7 +1,9 @@
+import { IJenkinsBuild } from "../Interfaces/IBuildInterface";
+import { JobCardProps } from "../Interfaces/IJobCardProps";
 
 // Determine the color based on build result
-const circleColor = (buildData: any | null) => {
-	switch (buildData["result"]) {
+const circleColor = (buildData: IJenkinsBuild | JobCardProps) => {
+	switch (buildData.result) {
 	case "SUCCESS":
 		return "bg-jenkins-job-green";
 	case "FAILURE":

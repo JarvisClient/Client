@@ -1,7 +1,7 @@
 import React from "react";
 import FeatureButtons from "../../config/FeatureButtons";
 
-interface FeatureButtonProps {
+interface Props {
   active?: boolean;
   buildNumber: number | null;
   onClick?: () => void;
@@ -11,10 +11,12 @@ interface FeatureButtonProps {
 
 /**
  * Functional component representing a feature button.
- * @param {FeatureButtonProps} props - The props for the component.
+ * @param {Props} props - The props for the component.
  * @returns {JSX.Element} - The rendered feature button.
  */
-const FeatureButtonComponent: React.FC<FeatureButtonProps> = ({ onClick, feature, active, useSecondaryIcon }) => {
+const FeatureButtonComponent: React.FC<Props> = ({
+	onClick, feature, active, useSecondaryIcon,
+}) => {
 	// Retrieve feature details from configuration
 	const featureDetails = FeatureButtons[feature];
 
@@ -23,10 +25,9 @@ const FeatureButtonComponent: React.FC<FeatureButtonProps> = ({ onClick, feature
 	const { bg_color, icon_color } = featureDetails;
 
 	if (useSecondaryIcon) {
-		IconComponent = featureDetails.secondaryIcon as React.ElementType<any>;
+		IconComponent = featureDetails.secondaryIcon as React.ElementType<string>;
 		active = true;
 	}
-	
 
 	return (
 		<div

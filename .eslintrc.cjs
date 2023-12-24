@@ -36,6 +36,7 @@ module.exports = {
 		"react"
 	],
 	"rules": {
+		"react/no-unescaped-entities": ["off"],
 		"indent": [
 			"error",
 			"tab"

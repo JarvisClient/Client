@@ -1,6 +1,6 @@
 import { open } from "@tauri-apps/api/shell";
-import StorageManager from "./StorageManager";
 import DOMPurify from "dompurify";
+import StorageManager from "./StorageManager";
 
 export const formatBuildDate = (timestamp: number) => {
 	const date = new Date(timestamp);
@@ -20,20 +20,11 @@ export const openLink = async (url: string, forceBrowser: boolean = false) => {
 
 	if (openInBrowser === "true" || forceBrowser) {
 		return await open(url);
-	} else {
-		return await window.open(url, "_blank");
 	}
-
+	return await window.open(url, "_blank");
 };
 
-/**
- * Function to check if two arrays are equal.
- */
-export function arraysAreEqual(array1: any, array2: any) {
-	return JSON.stringify(array1) === JSON.stringify(array2);
-}
-
-export function deepEqual(obj1: any, obj2: any) {
+export function deepEqual(obj1: unknown, obj2: unknown): boolean {
 	// Handle primitive types
 	if (obj1 === obj2) {
 		return true;
@@ -44,22 +35,27 @@ export function deepEqual(obj1: any, obj2: any) {
 		return false;
 	}
 
+	// Type assertion to treat obj1 and obj2 as objects
+	const obj1AsObject = obj1 as Record<string, unknown>;
+	const obj2AsObject = obj2 as Record<string, unknown>;
+
 	// Check if the number of keys or elements match
-	const keys1 = Object.keys(obj1);
-	const keys2 = Object.keys(obj2);
+	const keys1 = Object.keys(obj1AsObject);
+	const keys2 = Object.keys(obj2AsObject);
 	if (keys1.length !== keys2.length) {
 		return false;
 	}
 
 	// Recursively compare each key or element
 	for (const key of keys1) {
-		if (!keys2.includes(key) || !deepEqual(obj1[key], obj2[key])) {
+		if (!keys2.includes(key) || !deepEqual(obj1AsObject[key], obj2AsObject[key])) {
 			return false;
 		}
 	}
 
 	return true;
 }
+
 
 export const isValidJson = (str: string) => {
 	try {
@@ -68,7 +64,7 @@ export const isValidJson = (str: string) => {
 		return false;
 	}
 	return true;
-}
+};
 
 export const renderHTML = (html: string) => {
 	const sanitizedHTML = DOMPurify.sanitize(html);

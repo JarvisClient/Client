@@ -18,9 +18,9 @@
     /* Linting */
     "strict": true,
     "noUnusedLocals": false,
-    "noUnusedParameters": false,
+    "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src"],
+  "include": ["src", "tests/src/helpers/utils/utils.test.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

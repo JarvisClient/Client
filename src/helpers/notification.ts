@@ -1,7 +1,6 @@
-
-import { getAuthDetails } from "../config/auth";
 import { isPermissionGranted, requestPermission, sendNotification as tauriSendNotification } from "@tauri-apps/api/notification";
 import { invoke } from "@tauri-apps/api/tauri";
+import { getAuthDetails } from "../config/auth";
 import Logger from "./Logger";
 import StorageManager from "./StorageManager";
 
@@ -12,15 +11,17 @@ export const sendNotification = async (title: string, body?: string) => {
 		permissionGranted = permission === "granted";
 	}
 	if (permissionGranted) {
-		tauriSendNotification({ title: title, body: body, sound: "default", icon: "../assets/brand/icoFull256x.png"});
+		tauriSendNotification({
+			title, body, sound: "default", icon: "../assets/brand/icoFull256x.png",
+		});
 	}
 };
 
-const fetchDataForBuild = async (buildNumber: any) => {
+const fetchDataForBuild = async (buildNumber: number) => {
 	const config = {
 		projectName: StorageManager.get("projectName"),
 		buildNumber: buildNumber.toString(),
-		...getAuthDetails()
+		...getAuthDetails(),
 	};
 
 	const response: string = await invoke("get_build_data", config);
@@ -29,9 +30,8 @@ const fetchDataForBuild = async (buildNumber: any) => {
 	return json;
 };
 
-export const registerNotification = async (buildNumber: any) => {
+export const registerNotification = async (buildNumber: number) => {
 	const response = await fetchDataForBuild(buildNumber);
 
 	Logger.info(response);
-    
 };
