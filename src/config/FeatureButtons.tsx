@@ -1,33 +1,24 @@
-import { FaGear } from "react-icons/fa6";
+import { FaCheck, FaGear } from "react-icons/fa6";
 
-import { IoMdListBox, IoIosSwitch, IoIosNotificationsOutline, IoIosNotifications, IoIosList } from "react-icons/io";
+import {
+	IoMdListBox, IoIosSwitch, IoIosNotificationsOutline, IoIosNotifications, IoIosList,
+} from "react-icons/io";
 import { BiSolidTerminal } from "react-icons/bi";
 import { MdOutlineOpenInBrowser } from "react-icons/md";
 import { LuTestTube2 } from "react-icons/lu";
 
 import { HiHome } from "react-icons/hi";
 
-import { BsList, BsPlayFill } from "react-icons/bs";
+import { BsPlayFill } from "react-icons/bs";
 import { TbPin, TbPinnedFilled } from "react-icons/tb";
 
 import StorageManager from "../helpers/StorageManager";
-
+import { FeatureButtonProps } from "../Interfaces/IFeatureButtonProps";
 
 const projectName = StorageManager.get("projectName");
 
-export interface FeatureButtonProps {
-  title: string;
-  titleBar: string;
-  bg_color: string;
-  icon_color: string;
-  icon: React.ElementType;
-  secondaryIcon?: React.ElementType;
-  purpose: "JOB" | "PROJECT" | "BOTH";
-  hidden?: boolean;
-}
-
 const FeatureButtons: { [key: string]: FeatureButtonProps } = {
-	"status_for_project": {
+	status_for_project: {
 		title: "Project",
 		titleBar: "Project Status",
 		bg_color: "#292929",
@@ -36,7 +27,7 @@ const FeatureButtons: { [key: string]: FeatureButtonProps } = {
 		hidden: !projectName,
 		purpose: "BOTH",
 	},
-	"switch_project": {
+	switch_project: {
 		title: "Switch Projects",
 		titleBar: "Switch Projects",
 		bg_color: "#292929",
@@ -122,6 +113,15 @@ const FeatureButtons: { [key: string]: FeatureButtonProps } = {
 		icon_color: "#F45B69",
 		icon: MdOutlineOpenInBrowser,
 		purpose: "JOB",
+	},
+	success: {
+		title: "Success",
+		titleBar: "Success",
+		bg_color: "#2D483A",
+		icon_color: "#84FFB3",
+		icon: FaCheck,
+		hidden: true,
+		purpose: "BOTH",
 	},
 };
 

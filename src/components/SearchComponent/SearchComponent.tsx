@@ -1,24 +1,22 @@
 import React, { useState, ChangeEvent, useEffect } from "react";
 import IcoSearch from "../../assets/icons/ico_search.svg";
 
-interface SearchComponentProps {
+interface Props {
     onSearchChange: (value: string) => void;
 	outSearchQuerry?: string;
 }
 
-function SearchComponent({ onSearchChange, outSearchQuerry }: SearchComponentProps): React.ReactElement<any, any> | null  {
+function SearchComponent({ onSearchChange, outSearchQuerry }: Props): React.ReactElement<string, string> | null {
 	const [search, setSearch] = useState<string>("");
 
 	const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
-		const value = e.target.value;
+		const { value } = e.target;
 		setSearch(value);
 		// Pass the search value to the parent component
 		onSearchChange(value);
 	};
 
 	useEffect(() => {
-		console.log("outSearchQuerry", outSearchQuerry);
-		
 		if (outSearchQuerry) {
 			setSearch(outSearchQuerry);
 		}

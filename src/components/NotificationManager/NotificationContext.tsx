@@ -1,26 +1,23 @@
-import React, { createContext, useContext, ReactNode, useState } from "react";
-import FeatureButtons, { FeatureButtonProps } from "../../config/FeatureButtons";
+import React, {
+	createContext, useContext, ReactNode, useState,
+} from "react";
+import { motion } from "framer-motion";
+import FeatureButtons from "../../config/FeatureButtons";
+import { Notification } from "../../Interfaces/INotification";
 
 import notifcationSoundAsset from "../../assets/sounds/notification.ogg";
-import { motion } from "framer-motion";
 import { NOTIFICATION_CLOSE_TIME } from "../../config/constants";
 import Logger from "../../helpers/Logger";
+
 const notificationSound = new Audio(notifcationSoundAsset);
 
-interface Notification {
-  id: number;
-  title: string;
-  message: string;
-  featureButtonData: FeatureButtonProps;
-  variant: string; // Add the "variant" property
-}
 
-interface NotificationContextType {
+interface Props_NotificationContext {
   showNotification: (title: string, message: string, icon: string) => void;
   hideNotification: (id: number) => void;
 }
 
-const NotificationContext = createContext<NotificationContextType | undefined>(undefined);
+const NotificationContext = createContext<Props_NotificationContext | undefined>(undefined);
 
 export function useNotification() {
 	try {
@@ -31,27 +28,28 @@ export function useNotification() {
 		return context;
 	} catch (error) {
 		Logger.error("Error using notification:", error);
-		return { showNotification: () => {}, hideNotification: () => {}};
+		return { showNotification: () => {}, hideNotification: () => {} };
 	}
 }
 
 let notificationIdCounter = 0;
 
-interface NotificationProviderProps {
+interface Props_NotificationProvider {
   children: ReactNode;
 }
 
-export const NotificationProvider: React.FC<NotificationProviderProps> = ({ children }) => {
+export const NotificationProvider: React.FC<Props_NotificationProvider> = ({ children }) => {
 	const [notifications, setNotifications] = useState<Notification[]>([]);
 
 	const showNotification = (title: string, message: string, icon: string) => {
-
-		if (!children) return showNotificationAsAlert(title, message, icon);
+		if (!children) return showNotificationAsAlert(title, message);
 
 		const id = notificationIdCounter++;
 		const featureButtonData = FeatureButtons[icon];
 
-		const newNotification: Notification = { id, title, message, featureButtonData, variant: "visible" }; // Initialize variant as 'visible'
+		const newNotification: Notification = {
+			id, title, message, featureButtonData, variant: "visible",
+		}; // Initialize variant as 'visible'
 		notificationSound.play();
 
 		setNotifications((prevNotifications) => [...prevNotifications, newNotification]);
@@ -62,9 +60,8 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({ chil
 		}, NOTIFICATION_CLOSE_TIME);
 	};
 
-	const showNotificationAsAlert = (title: string, message: string, icon: string) => {
-		const featureButtonData = FeatureButtons[icon];
-		alert(title + "\n\n" + message);
+	const showNotificationAsAlert = (title: string, message: string) => {
+		alert(`${title}\n\n${message}`);
 	};
 
 	const hideNotification = (id: number) => {
@@ -73,12 +70,12 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({ chil
 
 	return (
 		<NotificationContext.Provider value={{ showNotification, hideNotification }}>
-			<div className='absolute bottom-[30px] right-[30px] space-y-2 w-[300px] z-50'>
+			<div className="absolute bottom-[30px] right-[30px] space-y-2 w-[300px] z-50">
 				{notifications.map((notification) => (
 					<motion.div
 						id="toast-interactive"
 						key={notification.id}
-						className={"w-full max-w-lg p-4 rounded-lg shadow bg-background-sidebar text-gray-400 opacity-0 transition-opacity duration-300"}
+						className="w-full max-w-lg p-4 rounded-lg shadow bg-background-sidebar text-gray-400 opacity-0 transition-opacity duration-300"
 						initial={{ opacity: 0, y: 50, scale: 0.3 }}
 						animate={{ opacity: 1, y: 0, scale: 1 }}
 						onClick={hideNotification.bind(null, notification.id)}

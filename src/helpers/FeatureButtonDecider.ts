@@ -1,36 +1,26 @@
-interface JenkinsAction {
-    _class: string;
-    // Additional properties based on your actual data structure
-    // Add here according to your needs
-}
+import { IJenkinsBuild, JenkinsBuildAction, JenkinsBuildCause, JenkinsBuildParameter } from "../Interfaces/IBuildInterface";
 
-interface JenkinsRun {
-    actions: JenkinsAction[];
-    // Additional properties based on your actual data structure
-    // Add here according to your needs
-}
-
-function featureButtonKeywordFinder(jenkinsRun: JenkinsRun): string[] {
+function featureButtonKeywordFinder(jenkinsRun: IJenkinsBuild): string[] {
 	const keywordsToFind = ["artifacts", "parameters"];
 	const result: string[] = [];
 
-	jenkinsRun.actions.forEach((action: any) => {
+	jenkinsRun.actions.forEach((action: JenkinsBuildAction) => {
 		if (action._class === "hudson.model.ParametersAction" && action.parameters) {
-			action.parameters.forEach((parameter: any) => {
+			action.parameters.forEach((parameter: JenkinsBuildParameter) => {
 				if (keywordsToFind.includes(parameter.name) && parameter.value) {
 					result.push(parameter.value);
 				}
 			});
 		} else if (
-			action._class === "hudson.model.CauseAction" &&
-            action.causes &&
-            action.causes.length > 0
+			action._class === "hudson.model.CauseAction"
+            && action.causes
+            && action.causes.length > 0
 		) {
-			action.causes.forEach((cause: any) => {
+			action.causes.forEach((cause: JenkinsBuildCause) => {
 				if (
-					cause._class === "hudson.model.Cause$UserIdCause" &&
-                    cause.shortDescription &&
-                    cause.userId
+					cause._class === "hudson.model.Cause$UserIdCause"
+                    && cause.shortDescription
+                    && cause.userId
 				) {
 					result.push(`${cause.shortDescription}: ${cause.userId}`);
 				}

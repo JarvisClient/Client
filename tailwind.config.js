@@ -3,16 +3,16 @@ export default {
 	content: [
 		"./src/**/*.{js,jsx,ts,tsx}",
 	],
-	"safelist": [
-		{ pattern: /bg-.*/, },
-		{ pattern: /font-.*/, },
-		{ pattern: /text-.*/, },
+	safelist: [
+		{ pattern: /bg-.*/ },
+		{ pattern: /font-.*/ },
+		{ pattern: /text-.*/ },
 	],
 	theme: {
 		extend: {
 			colors: {
 				// UI Colors
-				"border": "#313133",
+				border: "#313133",
 				"background-sidebar": "#0E0E0F",
 				"background-view": "#171717",
 				"background-card": "#212121",
@@ -33,9 +33,8 @@ export default {
 			},
 			class: {
 				"big-sidebar": "bg-red-200",
-			}
+			},
 		},
 	},
 	plugins: [],
 };
-
