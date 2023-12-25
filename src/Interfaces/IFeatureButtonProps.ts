@@ -1,5 +1,7 @@
 export interface FeatureButtonProps {
   title: string;
+  description: string;
+  secondaryDescription?: string;
   titleBar: string;
   bg_color: string;
   icon_color: string;

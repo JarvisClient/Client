@@ -110,26 +110,26 @@ export class JarvisUtils {
 	/**
 	 * Handle a click on the pin button of a job card.
 	 * @param jobCardProps
-	 * @param activeJobBuildNumber
+	 * @param activeJobBuild
 	 */
-	onJobCardPin = (jobCardProps: JobCardProps[], activeJobBuildNumber: IJenkinsBuild) => {
+	onJobCardPin = (jobCardProps: JobCardProps[], activeJobBuild: IJenkinsBuild) => {
 		let pinnedJobs = JSON.parse(StorageManager.get("pinnedJobs") || "{}");
 		if (Array.isArray(pinnedJobs)) pinnedJobs = {};
 
 		if (this.storedProjectName) {
 			// if the job is already pinned, remove it from the pinnedJobs object else add it
-			if (pinnedJobs[this.storedProjectName] && pinnedJobs[this.storedProjectName].includes(activeJobBuildNumber.id)) {
-				pinnedJobs[this.storedProjectName] = pinnedJobs[this.storedProjectName].filter((element: string) => element !== activeJobBuildNumber.id);
+			if (pinnedJobs[this.storedProjectName] && pinnedJobs[this.storedProjectName].includes(activeJobBuild.id)) {
+				pinnedJobs[this.storedProjectName] = pinnedJobs[this.storedProjectName].filter((element: string) => element !== activeJobBuild.id);
 				notification.showNotification("Job Unpinned", "The job has been unpinned.", "pin");
-				Logger.info("Job unpinned:", activeJobBuildNumber);
+				Logger.info("Job unpinned:", activeJobBuild);
 
 			} else {
 				if (!pinnedJobs[this.storedProjectName]) {
 					pinnedJobs[this.storedProjectName] = [];
 				}
-				pinnedJobs[this.storedProjectName].push(activeJobBuildNumber.id);
+				pinnedJobs[this.storedProjectName].push(activeJobBuild.id);
 				notification.showNotification("Job Pinned", "The job has been pinned to the top of the list.", "pin");
-				Logger.info("Job pinned:", activeJobBuildNumber);
+				Logger.info("Job pinned:", activeJobBuild);
 
 			}
 		} else {
@@ -162,26 +162,26 @@ export class JarvisUtils {
 	/**
 	 * Handle a click on the notification button of a job card.
 	 * @param jobCardProps
-	 * @param activeJobBuildNumber
+	 * @param activeJobBuild
 	 */
-	onNotificationSetter = (jobCardProps: JobCardProps[], activeJobBuildNumber: IJenkinsBuild) => {
+	onNotificationSetter = (jobCardProps: JobCardProps[], activeJobBuild: IJenkinsBuild) => {
 		let notificationSetJobs = JSON.parse(StorageManager.get("notificationSetJobs") || "{}");
 		if (Array.isArray(notificationSetJobs)) notificationSetJobs = {};
 
 		if (this.storedProjectName) {
 			// if the job is already pinned, remove it from the pinnedJobs object else add it
-			if (notificationSetJobs[this.storedProjectName] && notificationSetJobs[this.storedProjectName].includes(activeJobBuildNumber.id)) {
-				notificationSetJobs[this.storedProjectName] = notificationSetJobs[this.storedProjectName].filter((element: string) => element !== activeJobBuildNumber.id);
+			if (notificationSetJobs[this.storedProjectName] && notificationSetJobs[this.storedProjectName].includes(activeJobBuild.id)) {
+				notificationSetJobs[this.storedProjectName] = notificationSetJobs[this.storedProjectName].filter((element: string) => element !== activeJobBuild.id);
 				notification.showNotification("Job Unpinned", "The job has been unpinned.", "pin");
-				Logger.info("Job unpinned:", activeJobBuildNumber);
+				Logger.info("Job unpinned:", activeJobBuild);
 
 			} else {
 				if (!notificationSetJobs[this.storedProjectName]) {
 					notificationSetJobs[this.storedProjectName] = [];
 				}
-				notificationSetJobs[this.storedProjectName].push(activeJobBuildNumber.id);
+				notificationSetJobs[this.storedProjectName].push(activeJobBuild.id);
 				notification.showNotification("Job Pinned", "The job has been pinned to the top of the list.", "pin");
-				Logger.info("Job pinned:", activeJobBuildNumber);
+				Logger.info("Job pinned:", activeJobBuild);
 
 			}
 		} else {
@@ -215,11 +215,11 @@ export class JarvisUtils {
 	 * Handle a click on a feature button.
 	 * @param feature
 	 * @param jobCardProps
-	 * @param activeJobBuildNumber
+	 * @param activeJobBuild
 	 * @param selectedBuildData
 	 * @param projectData
 	 */
-	handleFeatureButtonClick = (feature: string, jobCardProps: JobCardProps[], activeJobBuildNumber: IJenkinsBuild, selectedBuildData: IJenkinsProject | null) => {
+	handleFeatureButtonClick = (feature: string, jobCardProps: JobCardProps[], activeJobBuild: IJenkinsBuild, selectedBuildData: IJenkinsProject | null) => {
 		if (!selectedBuildData) return;
 
 		switch (feature) {
@@ -235,13 +235,17 @@ export class JarvisUtils {
 			return;
 			break;
 		case "pin": {
-			this.onJobCardPin(jobCardProps, activeJobBuildNumber);
+			this.onJobCardPin(jobCardProps, activeJobBuild);
 			return;
 			break;
 		}
 		case "notification": {
-			this.onNotificationSetter(jobCardProps, activeJobBuildNumber);
+			this.onNotificationSetter(jobCardProps, activeJobBuild);
 			return;
+			break;
+		}
+		case "stop_build": {
+			return
 			break;
 		}
 		default:
@@ -253,7 +257,7 @@ export class JarvisUtils {
 	/**
 	 * Render feature buttons.
 	 * @param featureButtons
-	 * @param activeJobBuildNumber
+	 * @param activeJobBuild
 	 * @param jobCardProps
 	 * @param selectedBuildData
 	 * @param projectData
@@ -262,7 +266,7 @@ export class JarvisUtils {
 	 */
 	renderFeatureButtons = (
 		featureButtons: FeautreButton_S[],
-		activeJobBuildNumber: number | null,
+		activeJobBuild: number | null,
 		jobCardProps: JobCardProps[],
 		selectedBuildData: IJenkinsBuild,
 		projectData: IJenkinsProject | null,
@@ -271,12 +275,12 @@ export class JarvisUtils {
 		return featureButtons.map((element: FeautreButton_S, index: number) => (
 			<FeatureButtonComponent
 				key={index}
-				buildNumber={activeJobBuildNumber}
+				buildNumber={activeJobBuild}
 				onClick={() => this.handleFeatureButtonClick(element.name, jobCardProps, selectedBuildData, projectData)}
 				feature={element.name}
 				useSecondaryIcon={
-					(element.name === "pin" && jobCardProps.find((item: JobCardProps) => item.buildNumber === activeJobBuildNumber)?.pinned) ||
-					(element.name === "notification" && jobCardProps.find((item: JobCardProps) => item.buildNumber === activeJobBuildNumber)?.notification_set)
+					(element.name === "pin" && jobCardProps.find((item: JobCardProps) => item.buildNumber === activeJobBuild)?.pinned) ||
+					(element.name === "notification" && jobCardProps.find((item: JobCardProps) => item.buildNumber === activeJobBuild)?.notification_set)
 				}
 				active={activeFeature === element.name}
 			/>

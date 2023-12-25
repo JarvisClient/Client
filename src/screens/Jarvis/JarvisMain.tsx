@@ -38,7 +38,7 @@ import { JobCardProps } from "../../Interfaces/IJobCardProps";
 function JarvisMain(): React.ReactElement {
 	const [searchQuery, setSearchQuery] = useState<string>("");
 	const [featureButtons, setFeatureButtons] = useState<FeautreButton_S[]>([]);
-	const [activeJobBuildNumber, setActiveJobBuildNumber] = useState<number | null>(null);
+	const [activeJobBuild, setActiveJobBuildNumber] = useState<number | null>(null);
 	const [selectedBuildData, setSelectedBuildData] = useState<IJenkinsBuild>({} as IJenkinsBuild);
 	const [projectData, setProjectData] = useState<IJenkinsProject | null>(null);
 	const [jobCardProps, setJobCardProps] = useState<JobCardProps[]>([]);
@@ -80,8 +80,8 @@ function JarvisMain(): React.ReactElement {
 	useEffect(() => {
 		const onJobCardClick = async () => {
 			try {
-				setJobCardProps(await miniUtils.updateActiveJobInJobCardProps(jobCardProps, activeJobBuildNumber));
-				setFeatureButtons(await miniUtils.createFeatureButtons(activeJobBuildNumber));
+				setJobCardProps(await miniUtils.updateActiveJobInJobCardProps(jobCardProps, activeJobBuild));
+				setFeatureButtons(await miniUtils.createFeatureButtons(activeJobBuild));
 				setParameterDefinition(await fetchUtils.fetchParameterDefinition(storedProjectName));
 			} catch (error) {
 				Logger.error("Error while updating job card props", error);
@@ -89,7 +89,7 @@ function JarvisMain(): React.ReactElement {
 		};
 
 		onJobCardClick();
-	}, [activeJobBuildNumber]);
+	}, [activeJobBuild]);
 	
 	useEffect(() => {
 		jarvisUtils.runStartupTasks();
@@ -122,13 +122,13 @@ function JarvisMain(): React.ReactElement {
 					<div className="overflow-y-scroll small-sidebar custom-scroll grid justify-items-center  py-4">
 						{/* Dynamically generates Featurebuttons */}
 						<div className="space-y-4 mb-4">
-							{jarvisUtils.renderFeatureButtons(featureButtons, activeJobBuildNumber, jobCardProps, selectedBuildData, projectData, activeFeature)}
+							{jarvisUtils.renderFeatureButtons(featureButtons, activeJobBuild, jobCardProps, selectedBuildData, projectData, activeFeature)}
 						</div>
 
 						{/* Settings Button */}
 						<div className="self-end">
 							<FeatureButtonComponent
-								buildNumber={activeJobBuildNumber}
+								buildNumber={activeJobBuild}
 								onClick={() => jarvisUtils.handleFeatureButtonClick("settings", jobCardProps, selectedBuildData, projectData)}
 								feature="settings"
 								active={activeFeature === "settings"}

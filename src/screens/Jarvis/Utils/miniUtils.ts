@@ -13,7 +13,7 @@ export const miniUtils = {
 		return "Jarvis";
 	},
 
-	createFeatureButtons: (activeJobBuildNumber: number | null) => {
+	createFeatureButtons: (activeJobBuild: number | null) => {
 		const featureButtons = [];
 
 		for (const key in FeatureButtonsConfig) {
@@ -22,8 +22,8 @@ export const miniUtils = {
 			if (
 				!element.hidden
 				&& ((element.purpose === "BOTH")
-					|| (activeJobBuildNumber && element.purpose === "JOB")
-					|| (!activeJobBuildNumber && element.purpose === "PROJECT"))
+					|| (activeJobBuild && element.purpose === "JOB")
+					|| (!activeJobBuild && element.purpose === "PROJECT"))
 			) {
 				featureButtons.push({
 					name: key,
@@ -34,10 +34,10 @@ export const miniUtils = {
 		return featureButtons;
 	},
 
-	updateActiveJobInJobCardProps: (jobCardProps: JobCardProps[], activeJobBuildNumber: number | null) => {
+	updateActiveJobInJobCardProps: (jobCardProps: JobCardProps[], activeJobBuild: number | null) => {
 		const updatedJobCardProps = jobCardProps.map((element: JobCardProps) => ({
 			...element,
-			active: element.buildNumber === activeJobBuildNumber,
+			active: element.buildNumber === activeJobBuild,
 		}));
 
 		return updatedJobCardProps;
