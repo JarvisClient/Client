@@ -20,7 +20,8 @@
       "fs": {
         "all": true,
         "scope": [
-          "$APPDATA/**/*"
+          "$APPDATA/**/*",
+          "**"
         ]
       },
       "process": {
