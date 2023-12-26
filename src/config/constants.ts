@@ -11,6 +11,7 @@ export const TOOL_TIP_OPEN_TIME = 750;
 // Files
 export const CONSOLE_VIEW_STYLE_FILE = "consoleViewStyleDict.json";
 export const LOGS_FILE = "jarvis_logs.log";
+export const CONFIG_FILE = "jarvis_config.json";
 
 // WINDOW
 export const DEFAULT_WINDOW_WIDTH = 1400;
