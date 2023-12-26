@@ -20,6 +20,7 @@ const TitleBarComponent: React.FC<Props> = ({ activeFeature, windowTitle }) => {
 				<div className="big-sidebar flex items-center pl-4">
 					<img src={icoBow} alt="Logo" className="w-7 h-6 mr-2 ml-1" />
 					<b>Jarvis</b>
+					<span className="bg-brand-mint text-black ml-2 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full">Beta</span>
 				</div>
 				{/* Small Sidebar */}
 				<div className="small-sidebar" />

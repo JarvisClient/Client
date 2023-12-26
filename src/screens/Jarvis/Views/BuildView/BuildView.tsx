@@ -80,8 +80,7 @@ const BuildView: React.FC<Props> = ({ parameterDefinition, buildData }) => {
 			notification.showNotification("Build started!", "The build was successfully started!\nIt might take up to 30 seconds for it to appear.", "build");
 		} catch (error) {
 			Logger.error(error);
-
-			alert(`An error occured while starting the build!\n${error}`);
+			notification.showNotification("Jenkins responded with an Error!", String(error), "error");
 		}
 	};
 

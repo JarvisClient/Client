@@ -30,6 +30,9 @@ export default {
 				"jenkins-job-orange": "#FD8E32",
 				"jenkins-job-blue": "#4657CE",
 				"jenkins-job-gray": "#939495",
+
+				// Brand
+				"brand-mint": "#9DFDD0"
 			},
 			class: {
 				"big-sidebar": "bg-red-200",

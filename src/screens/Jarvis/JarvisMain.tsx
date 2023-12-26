@@ -117,7 +117,7 @@ function JarvisMain(): React.ReactElement {
 							</>
 						) : (
 							<>
-								{Array.from(Array(10).keys()).map((index) => <JobCardLoadingComponent key={index} />)}
+								{Array.from(Array(7).keys()).map((index) => <JobCardLoadingComponent key={index} />)}
 							</>
 						)}
 					</div>

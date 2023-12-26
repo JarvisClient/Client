@@ -417,6 +417,10 @@ export class JarvisUtils {
 
 					if (sortedJobCards.length === 0 && searchQuery) return renderNoJobsFound();
 
+					if (sortedJobCards.length === 0) return (
+						<p>No Jobs found</p>
+					)
+
 					return sortedJobCards.map((props, index) => (
 						<JobCardComponent key={index} {...props} />
 					));
@@ -567,6 +571,10 @@ export class JarvisUtils {
 				// Logger
 				Logger.info("Latest build data has changed. Updating state...");
 			}
+
+			// Check builds in notification set jobs
+
+
 		} catch (error) {
 			this.notification.showNotification("Error", "An Error occured while trying to fetch project data. Please check your internet connection and try again.", "jenkins");
 			Logger.error("Error fetching project data:", error);
