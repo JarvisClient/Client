@@ -14,3 +14,11 @@ export interface FeatureButtonProps {
 export interface FeautreButton_S {
   name: string;
 }
+
+export interface FeatureButtonComponentProps {
+	active?: boolean;
+	buildNumber: number | null;
+	onClick?: () => void;
+	feature: string;
+	useSecondaryIcon?: boolean;
+}

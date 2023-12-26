@@ -6,14 +6,15 @@ import { useNotification } from "../../../components/NotificationManager/Notific
 import Logger, { onStartup } from "../../../helpers/Logger";
 import { fetchUtils } from "./fetchUtils";
 import JobCardComponent from "../../../components/JobCardComponent/JobCardComponent";
-import { deepEqual, isValidJson, openLink } from "../../../helpers/utils";
+import { deepEqual, openLink } from "../../../helpers/utils";
 import FeatureButtonComponent from "../../../components/FeatureButtonComponent/FeatureButtonComponent";
 import { DEFAULT_WINDOW_HEIGHT, DEFAULT_WINDOW_WIDTH, JOBCARD_REFRESH_TIME } from "../../../config/constants";
-import { IJenkinsBuild } from "../../../Interfaces/IBuildInterface";
+import { FeatureButton, IJenkinsBuild } from "../../../Interfaces/IBuildInterface";
 import { IJenkinsProject, IJenkinsProjectBuild } from "../../../Interfaces/IProjectInterface";
-import { FeautreButton_S } from "../../../Interfaces/IFeatureButtonProps";
+import { FeatureButtonComponentProps, FeatureButtonProps, FeautreButton_S } from "../../../Interfaces/IFeatureButtonProps";
 import { JobCardProps } from "../../../Interfaces/IJobCardProps";
 import { IPinnedANDNotificatonJobs } from "../../../Interfaces/IPinnedANDNotificatonJobs";
+import { miniUtils } from "./miniUtils";
 
 /**
  * Utility class for handling job card related functionality.
@@ -252,7 +253,8 @@ export class JarvisUtils {
 				}
 				case "stop_build": {
 					if (!selectedBuildData) throw new Error("selectedBuildData is undefined");
-					return
+					this.stopBuild(activeJobBuild);
+					return;
 					break;
 				}
 				default:
@@ -284,19 +286,39 @@ export class JarvisUtils {
 		projectData: IJenkinsProject | null,
 		activeFeature: string | undefined
 	) => {
-		return featureButtons.map((element: FeautreButton_S, index: number) => (
+		let buttons: JSX.Element[] = [];
+		featureButtons.map((element: FeautreButton_S, index: number) => {
+			let featureButtonProps: FeatureButtonComponentProps = {
+				buildNumber: activeJobBuild,
+				feature: element.name,
+				onClick: () => this.handleFeatureButtonClick(element.name, jobCardProps, selectedBuildData, projectData),
+				active: activeFeature === element.name,
+			};
+
+			// Set useSecondaryIcon to true if the job is pinned
+			if (element.name === "pin" && jobCardProps.find((item: JobCardProps) => item.buildNumber === activeJobBuild)?.pinned) {
+				featureButtonProps.useSecondaryIcon = true;
+			}
+
+			// Set useSecondaryIcon to true if the job is notification set
+			if (element.name === "notification" && jobCardProps.find((item: JobCardProps) => item.buildNumber === activeJobBuild)?.notification_set) {
+				featureButtonProps.useSecondaryIcon = true;
+			}
+
+			// Skip rendering the stop_build button if the build is not running
+			if (element.name === "stop_build" && selectedBuildData.result !== null) {
+				return null;
+			}
+			
+			buttons.push(
 			<FeatureButtonComponent
 				key={index}
-				buildNumber={activeJobBuild}
-				onClick={() => this.handleFeatureButtonClick(element.name, jobCardProps, selectedBuildData, projectData)}
-				feature={element.name}
-				useSecondaryIcon={
-					(element.name === "pin" && jobCardProps.find((item: JobCardProps) => item.buildNumber === activeJobBuild)?.pinned) ||
-					(element.name === "notification" && jobCardProps.find((item: JobCardProps) => item.buildNumber === activeJobBuild)?.notification_set)
-				}
-				active={activeFeature === element.name}
-			/>
-		));
+				{...featureButtonProps}
+			/>)
+		});
+
+		
+		return buttons;
 	};
 
 
@@ -407,6 +429,24 @@ export class JarvisUtils {
 		}
 	};
 
+	async stopBuild(activeJobBuild: IJenkinsBuild): Promise<boolean> {
+		if (activeJobBuild.result == null) {
+			// Build is running
+			this.notification.showNotification("Stopping Build", "Stopping build " + activeJobBuild.number + "...", "jenkins");
+			let response = await fetchUtils.stopBuild(this.storedProjectName, String(activeJobBuild.number));
+			// refresh jobcard data 
+			this.startJarvis_interval();
+			activeJobBuild.result = "ABORTED";
+
+			return true
+		} else {
+			// Build is not running
+			this.notification.showNotification("Error", "Build " + activeJobBuild.number + " is not running.", "jenkins");
+			return false
+		}
+
+	}
+
 	runStartupTasks = () => {
 		// Set window size
 		appWindow.setSize(new LogicalSize(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT));
@@ -475,7 +515,6 @@ export class JarvisUtils {
 
 		return this.intervalId;
 	};
-
 
 	/**
 	 * Stop Jarvis.

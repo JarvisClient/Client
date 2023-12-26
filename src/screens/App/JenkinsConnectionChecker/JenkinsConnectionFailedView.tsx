@@ -47,12 +47,12 @@ const JenkinsConnectionFailedView: React.FC = () => {
 							<ul className="">
 								<li className="text-left font-bold">Here are some possible reasons why this error occurred:</li>
 								<div className="ml-8">
-								<li className="text-left list-disc">The URL of your Jenkins Server has changed.</li>
-								<li className="text-left list-disc">You don't have an Internet connection.</li>
-								<li className="text-left list-disc">The Jenkins Server is temporarily down for maintenance.</li>
-								<li className="text-left list-disc">There is a firewall or network issue preventing the connection.</li>
-								<li className="text-left list-disc">Your Jenkins credentials are incorrect or have changed.</li>
-								<li className="text-left list-disc">There is a problem with your Jenkins plugin or integration.</li>
+									<li className="text-left list-disc">The URL of your Jenkins Server has changed.</li>
+									<li className="text-left list-disc">You don't have an Internet connection.</li>
+									<li className="text-left list-disc">The Jenkins Server is temporarily down for maintenance.</li>
+									<li className="text-left list-disc">There is a firewall or network issue preventing the connection.</li>
+									<li className="text-left list-disc">Your Jenkins credentials are incorrect or have changed.</li>
+									<li className="text-left list-disc">There is a problem with your Jenkins plugin or integration.</li>
 								</div>
 							</ul>
 						</div>

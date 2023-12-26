@@ -18,7 +18,7 @@ import OnboardingStep3 from "./screens/Onboarding/OnboardingStep3";
 import ErrorBoundary from "./screens/ErrorBoundary/ErrorBoundary"; // Import the ErrorBoundary component
 import CauseError from "./screens/ErrorBoundary/CauseError";
 import UpdateAvailable from "./screens/App/updateChecker/UpdateAvailable";
-import JenkinsConnectionFailedView from "./screens/App/JenkinsConnectionChecker/JenkinsConnectionFailedView"
+import JenkinsConnectionFailedView from "./screens/App/JenkinsConnectionChecker/JenkinsConnectionFailedView";
 
 function AppContainer() {
 	return (

@@ -46,7 +46,7 @@ export interface IJenkinsBuild {
     keepLog: boolean;
     number: number;
     queueId: number;
-    result: string;
+    result: "SUCCESS" | "UNSTABLE" | "FAILURE" | "ABORTED" | null;
     timestamp: number;
     url: string;
     builtOn: string;

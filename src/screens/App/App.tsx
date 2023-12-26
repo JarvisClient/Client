@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { appWindow, LogicalSize, WebviewWindow } from "@tauri-apps/api/window";
+import { appWindow, LogicalSize } from "@tauri-apps/api/window";
 
 import { useNavigate } from "react-router-dom";
 import loading_anim from "../../assets/icons/loading_anim.webm";
@@ -32,7 +32,7 @@ const App: React.FC = () => {
 				setSpecificLoadingMessage("Checking Setup...");
 				navigate(decideOnboarding());
 			}, 1500);
-		}
+		};
 
 		startApp();
 	}, []);

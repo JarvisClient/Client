@@ -73,6 +73,21 @@ export const fetchUtils = {
 		const response: string = await invoke("get_test_result_data", config);
 		return JSON.parse(response);
 
-	}
+	},
 
+	stopBuild: async (storedProjectName: string | null, buildNumber: string): Promise<boolean> => {
+		const config = {
+			projectName: storedProjectName,
+			buildNumber: buildNumber,
+			...getAuthDetails(),
+		};
+		
+		const response: string = await invoke("stop_build", config);
+		
+		if (response.includes("aborted") || response.includes("stopped")) {
+			return true;
+		}
+		
+		return false;
+	},
 };

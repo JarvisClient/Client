@@ -62,7 +62,6 @@ impl JenkinsClient {
             Err(err) => Err(format!("Request error: {:?}", err)),
         }
     }
-    
 
     pub async fn get_build_data(&self, job_name: &str, build_number: &str) -> Result<String, reqwest::Error> {
         let url = format!("{}/job/{}/{}/api/json", self.base_url, job_name, build_number);    
@@ -76,6 +75,23 @@ impl JenkinsClient {
 
         if !response.status().is_success() {
             panic!("Error getting job data: {}", response.status());
+        }
+
+        response.text().await
+    }
+
+    pub async fn stop_build(&self, job_name: &str, build_number: &str) -> Result<String, reqwest::Error> {
+        let url = format!("{}/job/{}/{}/stop", self.base_url, job_name, build_number);    
+        
+        let client = reqwest::Client::new();
+        let response = client
+            .post(&url)
+            .header("Authorization", format!("Basic {}", general_purpose::STANDARD_NO_PAD.encode(&format!("{}:{}", self.jenkins_username, self.jenkins_api_token))))
+            .send()
+            .await?;
+
+        if !response.status().is_success() {
+            panic!("Error Stopping build: {}", response.status());
         }
 
         response.text().await

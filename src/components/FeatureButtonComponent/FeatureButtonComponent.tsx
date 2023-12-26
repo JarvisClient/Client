@@ -2,21 +2,16 @@ import React from "react";
 import FeatureButtons from "../../config/FeatureButtons";
 import { motion } from "framer-motion";
 import { TOOL_TIP_OPEN_TIME } from "../../config/constants";
+import { FeatureButtonComponentProps } from "../../Interfaces/IFeatureButtonProps";
 
-interface Props {
-	active?: boolean;
-	buildNumber: number | null;
-	onClick?: () => void;
-	feature: string;
-	useSecondaryIcon?: boolean;
-}
+
 
 /**
  * Functional component representing a feature button.
  * @param {Props} props - The props for the component.
  * @returns {JSX.Element} - The rendered feature button.
  */
-const FeatureButtonComponent: React.FC<Props> = ({
+const FeatureButtonComponent: React.FC<FeatureButtonComponentProps> = ({
 	onClick, feature, active, useSecondaryIcon,
 }) => {
 	const [showTooltip, setShowTooltip] = React.useState<boolean>(false);
@@ -64,14 +59,14 @@ const FeatureButtonComponent: React.FC<Props> = ({
 				<IconComponent className="text-white" color={icon_color} size={30} />
 			</div>
 			<motion.div
-			initial={{ opacity: 0, x: -30}}
-			animate={{
-				opacity: showTooltip ? 1 : 0,
-				x: showTooltip ? 0 : -30,
-				pointerEvents: showTooltip ? "auto" : "none", // Enable or disable pointer events
-			  }}
-			className="absolute bg-red-500 z-20 min-h-12 w-auto max-w-[350px] rounded-md ml-14 pl-4 pr-4 pt-3 pb-3 flex flex-col select-none"
-			style={{ backgroundColor: bg_color }}>
+				initial={{ opacity: 0, x: -30 }}
+				animate={{
+					opacity: showTooltip ? 1 : 0,
+					x: showTooltip ? 0 : -30,
+					pointerEvents: showTooltip ? "auto" : "none", // Enable or disable pointer events
+				}}
+				className="absolute bg-red-500 z-20 min-h-12 w-auto max-w-[350px] rounded-md ml-14 pl-4 pr-4 pt-3 pb-3 flex flex-col select-none"
+				style={{ backgroundColor: bg_color }}>
 				<p className="font-bold text-md">{featureDetails.title}</p>
 				{useSecondaryIcon ? (
 					<p className="text-sm text-white">{featureDetails.secondaryDescription}</p>
