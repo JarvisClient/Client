@@ -26,10 +26,12 @@ const TitleBarComponent: React.FC<Props> = ({ activeFeature, windowTitle }) => {
 				{/* Main View */}
 				<div className="general-view bg-gradient-to-t from-[#171717] to-[#121212] flex flex-row items-center px-4">
 					{/* Icon & Text */}
-					<div className="flex">
+					<div className="grid grid-cols-[40px,auto,160px] w-full">
 						{IconComponent && <IconComponent size={22} className="ml-2" />}
 						<b className="text-md ml-2 line-clamp-1 break-all">{windowTitle}</b>
+						<div className="justify-self-end"></div>
 					</div>
+
 				</div>
 			</div>
 			{renderSysButtons()}

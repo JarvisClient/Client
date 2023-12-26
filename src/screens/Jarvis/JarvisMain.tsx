@@ -30,6 +30,7 @@ import { IJenkinsBuild } from "../../Interfaces/IBuildInterface";
 import { IJenkinsProject, IJenkinsProjectParameterDefinition } from "../../Interfaces/IProjectInterface";
 import { FeautreButton_S } from "../../Interfaces/IFeatureButtonProps";
 import { JobCardProps } from "../../Interfaces/IJobCardProps";
+import { useNotification } from "../../components/NotificationManager/NotificationContext";
 
 /**
  * Main component for the Jarvis application.
@@ -48,6 +49,8 @@ function JarvisMain(): React.ReactElement {
 
 	const storedProjectName: string | null = StorageManager.get("projectName");
 
+	const notification = useNotification();
+
 	/**
 	 * Create a ne Instance of JarvisUtils.
 	 */
@@ -59,6 +62,7 @@ function JarvisMain(): React.ReactElement {
 		setJobCardProps,
 		setProjectData,
 		setJobCardsLoading,
+		notification
 	);
 
 	/**
@@ -103,9 +107,9 @@ function JarvisMain(): React.ReactElement {
 			/>
 			<div className="h-screen flex flex-col pt-[48px]">
 				{/* Main Content Area */}
-				<div className="flex flex-grow overflow-y-scroll custom-scroll ml-[1px]">
+				<div className="flex flex-grow overflow-y-scroll hide-scrollbar ml-[1px]">
 					{/* Job Cards & Search List */}
-					<div className="overflow-y-scroll overflow-x-hidden big-sidebar custom-scroll grid content-start justify-items-center space-y-4 py-4 relative">
+					<div className="overflow-y-scroll overflow-x-hidden big-sidebar error-custom-scroll grid content-start justify-items-center space-y-4 py-4 relative">
 						<SearchComponent onSearchChange={(value) => setSearchQuery(value)} outSearchQuerry={searchQuery} />
 						{!jobCardsLoading ? (
 							<>
@@ -119,7 +123,7 @@ function JarvisMain(): React.ReactElement {
 					</div>
 
 					{/* Feature Buttons */}
-					<div className="overflow-y-scroll small-sidebar custom-scroll grid justify-items-center  py-4">
+					<div className="overflow-y-scroll small-sidebar hide-scrollbar grid justify-items-center  py-4">
 						{/* Dynamically generates Featurebuttons */}
 						<div className="space-y-4 mb-4">
 							{jarvisUtils.renderFeatureButtons(featureButtons, activeJobBuild, jobCardProps, selectedBuildData, projectData, activeFeature)}

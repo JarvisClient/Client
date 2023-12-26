@@ -17,10 +17,10 @@ export const fetchUtils = {
 			...getAuthDetails(),
 		};
 
+		
 		const response: string = await invoke("get_project_data", config);
-		const jsonData: IJenkinsProject = JSON.parse(response);
 
-		return jsonData;
+		return JSON.parse(response);
 	},
 
 	fetchBuildData: async (buildNumber: number, storedProjectName: string | null): Promise<IJenkinsBuild> => {

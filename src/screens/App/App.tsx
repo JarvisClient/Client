@@ -5,75 +5,38 @@ import { useNavigate } from "react-router-dom";
 import loading_anim from "../../assets/icons/loading_anim.webm";
 import Logger from "../../helpers/Logger";
 import StorageManager from "../../helpers/StorageManager";
-import { checkForUpdates } from "./updateChecker/updateChecker";
-import { DEFAULT_WINDOW_HEIGHT, DEFAULT_WINDOW_WIDTH } from "../../config/constants";
+import { JARVIS_LOADING_MESSAGES } from "../../config/constants";
+import { initJenkinsConnectionCheck, initUpdateChecker } from "./AppUtils";
 
 const App: React.FC = () => {
 	const navigate = useNavigate();
 	const [specificLoadingMessage, setSpecificLoadingMessage] = React.useState<string>("");
 
 	useEffect(() => {
-		const initUpdateChecker = async () => {
-			const updateState = await checkForUpdates();
-			if (updateState) {
-				Logger.info("Update available, opening update window");
-				const webview = new WebviewWindow("theUniqueLabel", {
-					url: "/updateAvailable",
-					title: "Update Available",
-					width: DEFAULT_WINDOW_WIDTH,
-					height: DEFAULT_WINDOW_HEIGHT,
-					resizable: false,
-					decorations: false,
-				});
+		const startApp = async () => {
+			// Set default window size
+			Logger.info("App started");
+			appWindow.setSize(new LogicalSize(270, 350));
+			appWindow.center();
 
-				webview.center();
+			// Check for updates
+			setSpecificLoadingMessage("Checking for Updates...");
+			initUpdateChecker();
 
-				webview.once("tauri://created", () => {
-					Logger.info("Webview created");
-				});
+			// Check if Jenkins is reachable
+			setSpecificLoadingMessage("Checking Jenkins Connection...");
+			initJenkinsConnectionCheck();
 
-				webview.once("tauri://error", (e) => {
-					Logger.error(`Error in webview: ${e}`);
-				});
-			}
-		};
+			// Navigate to onboarding or jarvis
+			setTimeout(() => {
+				setSpecificLoadingMessage("Checking Setup...");
+				navigate(decideOnboarding());
+			}, 1500);
+		}
 
-		Logger.info("App started");
-		appWindow.setSize(new LogicalSize(270, 350));
-		appWindow.center();
-
-		// Check for Jarvis Home Connection
-		setSpecificLoadingMessage("Checking for Updates...");
-		initUpdateChecker();
-
-		setTimeout(() => {
-			setSpecificLoadingMessage("Checking Setup...");
-			navigate(decideOnboarding());
-		}, 1500);
+		startApp();
 	}, []);
 
-	const messages = [
-		"Polishing the silverware",
-		"Selecting the finest monocle",
-		"Adjusting the bowtie to the perfect angle",
-		"Summoning the ghost of Jeeves",
-		"Brewing a spot of Earl Grey tea",
-		"Inspecting the quality of crumpets",
-		"Counting the silver spoons",
-		"Measuring the top hat's height",
-		"Warming up Jarvis' gloves",
-		"Polishing the shoe shine machine",
-		"Tuning Jarvis' impeccable accent",
-		"Checking the mustache wax supply",
-		"Choreographing a graceful entrance",
-		"Practicing impeccable etiquette",
-		"Preparing a tray of cucumber sandwiches",
-		"Ironing the tails of Jarvis' coat",
-		"Ensuring the pocket watch is on time",
-		"Perfecting the art of discreet coughing",
-		"Synchronizing Jarvis' impeccable timing",
-		"Reviewing the etiquette rulebook",
-	];
 
 	const decideOnboarding = () => {
 		const onboardState = StorageManager.get("onboardState");
@@ -93,7 +56,7 @@ const App: React.FC = () => {
 			<video autoPlay loop muted className="w-20 h-20 mb-12">
 				<source src={loading_anim} type="video/webm" />
 			</video>
-			<h1 className="text-xl mx-6 mb-2 font-medium text-center">{selectRandomLoadingMessage(messages)}</h1>
+			<h1 className="text-xl mx-6 mb-2 font-medium text-center">{selectRandomLoadingMessage(JARVIS_LOADING_MESSAGES)}</h1>
 			<p className="text-sm text-center mx-2 text-comment-color">{specificLoadingMessage}</p>
 		</div>
 	);

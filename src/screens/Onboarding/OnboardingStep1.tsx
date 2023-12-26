@@ -13,6 +13,7 @@ import { IoClose } from "react-icons/io5";
 
 import baseURLIMG from "../../assets/faq/faq_baseURL.webp";
 import usernameIMG from "../../assets/faq/faq_username.webp";
+import Logger from "../../helpers/Logger";
 
 const OnboardingStep1: React.FC = () => {
 	const [baseUrl, setBaseUrl] = useState(StorageManager.get("baseurl") || "");
@@ -39,32 +40,40 @@ const OnboardingStep1: React.FC = () => {
 	};
 
 	const continueOnboarding = async () => {
-		// validate input
-
-		if (!checkValidUrl(baseUrl)) {
-			notification.showNotification("Invalid URL", "Please check again.", "jenkins");
-			return;
-		}
-
-		if (username === "") {
-			notification.showNotification("Invalid Username", "Please check again.", "jenkins");
-			return;
-		}
-
-		if (apiToken === "") {
-			notification.showNotification("Invalid API Token", "Please check again.", "jenkins");
-			return;
-		}
-
-		const response = await checkAuthentication(baseUrl, username, apiToken);
-
-		if (response === false) {
-			notification.showNotification("Authentication failed", "Please check your Credentials.", "jenkins");
-		} else {
-			StorageManager.save("baseurl", baseUrl);
-			StorageManager.save("username", username);
-			StorageManager.save("apiToken", apiToken);
-			navigate("/onboarding/step_2");
+		try {
+			if (!checkValidUrl(baseUrl)) {
+				notification.showNotification("Invalid URL", "Please check again.", "jenkins");
+				return;
+			}
+	
+			if (username === "") {
+				notification.showNotification("Invalid Username", "Please check again.", "jenkins");
+				return;
+			}
+	
+			if (apiToken === "") {
+				notification.showNotification("Invalid API Token", "Please check again.", "jenkins");
+				return;
+			}
+	
+			const response = await checkAuthentication(baseUrl, username, apiToken);
+	
+			if (response === false) {
+				notification.showNotification("Authentication failed", "Please check your Credentials.", "jenkins");
+			} else {
+				StorageManager.save("baseurl", baseUrl);
+				StorageManager.save("username", username);
+				StorageManager.save("apiToken", apiToken);
+				navigate("/onboarding/step_2");
+			}
+		} catch (error) {
+			// if error includes "error trying to connect" then show notification
+			if ((error as Error).toString().includes("error trying to connect")) {
+				notification.showNotification("Connection failed", "Could not connect to the Jenkins Server", "jenkins");
+			} else {
+				notification.showNotification("An error occurred", "Please try again.", "jenkins");
+			}
+			Logger.error("OnboardingStep1 Error", error);
 		}
 	};
 
