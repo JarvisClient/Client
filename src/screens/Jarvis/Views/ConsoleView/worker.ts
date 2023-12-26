@@ -1,5 +1,5 @@
+import { IStylingDict } from "../../../../Interfaces/StylingDict";
 import Logger from "../../../../helpers/Logger";
-import { IStylingDict } from "./styleDict";
 
 self.addEventListener("message", (e) => {
 	const { data, stylingDict } = e.data;

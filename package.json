@@ -10,7 +10,9 @@
     "tauri": "tauri",
     "lint": "npx eslint .",
     "lint:fix": "npx eslint . --fix",
-    "test": "vitest"
+    "test:all": "npm run test:unit && npm run test:e2e",
+    "test:unit": "vitest",
+    "test:e2e": "concurrently \"npm run preview\" \"cypress open\""
   },
   "dependencies": {
     "@tauri-apps/api": "^1.5.2",
@@ -34,6 +36,8 @@
     "@typescript-eslint/eslint-plugin": "^6.15.0",
     "@typescript-eslint/parser": "^6.15.0",
     "@vitejs/plugin-react": "^4.2.1",
+    "concurrently": "^8.2.2",
+    "cypress": "^13.6.1",
     "eslint": "^8.56.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-import-resolver-typescript": "^3.6.1",
