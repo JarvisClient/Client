@@ -17,7 +17,6 @@ export const fetchUtils = {
 			...getAuthDetails(),
 		};
 
-		
 		const response: string = await invoke("get_project_data", config);
 
 		return JSON.parse(response);
@@ -46,7 +45,6 @@ export const fetchUtils = {
 		);
 
 		return parameterDefinition ? parameterDefinition.parameterDefinitions : [];
-
 	},
 
 	fetchJenkinsData: async (): Promise<JenkinsData | undefined> => {
@@ -70,9 +68,9 @@ export const fetchUtils = {
 			buildNumber: buildNumber,
 			...getAuthDetails(),
 		};
+
 		const response: string = await invoke("get_test_result_data", config);
 		return JSON.parse(response);
-
 	},
 
 	stopBuild: async (storedProjectName: string | null, buildNumber: string): Promise<boolean> => {

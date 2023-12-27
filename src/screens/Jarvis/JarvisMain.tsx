@@ -68,7 +68,7 @@ function JarvisMain(): React.ReactElement {
 
 	/**
 	 * Runs when a storedProjectName is set.
-	 * aka.
+	 * aka. Jarvis is started.
 	 */
 	useEffect(() => {
 		Logger.info("STARTUP: Running startup tasks for", storedProjectName);
@@ -96,8 +96,16 @@ function JarvisMain(): React.ReactElement {
 		onJobCardClick();
 	}, [activeJobBuild]);
 
+	/**
+	 * Stops the interval when the component unmounts.
+	 */
 	useEffect(() => {
+		// Run startup tasks
 		jarvisUtils.runStartupTasks();
+
+		return () => {
+			jarvisUtils.stopJarvis();
+		};
 	}, []);
 
 	return (

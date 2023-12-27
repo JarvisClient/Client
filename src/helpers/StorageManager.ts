@@ -1,6 +1,4 @@
 import Logger from "./Logger";
-import { writeTextFile, BaseDirectory, exists, createDir, readTextFile } from "@tauri-apps/api/fs";
-import { CONFIG_FILE } from "../config/constants";
 
 type allowedKeys =
     "baseurl" |
@@ -14,19 +12,7 @@ type allowedKeys =
     "projects" |
     "titlebarStyle";
 
-interface ConfigFile {
-	baseurl: string;
-	username: string;
-	apiToken: string;
-	onboardState: string;
-	openInBrowser: string;
-	pinnedJobs: string[];
-	projectName: string;
-	notificationSetJobs: string[];
-	projects: string[];
-	titlebarStyle: string;
-}
-
+/*
 const saveToConfigFile = async (content: ConfigFile, CONFIG_FILE: string) => {
 	await writeTextFile(CONFIG_FILE, JSON.stringify(content), {
 		dir: BaseDirectory.AppData
@@ -35,11 +21,11 @@ const saveToConfigFile = async (content: ConfigFile, CONFIG_FILE: string) => {
 
 const getConfigFile = async (CONFIG_FILE: string): Promise<ConfigFile> => {
 	const appDataDirExists = await exists("", { dir: BaseDirectory.AppData });
-
+	
 	if (!appDataDirExists) {
 		await createDir("", { dir: BaseDirectory.AppData });
 	}
-
+	
 	if (await exists(CONFIG_FILE, { dir: BaseDirectory.AppData })) {
 		// File exists, return it
 		return await JSON.parse(await readTextFile(CONFIG_FILE, { dir: BaseDirectory.AppData }));
@@ -48,6 +34,7 @@ const getConfigFile = async (CONFIG_FILE: string): Promise<ConfigFile> => {
 		return {} as ConfigFile;
 	}
 };
+*/
 
 /**
  * Should be a drop in replacement for StorageManager

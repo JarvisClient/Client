@@ -30,6 +30,8 @@ export class JarvisUtils {
 	prevLatestBuildData: IJenkinsBuild | null | undefined = null;
 	notification: ReturnType<typeof useNotification>;
 	queuedBuild: number = -1;
+	jobCardProps: JobCardProps[] = [];
+	activeJobBuild: number | null = null;
 
 	/**
 	 * Constructor for JarvisUtils class.
@@ -64,7 +66,7 @@ export class JarvisUtils {
 	 * @param builds - An array of build data.
 	 * @returns An array of job card properties.
 	 */
-	createJobCardProps = async (builds: IJenkinsProjectBuild[]) => {
+	createJobCardProps = async (builds: IJenkinsProjectBuild[]): Promise<JobCardProps[]> => {
 		// Parse pinned jobs and notification set jobs from local storage
 		const pinnedJobs: IPinnedANDNotificatonJobs = JSON.parse(StorageManager.get("pinnedJobs") || "{}");
 		const notificationSetJobs: IPinnedANDNotificatonJobs = JSON.parse(StorageManager.get("notificationSetJobs") || "{}");
@@ -73,16 +75,7 @@ export class JarvisUtils {
 			const jobCardProps = await Promise.all(builds.map(async (build: IJenkinsProjectBuild) => {
 				const details = await fetchUtils.fetchBuildData(build.number, this.storedProjectName);
 				if (!details) throw new Error("No build details found for build number " + build.number);
-				return {
-					buildNumber: build.number,
-					displayName: details.displayName,
-					description: details.description,
-					result: details.result,
-					pinned: (pinnedJobs[this.storedProjectName as string] || []).includes(String(build.number)),
-					notification_set: (notificationSetJobs[this.storedProjectName as string] || []).includes(String(build.number)),
-					onClick: () => this.handleJobCardClick(build.number),
-					active: false,
-				};
+				return this.createJobCardPropsForBuild(details)
 			}));
 
 			return jobCardProps;
@@ -93,6 +86,19 @@ export class JarvisUtils {
 		}
 	};
 
+	createJobCardPropsForBuild = (build: IJenkinsBuild): JobCardProps => {
+		return {
+			buildNumber: build.number,
+			displayName: build.displayName,
+			description: build.description || undefined,
+			result: build.result,
+			pinned: [this.storedProjectName as string].includes(String(build.number)),
+			notification_set: [this.storedProjectName as string].includes(String(build.number)),
+			onClick: () => this.handleJobCardClick(build.number),
+			active: build.number === this.activeJobBuild,
+		}
+	}
+
 	/**
 	 * Handle a click on a job card.
 	 * @param buildNumber - The build number of the clicked job card.
@@ -100,6 +106,7 @@ export class JarvisUtils {
 	handleJobCardClick = async (buildNumber: number) => {
 		try {
 			this.setActiveJobBuildNumber(buildNumber);
+			this.activeJobBuild = buildNumber;
 			const buildData = await fetchUtils.fetchBuildData(buildNumber, this.storedProjectName);
 			this.setSelectedBuildData(buildData);
 			this.setActiveFeature("status");
@@ -227,10 +234,12 @@ export class JarvisUtils {
 			switch (feature) {
 			case "settings":
 				this.setActiveJobBuildNumber(null);
+				this.activeJobBuild = null;
 				break;
 			case "status_for_project":
 				if (!selectedBuildData) throw new Error("selectedBuildData is undefined");
 				this.setActiveJobBuildNumber(null);
+				this.activeJobBuild = null;
 				this.setSelectedBuildData({} as IJenkinsBuild);
 				break;
 			case "jenkins":
@@ -308,7 +317,7 @@ export class JarvisUtils {
 			if (element.name === "stop_build" && selectedBuildData.result !== null) {
 				return null;
 			}
-			
+
 			buttons.push(
 				<FeatureButtonComponent
 					key={index}
@@ -316,7 +325,7 @@ export class JarvisUtils {
 				/>);
 		});
 
-		
+
 		return buttons;
 	};
 
@@ -468,41 +477,19 @@ export class JarvisUtils {
 			if (this.intervalId === null) {
 				// Fetch project data & set job card props
 				const projectData = await fetchUtils.fetchProjectData(this.storedProjectName);
-
-				// Check if projectData is undefined
-				if (!projectData) {
-					this.notification.showNotification("Error", "Failed to fetch project data. Please check your internet connection or project name and try again.", "jenkins");
-					Logger.error("Failed to fetch project data.");
-					return null;
-				}
-
-				// Check for queued build
-				if (projectData.inQueue) {
-					this.queuedBuild = projectData.nextBuildNumber;
-				} else {
-					this.queuedBuild = -1;
-				}
-
-				const jobCardProps = await this.createJobCardProps(projectData.builds);
+				if (!projectData) throw new Error("No project data found, please check your internet connection and try again.");
 				this.setProjectData(projectData);
-				this.setJobCardProps(jobCardProps.map((props) => ({
-					...props,
-					description: props.description || undefined,
-				})));
+
+				// Create job card props
+				this.jobCardProps = await this.createJobCardProps(projectData.builds);
+				this.setJobCardProps(this.jobCardProps);
 				this.setJobCardsLoading(false);
-
-				// Set previous latest build data
-				this.prevLatestBuildData = await fetchUtils.fetchBuildData(projectData.builds[0].number, this.storedProjectName);
-
-				// Run startup tasks
-				this.runStartupTasks();
 
 				// Start interval
 				this.intervalId = setInterval(() => {
 					try {
 						this.startJarvis_interval();
 					} catch (error) {
-						clearInterval(this.intervalId as NodeJS.Timeout);
 						this.notification.showNotification("Error", "An Error occurred while trying to start Jarvis. Please check your internet connection and try again.", "jenkins");
 						Logger.error("An Error occurred while trying to start Jarvis:", error);
 					}
@@ -538,41 +525,73 @@ export class JarvisUtils {
 	 */
 	private startJarvis_interval = async () => {
 		try {
-			// Fetch project data
+			//Logger
+			Logger.info(`Fetching project data every ${JOBCARD_REFRESH_TIME / 1000} seconds for ${this.storedProjectName}`);
+
+			// Fetch project data to check for new builds
 			const newData = await fetchUtils.fetchProjectData(this.storedProjectName);
+			const collectedBuildData: IJenkinsBuild[] = [];
 			if (!newData) throw new Error("No project data found, please check your internet connection and try again.");
-			const latestBuildData = await fetchUtils.fetchBuildData(newData.builds[0].number, this.storedProjectName);
-			if (!latestBuildData) throw new Error("No latest build data found, please check your internet connection and try again.");
-			const latestBuildDataData = await fetchUtils.fetchBuildData(latestBuildData.number, this.storedProjectName);
+			const newBuilds = newData.builds;
 
-			// Check for queued build
-			if (newData.inQueue) {
-				this.queuedBuild = newData.nextBuildNumber;
-			} else {
-				this.queuedBuild = -1;
+			// check if the build numbers of the new builds are the same as the old ones
+			const buildNumbersEqual = deepEqual(this.jobCardProps.map((element) => element.buildNumber), newBuilds.map((element) => element.number));
+
+			// If the build numbers are not equal, add the new builds to the jobCardProps array
+			if (!buildNumbersEqual) {
+				// Add new builds to the jobCardProps array
+				let newBuildsAdded: number[] = [];
+				newBuilds.forEach((element) => {
+					if (!this.jobCardProps.find((item) => item.buildNumber === element.number)) {
+						newBuildsAdded.push(element.number);
+					}
+				});
+
+				for (const [index, element] of newBuildsAdded.entries()) {
+					let builData = await fetchUtils.fetchBuildData(element, this.storedProjectName);
+					let newJobCardProps = this.createJobCardPropsForBuild(builData);
+					// add the new build to the jobCardProps array if it is not already in there
+					if (!this.jobCardProps.find((item) => item.buildNumber === newJobCardProps.buildNumber)) {
+						this.jobCardProps.splice(index, 0, newJobCardProps);
+					}
+				}
 			}
 
-			// Logger
-			Logger.info("Fetching project data every 30 seconds for", this.storedProjectName);
+			// List of all builds not finished
+			const buildsNotFinished: JobCardProps[] = this.jobCardProps.filter((element) => element.result === null);
 
-			// Update state if latestBuildData has changed
-			if (!deepEqual(this.prevLatestBuildData, latestBuildDataData)) {
-				// Update state
-				const jobCardProps = await this.createJobCardProps(newData.builds);
-				this.prevLatestBuildData = latestBuildDataData;
+			// Check if the latest build has changed
+			for (const [index, element] of buildsNotFinished.entries()) {
+				if (!element.buildNumber) continue;
+				const buildData = await fetchUtils.fetchBuildData(element.buildNumber, this.storedProjectName);
+				collectedBuildData.push(buildData);
 
-				// Set state
-				this.setJobCardProps(jobCardProps.map((props) => ({
-					...props,
-					description: props.description || undefined,
-				})));
-				this.setProjectData(newData);
-				// Logger
-				Logger.info("Latest build data has changed. Updating state...");
+				// Set buildData to null if it is undefined
+				buildsNotFinished[index] = {
+					...buildsNotFinished[index],
+					displayName: buildData.displayName,
+					description: buildData.description || undefined,
+					result: buildData.result,
+				};
 			}
 
-			// Check builds in notification set jobs
+			// Insert the buildsNotFinished into jobCardProps array at the correct position
+			const newJobCardProps = this.jobCardProps.map((element) => {
+				const index = buildsNotFinished.findIndex((item) => item.buildNumber === element.buildNumber);
+				if (index !== -1) {
+					return buildsNotFinished[index];
+				}
+				return element;
+			});
 
+			// Set the new jobCardProps
+			this.jobCardProps = newJobCardProps;
+			this.setJobCardProps(this.jobCardProps);
+
+			const selectedBuild = collectedBuildData.find((element) => element.number === this.activeJobBuild);
+			if (selectedBuild) {
+				this.setSelectedBuildData(selectedBuild);
+			}
 
 		} catch (error) {
 			this.notification.showNotification("Error", "An Error occured while trying to fetch project data. Please check your internet connection and try again.", "jenkins");

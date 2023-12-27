@@ -4,7 +4,7 @@
 }
 
 .custom-scroll::-webkit-scrollbar {
-  width: 4px;
+  width: 8px;
   @apply bg-background-view;
 }
 

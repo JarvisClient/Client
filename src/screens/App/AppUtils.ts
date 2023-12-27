@@ -48,6 +48,16 @@ export const initJenkinsConnectionCheck = async ()  => {
 			resizable: false,
 			decorations: false,
 		});
+
+		webview.center();
+
+		webview.once("tauri://created", () => {
+			Logger.info("Webview created");
+		});
+
+		webview.once("tauri://error", (e) => {
+			Logger.error(`Error in webview: ${e}`);
+		});
 		return false;
 	}
 };
