@@ -43,20 +43,10 @@ export const initJenkinsConnectionCheck = async ()  => {
 		const webview = new WebviewWindow("restartOnboardingMaybe", {
 			url: "/jenkinsUnavailable",
 			title: "Jenkins Unavailable",
-			width: DEFAULT_WINDOW_WIDTH,
+			width: 800,
 			height: DEFAULT_WINDOW_HEIGHT,
 			resizable: false,
 			decorations: false,
-		});
-
-		webview.center();
-
-		webview.once("tauri://created", () => {
-			Logger.info("Webview created");
-		});
-
-		webview.once("tauri://error", (e) => {
-			Logger.error(`Error in webview: ${e}`);
 		});
 		return false;
 	}
