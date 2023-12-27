@@ -95,6 +95,14 @@ const SettingsView: React.FC = () => {
 								<div>
 									<button onClick={() => navigate("/onboarding/step_1")} className="button"> Restart Onboarding </button>
 								</div>
+								{/* Feedback */}
+								<div className="flex flex-col">
+									<p className="mb-2 text-lg font-bold">Give Feedback</p>
+									<p className="mb-2 leading-5 text-comment-color">Help us Improve Jarvis by giving some Feedback. This will only take 1-2 Minutes.</p>
+								</div>
+								<div>
+									<button onClick={() => navigate("/onboarding/step_1")} className="button"> Open Feedback Form </button>
+								</div>
 							</div>
 						</div>
 

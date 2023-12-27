@@ -31,6 +31,7 @@ import { IJenkinsProject, IJenkinsProjectParameterDefinition } from "../../Inter
 import { FeautreButton_S } from "../../Interfaces/IFeatureButtonProps";
 import { JobCardProps } from "../../Interfaces/IJobCardProps";
 import { useNotification } from "../../components/NotificationManager/NotificationContext";
+import CustomAnimatePresence from "../../components/CustomAnimatePresence/CustomAnimatePresence ";
 
 /**
  * Main component for the Jarvis application.
@@ -94,7 +95,7 @@ function JarvisMain(): React.ReactElement {
 
 		onJobCardClick();
 	}, [activeJobBuild]);
-	
+
 	useEffect(() => {
 		jarvisUtils.runStartupTasks();
 	}, []);
@@ -146,14 +147,16 @@ function JarvisMain(): React.ReactElement {
 						{activeFeature !== "settings" && activeFeature !== "status_for_project" && activeFeature !== "build" && activeFeature != "switch_project" && (
 							<FeatureViewHead buildData={selectedBuildData} />
 						)}
-						{activeFeature === "switch_project" && <SwitchProjectView />}
-						{activeFeature === "status" && <StatusView buildData={selectedBuildData} />}
-						{activeFeature === "console" && <ConsoleView buildData={selectedBuildData} />}
-						{activeFeature === "parameters" && <ParametersView buildData={selectedBuildData} />}
-						{activeFeature === "settings" && <SettingsView />}
-						{activeFeature === "status_for_project" && <ProjectStatusView buildData={projectData} />}
-						{activeFeature === "testReport" && <TestReport buildData={selectedBuildData} />}
-						{activeFeature === "build" && <BuildView buildData={selectedBuildData} parameterDefinition={parameterDefinition} />}
+						<CustomAnimatePresence currentFeature={activeFeature} activeJobBuild={activeJobBuild}>
+							{activeFeature === "switch_project" && <SwitchProjectView />}
+							{activeFeature === "status" && <StatusView buildData={selectedBuildData} />}
+							{activeFeature === "console" && <ConsoleView buildData={selectedBuildData} />}
+							{activeFeature === "parameters" && <ParametersView buildData={selectedBuildData} />}
+							{activeFeature === "settings" && <SettingsView />}
+							{activeFeature === "status_for_project" && <ProjectStatusView buildData={projectData} />}
+							{activeFeature === "testReport" && <TestReport buildData={selectedBuildData} />}
+							{activeFeature === "build" && <BuildView buildData={selectedBuildData} parameterDefinition={parameterDefinition} />}
+						</CustomAnimatePresence>
 					</div>
 					{/* End of Feature View */}
 				</div>

@@ -10,28 +10,15 @@ import Logger from "../../../helpers/Logger";
 import { IJenkinsBuild } from "../../../Interfaces/IBuildInterface";
 
 import StorageManager from "../../../helpers/StorageManager";
+import { fetchUtils } from "../Utils/fetchUtils";
+import { motion } from "framer-motion";
 
 interface Props {
     buildData: IJenkinsBuild;
 }
 const FeatureViewHead: React.FC<Props> = ({ buildData }) => {
 	const [projectBuildStateLED, setProjectBuildStateLED] = useState<string>("");
-
-	const fetchDataForBuild = async () => {
-		try {
-			const config = {
-				projectName: StorageManager.get("projectName"),
-				buildNumber: buildData.id.toString(),
-				...getAuthDetails(),
-			};
-			const response: string = await invoke("get_build_data", config);
-			const json = await JSON.parse(response);
-
-			return json;
-		} catch (error) {
-			Logger.error("Error invoking get_build_data:", error);
-		}
-	};
+  const [animationKey, setAnimationKey] = useState(0);
 
 	const intervalRef = useRef<NodeJS.Timeout>();
 
@@ -40,7 +27,8 @@ const FeatureViewHead: React.FC<Props> = ({ buildData }) => {
 
 		const fetchData = async () => {
 			try {
-				const response = await fetchDataForBuild();
+        let storedProjectName: string | null = StorageManager.get("projectName");
+				const response = await fetchUtils.fetchBuildData(buildData.number, storedProjectName);
 				if (isMounted && response.result === null) {
 					// Clear existing interval before setting up a new one
 					clearInterval(intervalRef.current);
@@ -64,6 +52,7 @@ const FeatureViewHead: React.FC<Props> = ({ buildData }) => {
 		};
 
 		fetchData();
+    setAnimationKey((prevKey) => prevKey + 1); // Change the key to trigger unmount/remount
 
 		return () => {
 			isMounted = false;
@@ -75,48 +64,44 @@ const FeatureViewHead: React.FC<Props> = ({ buildData }) => {
 	}, [buildData]);
 
 	return (
-
-		<div className="mx-10 my-10">
-			<div className="flex items-center rounded-lg p-5 mb-10 transition select-none overflow-hidden">
-				<div className="flex-shrink-0 mr-3">
-					<span className="relative flex h-[37px] w-[37px]">
-						{projectBuildStateLED === "bg-jenkins-job-blue"
-							? <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-jenkins-job-blue opacity-75" />
-							: null}
-						<span className={`relative inline-flex rounded-full h-full w-full ${projectBuildStateLED}`} />
-					</span>
-				</div>
-				<div className="flex flex-col justify-center">
-					{/* Two rows for Title and Comment */}
-					<div className="text-3xl text-text-color font-bold overflow-hidden">
-						{buildData.displayName == `#${buildData.id}` ? (
-							<p>
-    Build #
-								{buildData.id}
-								{" "}
-    (
-								{formatBuildDate(buildData.timestamp)}
-    )
-							</p>
-						) : (
-							<p>
-    Build
-								{buildData.displayName}
-								{" "}
-    (
-								{formatBuildDate(buildData.timestamp)}
-    )
-							</p>
-						)}
-					</div>
-					<div className="text-xl text-comment-color overflow-hidden line-clamp-2">
-						{buildData.description}
-					</div>
-				</div>
-			</div>
-		</div>
-
-	);
+    <div className="mx-10 my-10">
+      <div className="flex items-center rounded-lg p-5 mb-10 transition select-none overflow-hidden">
+        <div className="flex-shrink-0 mr-3 self-start">
+          <span className="relative flex h-[37px] w-[37px]">
+            {projectBuildStateLED === "bg-jenkins-job-blue" ? (
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-jenkins-job-blue opacity-75" />
+            ) : null}
+            <span className={`relative inline-flex rounded-full h-full w-full ${projectBuildStateLED}`} />
+          </span>
+        </div>
+        <div className="flex flex-col justify-center">
+          {/* Two rows for Title and Comment */}
+          <div className="text-3xl text-text-color font-bold overflow-hidden">
+            <motion.p
+              key={animationKey}
+              initial={{ opacity: 0.9, y: -40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}>
+              {buildData.displayName === `#${buildData.id}`
+                ? `Build #${buildData.id}`
+                : `Build ${buildData.displayName}`} ({" "}
+              {formatBuildDate(buildData.timestamp)} )
+            </motion.p>
+          </div>
+          <div className="text-xl text-comment-color overflow-hidden line-clamp-2">
+            <motion.div
+              key={animationKey}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.3, delay: 0.2 }}
+            >
+              {buildData.description}
+            </motion.div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default FeatureViewHead;
