@@ -52,68 +52,6 @@ const getConfigFile = async (CONFIG_FILE: string): Promise<ConfigFile> => {
 /**
  * Should be a drop in replacement for StorageManager
  */
-export const StorageManagerExperimental = {
-	/**
-	 * Save a value to local storage.
-	 * @param {AllowedKey} key - The key to save the value under.
-	 * @param {*} value - The value to save.
-	 * @returns {boolean} - True if the save was successful, false otherwise.
-	 */
-	save: async (key: allowedKeys, value: string | string[]): Promise<boolean> => {
-		try {
-			const configFile = await getConfigFile(CONFIG_FILE);
-			configFile[key] = value;
-			await saveToConfigFile(configFile, CONFIG_FILE);
-		} catch (error) {
-			Logger.error(error);
-			return false;
-		}
-		return true;
-	},
-
-	/**
-	 *
-	 * @param {AllowedKey} key - The key to get the value for.
-	 * @returns {*} - The value for the key.
-	 * @returns {null} - If the key does not exist.
-	 */
-	get: async (key: allowedKeys): Promise<string | null> => {
-		const configFile = await getConfigFile(CONFIG_FILE);
-		const value = configFile[key];
-
-		if (value) {
-			return JSON.stringify(value);
-		}
-		return null;
-	},
-
-	clearAll: async (): Promise<boolean> => {
-		try {
-			await saveToConfigFile({} as ConfigFile, CONFIG_FILE);
-		} catch (error) {
-			Logger.error(error);
-			return false;
-		}
-		return true;
-	},
-
-	/**
-	 *
-	 * @param {AllowedKey} key - The key to remove.
-	 * @returns {boolean} - True if the removal was successful, false otherwise.
-	 */
-	removeItem: async (key: allowedKeys): Promise<boolean> => {
-		try {
-			const configFile = await getConfigFile(CONFIG_FILE);
-			delete configFile[key];
-			await saveToConfigFile(configFile, CONFIG_FILE);
-			return true;
-		} catch (error) {
-			Logger.error(error);
-			return false;
-		}
-	},
-};
 
 const StorageManager = {
 	/**
