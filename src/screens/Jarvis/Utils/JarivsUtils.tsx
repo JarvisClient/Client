@@ -15,6 +15,7 @@ import { FeatureButtonComponentProps, FeautreButton_S } from "../../../Interface
 import { JobCardProps } from "../../../Interfaces/IJobCardProps";
 import { IPinnedANDNotificatonJobs } from "../../../Interfaces/IPinnedANDNotificatonJobs";
 import { miniUtils } from "./miniUtils";
+import { sendNotification } from "../../../helpers/notification";
 
 /**
  * Utility class for handling job card related functionality.
@@ -252,7 +253,7 @@ export class JarvisUtils {
 			}
 
 			// Skip rendering the stop_build button if the build is not running
-			if (element.name === "stop_build" && selectedBuildData.result !== null) {
+			if ((element.name === "stop_build" || element.name === "notification") && selectedBuildData.result !== null) {
 				return null;
 			}
 
@@ -476,8 +477,6 @@ export class JarvisUtils {
 			 * This Section is for adding new builds to the jobCardProps array.
 			 * If a new build is found, it is added to the jobCardProps array.
 			 */
-
-
 			// check if the build numbers of the new builds are the same as the old ones
 			const buildNumbersEqual = deepEqual(this.jobCardProps.map((element) => element.buildNumber), newBuilds.map((element) => element.number));
 
@@ -502,22 +501,36 @@ export class JarvisUtils {
 			}
 
 			/**
-			 * This Section is for updating the jobCardProps array with the latest build data.
+			 * This Section is for updating the jobCardProps array with the latest build data
+			 * and Setting Notifications for finished builds.
 			 * If a build is not finished, it is updated with the latest build data.
 			 */
-
 			// List of all builds not finished
 			const buildsNotFinished: JobCardProps[] = this.jobCardProps.filter((element) => element.result === null);
+			const NotificationSet = JSON.parse(StorageManager.get("notificationSetJobs") || "{}")
+			const buildsinNotificationSet: String[] = NotificationSet[this.storedProjectName as string] || [];			
+
 
 			if (buildsNotFinished.length !== 0) {
-
-
 				// Check if the latest build has changed
 				for (const [index, element] of buildsNotFinished.entries()) {
 					if (!element.buildNumber) continue;
+					// Gather the latest build data
 					const buildData = await fetchUtils.fetchBuildData(element.buildNumber, this.storedProjectName);
-					collectedBuildData.push(buildData);
 
+					// Check if the build is finished and if it is in the notification set
+					if (buildData.result !== null && buildsinNotificationSet.includes(String(buildData.number))) {
+						// Send Notification
+						sendNotification(`Build ${buildData.number} finished`, `Build ${buildData.number} finished with result ${buildData.result}`);
+						this.notification.showNotification(`Build ${buildData.number} finished`, `Build ${buildData.number} finished with result ${buildData.result}`, "jenkins");
+						
+						// remove the build from the notification set
+						NotificationSet[this.storedProjectName as string] = NotificationSet[this.storedProjectName as string].filter((item: String) => item !== String(buildData.number));
+						StorageManager.save("notificationSetJobs", JSON.stringify(NotificationSet));
+					}
+
+					// Write the build data to the collectedBuildData array
+					collectedBuildData.push(buildData);
 					buildsNotFinished[index] = {
 						...buildsNotFinished[index],
 						displayName: buildData.displayName,

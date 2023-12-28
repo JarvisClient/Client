@@ -19,11 +19,9 @@ const FeatureViewHead: React.FC<Props> = ({ buildData }) => {
 			setOriginalBuildData(buildData);
 		}
     
-		if (originalBuildData !== buildData) {
+		if (originalBuildData?.result !== buildData.result) {
 			setAnimationKey((prevKey) => prevKey + 1);
 		}
-
-
 	}, [buildData]);
 
 	return (
