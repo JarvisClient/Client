@@ -24,7 +24,7 @@ const ProjectSwitcher = () => {
     const notification = useNotification();
 
     // Function to fetch all Jenkins projects
-    
+
 
     // Function to fetch Jenkins jobs and update state
     const getJobs = async (): Promise<void> => {
@@ -38,12 +38,9 @@ const ProjectSwitcher = () => {
     const refreshJobs = (jobs: JenkinsDataJob[]): void => {
         const jobsInStorage: JenkinsDataJob[] = JSON.parse(StorageManager.get("projects") || "[]");
 
-        jobsInStorage.forEach((job: JenkinsDataJob) => {
-            const index = jobs.findIndex((item: JenkinsDataJob) => item.name === job.name);
-            if (index !== -1) {
-                jobs[index].favorite = true;
-            }
-        });
+        for (const [index, job] of jobs.entries()) {
+            job.favorite = jobsInStorage.some((item: JenkinsDataJob) => item.url === job.url);
+        }
 
         const updatedJobs = [...jobs];
 
@@ -56,11 +53,12 @@ const ProjectSwitcher = () => {
     // Function to add or remove a project from favorites
     const addToProjects = (project: JenkinsDataJob): void => {
         let projects: JenkinsDataJob[] = JSON.parse(StorageManager.get("projects") || "[]");
-
-        const index = projects.findIndex((item: JenkinsDataJob) => item.name === project.name);
+        const index = projects.findIndex((item: JenkinsDataJob) => item.url === project.url);
         if (index !== -1) {
+            // Remove from favorites
             projects.splice(index, 1);
         } else {
+            // Add to favorites
             projects.push(project);
         }
 
