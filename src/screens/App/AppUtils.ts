@@ -3,6 +3,8 @@ import Logger from "../../helpers/Logger";
 import { checkForUpdates } from "./updateChecker/updateChecker";
 import { DEFAULT_WINDOW_HEIGHT, DEFAULT_WINDOW_WIDTH } from "../../config/constants";
 import { checkJenkinsConnection } from "./JenkinsConnectionChecker/JenkinsConnectionChecker";
+import { isPermissionGranted, requestPermission, sendNotification as tauriSendNotification } from "@tauri-apps/api/notification";
+import StorageManager from "../../helpers/StorageManager";
 
 export const initUpdateChecker = async () => {
 	const updateState = await checkForUpdates();
@@ -33,7 +35,7 @@ export const initUpdateChecker = async () => {
  * 
  * @returns true if Jenkins is available
  */
-export const initJenkinsConnectionCheck = async ()  => {
+export const initJenkinsConnectionCheck = async () => {
 	const initJenkinsConnectionCheck = await checkJenkinsConnection();
 	if (initJenkinsConnectionCheck) {
 		Logger.info("Jenkins is available");
@@ -62,6 +64,15 @@ export const initJenkinsConnectionCheck = async ()  => {
 	}
 };
 
-export const checkConfigFiles = async () => {
-	// To be implemented
+export const checkPermissions = async (): Promise<void> => {
+	if (!StorageManager.get("notificationPermission")) {
+		const permission = await requestPermission();
+		if (permission === "granted") {
+			StorageManager.save("notificationPermission", "granted");
+			Logger.info("Notification permission granted");
+		} else {
+			StorageManager.save("notificationPermission", "denied");
+			Logger.info("Notification permission denied");
+		}
+	}
 };

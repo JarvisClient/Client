@@ -6,7 +6,7 @@ import loading_anim from "../../assets/icons/loading_anim.webm";
 import Logger from "../../helpers/Logger";
 import StorageManager from "../../helpers/StorageManager";
 import { JARVIS_LOADING_MESSAGES } from "../../config/constants";
-import { checkConfigFiles, initJenkinsConnectionCheck, initUpdateChecker } from "./AppUtils";
+import { checkPermissions, initJenkinsConnectionCheck, initUpdateChecker } from "./AppUtils";
 import { invoke } from "@tauri-apps/api";
 
 const App: React.FC = () => {
@@ -34,8 +34,8 @@ const App: React.FC = () => {
 				abortStartup = await !initJenkinsConnectionCheck();
 
 				// Check Config Files
-				setSpecificLoadingMessage("Checking Config File...");
-				checkConfigFiles();
+				setSpecificLoadingMessage("Checking for Permissions...");
+				checkPermissions();
 			}
 			
 			// Navigate to onboarding or jarvis

@@ -10,7 +10,8 @@ type allowedKeys =
     "projectName" |
     "notificationSetJobs" |
     "projects" |
-    "titlebarStyle";
+    "titlebarStyle" |
+	"notificationPermission";
 
 /*
 const saveToConfigFile = async (content: ConfigFile, CONFIG_FILE: string) => {
