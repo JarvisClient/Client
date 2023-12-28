@@ -45,3 +45,12 @@ export interface JenkinsDataUnlabeledLoad {
     _class: string;
     // Add specific properties for unlabeledLoad if available
 }
+
+export interface JenkinsDataJobMultibranch {
+    _class: string;
+    name: string;
+    url: string;
+    color: string;
+    favorite?: boolean;
+    jobs: JenkinsData[];
+}

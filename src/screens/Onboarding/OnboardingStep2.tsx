@@ -10,12 +10,12 @@ import { motion } from "framer-motion";
 import StorageManager from "../../helpers/StorageManager";
 
 import projectURLIMG from "../../assets/faq/faq_projectURL.webp";
-import { fetchUtils } from "../Jarvis/Utils/fetchUtils";
-import { JenkinsData, JenkinsDataJob } from "../../Interfaces/IJenkinsData";
+import {JenkinsDataJob } from "../../Interfaces/IJenkinsData";
 import Logger from "../../helpers/Logger";
+import { getAllProjects } from "../../components/ProjectSwitcher/ProjectSwitchUtils";
 
 const OnboardingStep1: React.FC = () => {
-	const [currentProjects, setCurrentProjects] = useState<string[]>([]);
+	const [FavoriteProjects, setFavoriteProjects] = useState<JenkinsDataJob[]>([]);
 	const [showHelpModal, setShowHelpModal] = useState(false);
 	const [allJobs, setAllJobs] = useState<JenkinsDataJob[]>([] as JenkinsDataJob[]);
 
@@ -30,75 +30,69 @@ const OnboardingStep1: React.FC = () => {
 
 	const continueOnboarding = async () => {
 		try {
-			if (currentProjects.length === 0) {
-				notification.showNotification("Error", "Please add at least one project.", "jenkins");
-				return;
-			}
+					// Check if there are any jobs added to favorites
+		if (FavoriteProjects.length === 0) throw new Error("No jobs added to favorites");
 
-			StorageManager.save("projectName", currentProjects[0]);
+		// Set Top most project url as currentProject
+		const baseUrl = StorageManager.get("baseurl");
+		if (!baseUrl) throw new Error("Base URL not found");
+		const currentProject = FavoriteProjects[0].url.replace(baseUrl + "job/", "");
+		await StorageManager.save("projectName", currentProject);
 
-			navigate("/onboarding/step_3");
+		navigate("/onboarding/step_3");
+
 		} catch (error) {
 			Logger.error(error);
-			notification.showNotification("Error", String(error), "jenkins");
+			notification.showNotification("error", String(error), "error");
 		}
 	};
 
-	const addJobToStorage = async (jobName: string) => {
-		const currentProjectsInStorage: string[] = JSON.parse(StorageManager.get("projects") || "[]");
+	const addJobToStorage = async (job: JenkinsDataJob) => {
+		// Add job to FavoriteProjects
+		const newFavoriteProjects = [...FavoriteProjects, job];
+		setFavoriteProjects(newFavoriteProjects);
 
-		if (currentProjectsInStorage.includes(jobName)) {
-			notification.showNotification("Project already exists in Storage", "Please use another one or click the Skip button.", "jenkins");
-			return;
-		}
-
-		currentProjectsInStorage.push(jobName);
-		StorageManager.save("projects", JSON.stringify(currentProjectsInStorage));
-
-		setCurrentProjects(currentProjectsInStorage);
-
-		const newAllJobs = allJobs.filter((job: JenkinsDataJob) => job.name !== jobName);
+		// Remove job from allJobs
+		const newAllJobs = allJobs.filter((item) => item.name !== job.name);
 		setAllJobs(newAllJobs);
+
+		// Add job to storage
+		const favoriteProjects = JSON.parse(await StorageManager.get("projects") || "[]");
+		favoriteProjects.push(job);
+		await StorageManager.save("projects", JSON.stringify(favoriteProjects));
 	};
 
-	const removeJobsFromStorage = async (jobName: string) => {
-		let currentProjectsInStorage: string[] = JSON.parse(StorageManager.get("projects") || "[]");
+	const removeJobsFromStorage = async (job: JenkinsDataJob) => {
+		// Remove job from FavoriteProjects
+		const newFavoriteProjects = FavoriteProjects.filter((item) => item.name !== job.name);
+		setFavoriteProjects(newFavoriteProjects);
 
-		currentProjectsInStorage = currentProjectsInStorage.filter((job) => job !== jobName);
-		StorageManager.save("projects", JSON.stringify(currentProjectsInStorage));
-
-		setCurrentProjects(currentProjectsInStorage);
-
-		// add job back to all jobs
-		const newAllJobs: JenkinsDataJob[] = allJobs;
-		newAllJobs.push({
-			name: jobName,
-			_class: "",
-			url: "",
-			color: ""
-		});
+		// Add job to allJobs
+		const newAllJobs = [...allJobs, job];
 		setAllJobs(newAllJobs);
+
+		// Remove job from storage
+		const favoriteProjects = JSON.parse(await StorageManager.get("projects") || "[]");
+		const newFavoriteProjectsStorage = favoriteProjects.filter((item: JenkinsDataJob) => item.name !== job.name);
+		await StorageManager.save("projects", JSON.stringify(newFavoriteProjectsStorage));
 	};
 
 	useEffect(() => {
 		const getJobs = async () => {
 			try {
-				const JenkinsData: JenkinsData | undefined = await fetchUtils.fetchJenkinsData();
-				const jobs: JenkinsDataJob[] | undefined = JenkinsData?.jobs;
-	
-				const currentProjectsInStorage: string[] = JSON.parse(StorageManager.get("projects") || "[]");
-				const newJobs = jobs?.filter((job) => !currentProjectsInStorage.includes(job.name));
-	
-				if (newJobs === undefined) {
-					notification.showNotification("Error", "No jobs found on Jenkins.", "jenkins");
-					return;
-				}
-	
-				setAllJobs(newJobs);
-				setCurrentProjects(currentProjectsInStorage);
+				// Get all jobs from storage
+				const allProjects = await getAllProjects();
+				setAllJobs(allProjects);
+
+				// Get favorite jobs from storage
+				const favoriteProjects: JenkinsDataJob[] = JSON.parse(await StorageManager.get("projects") || "[]");
+				setFavoriteProjects(favoriteProjects);
+
+				// Remove favorite jobs from all jobs
+				const newAllJobs = allProjects.filter((item) => !favoriteProjects.includes(item));
+				setAllJobs(newAllJobs);
 			} catch (error) {
-				Logger.error(error);
-				notification.showNotification("Error", String(error), "jenkins");
+				
 			}
 		};
 
@@ -118,7 +112,7 @@ const OnboardingStep1: React.FC = () => {
 						<div className="flex space-x-5" key={index}>
 							<p
 								className="hover:bg-background-card-selected px-7 py-1 rounded-lg active:brightness-[0.9] cursor-pointer break-all"
-								onClick={() => addJobToStorage(project.name)}
+								onClick={() => addJobToStorage(project)}
 							>
 								{project.name}
 							</p>
@@ -129,13 +123,13 @@ const OnboardingStep1: React.FC = () => {
 				<div className="bg-console-background px-5 py-5 w-2/3 rounded-md space-y-2 max-h-[350px] overflow-y-scroll onboarding-custom-scroll">
 					<p className="font-[600] text-lg">Added to Favorites</p>
 					<hr className="border-border border-2 rounded-full" />
-					{currentProjects.map((project, index) => (
+					{FavoriteProjects.map((project, index) => (
 						<div className="flex space-x-5" key={index}>
 							<p
 								className="hover:bg-background-card-selected px-7 py-1 rounded-lg active:brightness-[0.9] cursor-pointer break-all"
 								onClick={() => removeJobsFromStorage(project)}
 							>
-								{project}
+								{project.name}
 							</p>
 						</div>
 					))}

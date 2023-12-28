@@ -205,7 +205,6 @@ export class JarvisUtils {
 				break;
 			}
 			default:
-				if (!selectedBuildData) throw new Error("selectedBuildData is undefined");
 				break;
 			}
 			this.setActiveFeature(feature);

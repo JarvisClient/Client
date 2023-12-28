@@ -75,3 +75,8 @@ export interface IJenkinsProjectProperty {
 export interface IJenkinsProjectSCM {
     _class: string;
 }
+
+// refernece 
+export interface IJenkinsProjectMultibranch extends IJenkinsProject {
+    jobs?: IJenkinsProject[];
+}

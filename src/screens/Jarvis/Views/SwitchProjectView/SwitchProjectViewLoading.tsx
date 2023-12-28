@@ -2,8 +2,6 @@ import React from "react";
 
 const SwitchProjectViewLoading: React.FC = () => (
 	<div className="animate-pulse">
-		<h1 className="text-3xl font-bold mb-8">Switch Projects</h1>
-
 		<div className="bg-background-sidebar px-6 py-5 rounded-lg space-y-2">
 			<div className="relative select-none" />
 
