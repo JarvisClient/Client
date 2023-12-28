@@ -13,7 +13,6 @@ const FeatureViewHead: React.FC<Props> = ({ buildData }) => {
 	const [originalBuildData, setOriginalBuildData] = useState<IJenkinsBuild | null>(null);
 
 	useEffect(() => {
-		console.log("buildData", buildData);
 		setProjectBuildStateLED(circleColor(buildData));
     
 		if (originalBuildData === null) {

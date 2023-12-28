@@ -1,3 +1,4 @@
+import { allowedFeatureButtons } from "../../../Interfaces/handleJobCardFeautreButtonInteraction";
 import { JobCardProps } from "../../../Interfaces/IJobCardProps";
 import FeatureButtonsConfig from "../../../config/FeatureButtons";
 
@@ -42,4 +43,25 @@ export const miniUtils = {
 
 		return updatedJobCardProps;
 	},
+
+	decidehandleJobCardFeautreButtonInteractionMessage: (feature: allowedFeatureButtons): string[] => {
+		switch (feature) {
+		case "pinnedJobs":
+			return [
+				"Job unpinned",
+				"The job has been unpinned!",
+				"Job pinned",
+				"The job has been pinned!",
+				"pin"
+			];
+		case "notificationSetJobs":
+			return [
+				"Notification removed",
+				"You will no longer receive notifications for this job!",
+				"Notification set",
+				"You will receive notifications for this job once its finished!",
+				"notification"
+			];
+		}
+	}
 };

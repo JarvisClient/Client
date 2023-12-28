@@ -14,6 +14,7 @@ import { IJenkinsProject, IJenkinsProjectBuild } from "../../../Interfaces/IProj
 import { FeatureButtonComponentProps, FeautreButton_S } from "../../../Interfaces/IFeatureButtonProps";
 import { JobCardProps } from "../../../Interfaces/IJobCardProps";
 import { IPinnedANDNotificatonJobs } from "../../../Interfaces/IPinnedANDNotificatonJobs";
+import { miniUtils } from "./miniUtils";
 
 /**
  * Utility class for handling job card related functionality.
@@ -68,14 +69,11 @@ export class JarvisUtils {
 	 */
 	createJobCardProps = async (builds: IJenkinsProjectBuild[]): Promise<JobCardProps[]> => {
 		// Parse pinned jobs and notification set jobs from local storage
-		const pinnedJobs: IPinnedANDNotificatonJobs = JSON.parse(StorageManager.get("pinnedJobs") || "{}");
-		const notificationSetJobs: IPinnedANDNotificatonJobs = JSON.parse(StorageManager.get("notificationSetJobs") || "{}");
-
 		try {
 			const jobCardProps = await Promise.all(builds.map(async (build: IJenkinsProjectBuild) => {
 				const details = await fetchUtils.fetchBuildData(build.number, this.storedProjectName);
 				if (!details) throw new Error("No build details found for build number " + build.number);
-				return this.createJobCardPropsForBuild(details)
+				return this.createJobCardPropsForBuild(details);
 			}));
 
 			return jobCardProps;
@@ -87,17 +85,20 @@ export class JarvisUtils {
 	};
 
 	createJobCardPropsForBuild = (build: IJenkinsBuild): JobCardProps => {
+		const pinnedJobs: IPinnedANDNotificatonJobs = JSON.parse(StorageManager.get("pinnedJobs") || "{}");
+		const notificationSetJobs: IPinnedANDNotificatonJobs = JSON.parse(StorageManager.get("notificationSetJobs") || "{}");
+
 		return {
 			buildNumber: build.number,
 			displayName: build.displayName,
 			description: build.description || undefined,
 			result: build.result,
-			pinned: [this.storedProjectName as string].includes(String(build.number)),
-			notification_set: [this.storedProjectName as string].includes(String(build.number)),
+			pinned: pinnedJobs[this.storedProjectName as string]?.includes(String(build.number)),
+			notification_set: notificationSetJobs[this.storedProjectName as string]?.includes(String(build.number)),
 			onClick: () => this.handleJobCardClick(build.number),
 			active: build.number === this.activeJobBuild,
-		}
-	}
+		};
+	};
 
 	/**
 	 * Handle a click on a job card.
@@ -116,107 +117,44 @@ export class JarvisUtils {
 		}
 	};
 
-	/**
-	 * Handle a click on the pin button of a job card.
-	 * @param jobCardProps
-	 * @param activeJobBuild
-	 */
-	onJobCardPin = (jobCardProps: JobCardProps[], activeJobBuild: IJenkinsBuild) => {
-		let pinnedJobs = JSON.parse(StorageManager.get("pinnedJobs") || "{}");
-		if (Array.isArray(pinnedJobs)) pinnedJobs = {};
+	handleJobCardFeautreButtonInteraction = (feature: "pinnedJobs" | "notificationSetJobs", jobCardProps: JobCardProps[], activeJobBuild: IJenkinsBuild) => {
+		const interactedJobs = JSON.parse(StorageManager.get(feature) || "{}");
+		const messages: string[] = miniUtils.decidehandleJobCardFeautreButtonInteractionMessage(feature);
+		if (Array.isArray(interactedJobs)) return;
+		if (!this.storedProjectName) return;
 
-		if (this.storedProjectName) {
-			// if the job is already pinned, remove it from the pinnedJobs object else add it
-			if (pinnedJobs[this.storedProjectName] && pinnedJobs[this.storedProjectName].includes(activeJobBuild.id)) {
-				pinnedJobs[this.storedProjectName] = pinnedJobs[this.storedProjectName].filter((element: string) => element !== activeJobBuild.id);
-				this.notification.showNotification("Job Unpinned", "The job has been unpinned.", "pin");
-				Logger.info("Job unpinned:", activeJobBuild);
-
-			} else {
-				if (!pinnedJobs[this.storedProjectName]) {
-					pinnedJobs[this.storedProjectName] = [];
-				}
-				pinnedJobs[this.storedProjectName].push(activeJobBuild.id);
-				this.notification.showNotification("Job Pinned", "The job has been pinned to the top of the list.", "pin");
-				Logger.info("Job pinned:", activeJobBuild);
-
-			}
+		if (interactedJobs[this.storedProjectName] && interactedJobs[this.storedProjectName]?.includes(activeJobBuild.id)) {
+			interactedJobs[this.storedProjectName] = interactedJobs[this.storedProjectName].filter((element: string) => element !== activeJobBuild.id);
+			this.notification.showNotification(messages[0], messages[1], messages[4]);
+			Logger.info("Interaction undone:", activeJobBuild);
 		} else {
-			this.notification.showNotification("Error", "Please select a project first.", "jenkins");
+			if (!interactedJobs[this.storedProjectName]) {
+				interactedJobs[this.storedProjectName] = [];
+			}
+			interactedJobs[this.storedProjectName].push(activeJobBuild.id);
+			this.notification.showNotification(messages[2], messages[3], messages[4]);
+			Logger.info("Interaction noted:", activeJobBuild);
 		}
 
-		StorageManager.save("pinnedJobs", JSON.stringify(pinnedJobs));
+		StorageManager.save(feature, JSON.stringify(interactedJobs));
 
-		this.updatePinnedJobCards(jobCardProps);
+		this.handleUpdatingJobCardPropsForFeatureButtonInteraction(jobCardProps);
 	};
 
-	/**
-	 * Update the pinned job cards.
-	 * @param jobCardProps
-	 */
-	updatePinnedJobCards = (jobCardProps: JobCardProps[]) => {
+	handleUpdatingJobCardPropsForFeatureButtonInteraction = (jobCardProps: JobCardProps[]) => {
 		try {
 			const pinnedJobs = JSON.parse(StorageManager.get("pinnedJobs") || "{}");
-			const updatedJobCardProps = jobCardProps.map((element: JobCardProps) => ({
-				...element,
-				pinned: pinnedJobs[this.storedProjectName as string].includes(String(element.buildNumber)),
-			}));
-
-			this.setJobCardProps(updatedJobCardProps);
-		} catch (error) {
-			Logger.error("Error updating pinned job cards:", error);
-		}
-	};
-
-	/**
-	 * Handle a click on the notification button of a job card.
-	 * @param jobCardProps
-	 * @param activeJobBuild
-	 */
-	onNotificationSetter = (jobCardProps: JobCardProps[], activeJobBuild: IJenkinsBuild) => {
-		let notificationSetJobs = JSON.parse(StorageManager.get("notificationSetJobs") || "{}");
-		if (Array.isArray(notificationSetJobs)) notificationSetJobs = {};
-
-		if (this.storedProjectName) {
-			// if the job is already pinned, remove it from the pinnedJobs object else add it
-			if (notificationSetJobs[this.storedProjectName] && notificationSetJobs[this.storedProjectName].includes(activeJobBuild.id)) {
-				notificationSetJobs[this.storedProjectName] = notificationSetJobs[this.storedProjectName].filter((element: string) => element !== activeJobBuild.id);
-				this.notification.showNotification("Job Unpinned", "The job has been unpinned.", "pin");
-				Logger.info("Job unpinned:", activeJobBuild);
-
-			} else {
-				if (!notificationSetJobs[this.storedProjectName]) {
-					notificationSetJobs[this.storedProjectName] = [];
-				}
-				notificationSetJobs[this.storedProjectName].push(activeJobBuild.id);
-				this.notification.showNotification("Job Pinned", "The job has been pinned to the top of the list.", "pin");
-				Logger.info("Job pinned:", activeJobBuild);
-
-			}
-		} else {
-			this.notification.showNotification("Error", "Please select a project first.", "jenkins");
-		}
-
-		StorageManager.save("notificationSetJobs", JSON.stringify(notificationSetJobs));
-
-		this.updatePinnedJobCards(jobCardProps);
-	};
-
-	/**
-	 * Update the notification set job cards.
-	 * @param jobCardProps
-	 */
-	updateNotificationSetJobCards = (jobCardProps: JobCardProps[]) => {
-		try {
 			const notificationSetJobs = JSON.parse(StorageManager.get("notificationSetJobs") || "{}");
+
 			const updatedJobCardProps = jobCardProps.map((element: JobCardProps) => ({
 				...element,
-				pinned: notificationSetJobs[this.storedProjectName as string].includes(String(element.buildNumber)),
+				pinned: pinnedJobs[this.storedProjectName as string]?.includes(String(element.buildNumber)),
+				notification_set: notificationSetJobs[this.storedProjectName as string]?.includes(String(element.buildNumber)),
 			}));
 
 			this.setJobCardProps(updatedJobCardProps);
 		} catch (error) {
-			Logger.error("Error updating pinned job cards:", error);
+			Logger.error("Error updating job card props:", error);
 		}
 	};
 
@@ -249,13 +187,13 @@ export class JarvisUtils {
 				break;
 			case "pin": {
 				if (!selectedBuildData) throw new Error("selectedBuildData is undefined");
-				this.onJobCardPin(jobCardProps, activeJobBuild);
+				this.handleJobCardFeautreButtonInteraction("pinnedJobs", jobCardProps, activeJobBuild);
 				return;
 				break;
 			}
 			case "notification": {
 				if (!selectedBuildData) throw new Error("selectedBuildData is undefined");
-				this.onNotificationSetter(jobCardProps, activeJobBuild);
+				this.handleJobCardFeautreButtonInteraction("notificationSetJobs", jobCardProps, activeJobBuild);
 				return;
 				break;
 			}
@@ -534,13 +472,19 @@ export class JarvisUtils {
 			if (!newData) throw new Error("No project data found, please check your internet connection and try again.");
 			const newBuilds = newData.builds;
 
+			/**
+			 * This Section is for adding new builds to the jobCardProps array.
+			 * If a new build is found, it is added to the jobCardProps array.
+			 */
+
+
 			// check if the build numbers of the new builds are the same as the old ones
 			const buildNumbersEqual = deepEqual(this.jobCardProps.map((element) => element.buildNumber), newBuilds.map((element) => element.number));
 
 			// If the build numbers are not equal, add the new builds to the jobCardProps array
 			if (!buildNumbersEqual) {
 				// Add new builds to the jobCardProps array
-				let newBuildsAdded: number[] = [];
+				const newBuildsAdded: number[] = [];
 				newBuilds.forEach((element) => {
 					if (!this.jobCardProps.find((item) => item.buildNumber === element.number)) {
 						newBuildsAdded.push(element.number);
@@ -548,8 +492,8 @@ export class JarvisUtils {
 				});
 
 				for (const [index, element] of newBuildsAdded.entries()) {
-					let builData = await fetchUtils.fetchBuildData(element, this.storedProjectName);
-					let newJobCardProps = this.createJobCardPropsForBuild(builData);
+					const builData = await fetchUtils.fetchBuildData(element, this.storedProjectName);
+					const newJobCardProps = this.createJobCardPropsForBuild(builData);
 					// add the new build to the jobCardProps array if it is not already in there
 					if (!this.jobCardProps.find((item) => item.buildNumber === newJobCardProps.buildNumber)) {
 						this.jobCardProps.splice(index, 0, newJobCardProps);
@@ -557,37 +501,60 @@ export class JarvisUtils {
 				}
 			}
 
+			/**
+			 * This Section is for updating the jobCardProps array with the latest build data.
+			 * If a build is not finished, it is updated with the latest build data.
+			 */
+
 			// List of all builds not finished
 			const buildsNotFinished: JobCardProps[] = this.jobCardProps.filter((element) => element.result === null);
 
-			// Check if the latest build has changed
-			for (const [index, element] of buildsNotFinished.entries()) {
-				if (!element.buildNumber) continue;
-				const buildData = await fetchUtils.fetchBuildData(element.buildNumber, this.storedProjectName);
-				collectedBuildData.push(buildData);
+			if (buildsNotFinished.length !== 0) {
 
-				// Set buildData to null if it is undefined
-				buildsNotFinished[index] = {
-					...buildsNotFinished[index],
-					displayName: buildData.displayName,
-					description: buildData.description || undefined,
-					result: buildData.result,
-				};
+
+				// Check if the latest build has changed
+				for (const [index, element] of buildsNotFinished.entries()) {
+					if (!element.buildNumber) continue;
+					const buildData = await fetchUtils.fetchBuildData(element.buildNumber, this.storedProjectName);
+					collectedBuildData.push(buildData);
+
+					buildsNotFinished[index] = {
+						...buildsNotFinished[index],
+						displayName: buildData.displayName,
+						description: buildData.description || undefined,
+						result: buildData.result,
+					};
+				}
+
+				// Insert the buildsNotFinished into jobCardProps array at the correct position
+				const newJobCardProps = this.jobCardProps.map((element) => {
+					const index = buildsNotFinished.findIndex((item) => item.buildNumber === element.buildNumber);
+					if (index !== -1) {
+						return buildsNotFinished[index];
+					}
+					return element;
+				});
+
+				// Set the new jobCardProps
+				this.jobCardProps = newJobCardProps;
 			}
 
-			// Insert the buildsNotFinished into jobCardProps array at the correct position
-			const newJobCardProps = this.jobCardProps.map((element) => {
-				const index = buildsNotFinished.findIndex((item) => item.buildNumber === element.buildNumber);
-				if (index !== -1) {
-					return buildsNotFinished[index];
-				}
-				return element;
-			});
+			
+			// Set Pinned and Notification Set Jobs.
+			// Ideally this is temporary fix since the jobCardProps should already have the correct values.
+			const pinnedJobs = JSON.parse(StorageManager.get("pinnedJobs") || "{}");
+			const notificationSetJobs = JSON.parse(StorageManager.get("notificationSetJobs") || "{}");
+
+			const updatedJobCardProps = this.jobCardProps.map((element: JobCardProps) => ({
+				...element,
+				pinned: pinnedJobs[this.storedProjectName as string]?.includes(String(element.buildNumber)),
+				notification_set: notificationSetJobs[this.storedProjectName as string]?.includes(String(element.buildNumber)),
+			}));
 
 			// Set the new jobCardProps
-			this.jobCardProps = newJobCardProps;
-			this.setJobCardProps(this.jobCardProps);
+			this.setJobCardProps(updatedJobCardProps);
 
+			// Set the selected build data
 			const selectedBuild = collectedBuildData.find((element) => element.number === this.activeJobBuild);
 			if (selectedBuild) {
 				this.setSelectedBuildData(selectedBuild);

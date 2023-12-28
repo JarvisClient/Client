@@ -61,3 +61,7 @@ export const initJenkinsConnectionCheck = async ()  => {
 		return false;
 	}
 };
+
+export const checkConfigFiles = async () => {
+	// To be implemented
+};

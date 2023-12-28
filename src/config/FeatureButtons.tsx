@@ -126,7 +126,7 @@ const FeatureButtons: { [key: string]: FeatureButtonProps } = {
 		icon: IoIosNotificationsOutline,
 		secondaryIcon: IoIosNotifications,
 		purpose: "JOB",
-		hidden: true,
+		hidden: false,
 	},
 	jenkins: {
 		title: "Jenkins",

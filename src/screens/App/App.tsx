@@ -6,7 +6,7 @@ import loading_anim from "../../assets/icons/loading_anim.webm";
 import Logger from "../../helpers/Logger";
 import StorageManager from "../../helpers/StorageManager";
 import { JARVIS_LOADING_MESSAGES } from "../../config/constants";
-import { initJenkinsConnectionCheck, initUpdateChecker } from "./AppUtils";
+import { checkConfigFiles, initJenkinsConnectionCheck, initUpdateChecker } from "./AppUtils";
 import { invoke } from "@tauri-apps/api";
 
 const App: React.FC = () => {
@@ -25,12 +25,19 @@ const App: React.FC = () => {
 			setSpecificLoadingMessage("Checking for Updates...");
 			initUpdateChecker();
 
-			// Check if Jenkins is reachable
-			setSpecificLoadingMessage("Checking Jenkins Connection...");
+			
+			
+			// Onboarding Specific Checks:
 			if (decideOnboarding() === "/jarvis") {
+				// Check Jenkins Connection
+				setSpecificLoadingMessage("Checking Jenkins Connection...");
 				abortStartup = await !initJenkinsConnectionCheck();
-			}
 
+				// Check Config Files
+				setSpecificLoadingMessage("Checking Config File...");
+				checkConfigFiles();
+			}
+			
 			// Navigate to onboarding or jarvis
 			setTimeout(() => {
 				setSpecificLoadingMessage("Checking Setup...");

@@ -35,8 +35,7 @@ const BuildView: React.FC<Props> = ({ parameterDefinition, buildData }) => {
 				setSParameterDefinitions(mergeParameters(parameterDefinition, buildData));
 			}
 		} catch (error) {
-			console.log(error);
-			
+			Logger.error(error);
 		}
 	}, [parameterDefinition, buildData]);
 
