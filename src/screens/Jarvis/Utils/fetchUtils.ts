@@ -64,7 +64,7 @@ export const fetchUtils = {
 
 	fetchTestData: async (storedProjectName: string | null, buildNumber: string): Promise<TestResult | undefined> => {
 		const config = {
-			storedProjectName,
+			projectName: storedProjectName,
 			buildNumber: buildNumber,
 			...getAuthDetails(),
 		};
