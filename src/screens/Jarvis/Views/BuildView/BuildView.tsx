@@ -1,11 +1,8 @@
 // React Imports
 import React, { useEffect, useState } from "react";
-import { invoke } from "@tauri-apps/api";
 import BoolenParameterDefinition from "./ParameterComponents/BoolenParameterDefinition";
 import StringParameterDefinition from "./ParameterComponents/StringParameterDefinition";
 import TextParameterDefinition from "./ParameterComponents/TextParameterDefinition";
-
-import { getAuthDetails } from "../../../../config/auth";
 
 import OtherParameterDefinition from "./ParameterComponents/OtherParameterDefinition";
 import ChoiceParameterDefinition from "./ParameterComponents/ChoiceParameterDefinition";
@@ -15,6 +12,7 @@ import { useNotification } from "../../../../components/NotificationManager/Noti
 import StorageManager from "../../../../helpers/StorageManager";
 import { IJenkinsProjectParameterDefinition } from "../../../../Interfaces/IProjectInterface";
 import { IJenkinsBuild } from "../../../../Interfaces/IBuildInterface";
+import { fetchUtils } from "../../Utils/fetchUtils";
 
 interface Props {
 	parameterDefinition: IJenkinsProjectParameterDefinition[] | undefined;
@@ -41,7 +39,7 @@ const BuildView: React.FC<Props> = ({ parameterDefinition, buildData }) => {
 
 	const mergeParameters = (parameterDefinition: IJenkinsProjectParameterDefinition[], buildData: IJenkinsBuild) => {
 		if (!parameterDefinition || !buildData) return [];
-		const buildData_params = buildData.actions.find((action) => action._class === "hudson.model.ParametersAction")?.parameters;
+		const buildData_params = buildData.actions?.find((action) => action._class === "hudson.model.ParametersAction")?.parameters;
 		const definitons = parameterDefinition;
 
 		definitons.forEach((definition) => {
@@ -56,20 +54,14 @@ const BuildView: React.FC<Props> = ({ parameterDefinition, buildData }) => {
 	};
 
 	const buildButtonClick = async () => {
-		const config = {
-			...getAuthDetails(),
-			projectName,
-			params: parameterValues,
-		};
-
 		try {
 			let response: string;
 			if (SParameterDefinitions) {
 				Logger.info("Made request to start build with parameters: ", parameterValues);
-				response = await invoke("start_build_with_parameters", config);
+				response = await fetchUtils.startBuild(projectName, parameterValues);
 			} else {
 				Logger.info("Made request to start build without parameters");
-				response = await invoke("start_build", config);
+				response = await fetchUtils.startBuild(projectName, parameterValues);
 			}
 
 			if (response.includes("Error")) {

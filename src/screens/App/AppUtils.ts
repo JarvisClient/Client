@@ -3,7 +3,7 @@ import Logger from "../../helpers/Logger";
 import { checkForUpdates } from "./updateChecker/updateChecker";
 import { DEFAULT_WINDOW_HEIGHT, DEFAULT_WINDOW_WIDTH } from "../../config/constants";
 import { checkJenkinsConnection } from "./JenkinsConnectionChecker/JenkinsConnectionChecker";
-import { isPermissionGranted, requestPermission, sendNotification as tauriSendNotification } from "@tauri-apps/api/notification";
+import { requestPermission } from "@tauri-apps/api/notification";
 import StorageManager from "../../helpers/StorageManager";
 
 export const initUpdateChecker = async () => {

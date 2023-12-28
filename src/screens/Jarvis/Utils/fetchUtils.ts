@@ -88,4 +88,20 @@ export const fetchUtils = {
 		
 		return false;
 	},
+
+	startBuild: async (storedProjectName: string | null, params: { [key: string]: string | boolean | number | null }): Promise<string> => {
+		const config = {
+			projectName: storedProjectName,
+			params: params,
+			...getAuthDetails(),
+		};
+
+		if (Object.keys(params).length === 0) {
+			const response: string = await invoke("start_build", config);
+			return response;
+		} else {
+			const response: string = await invoke("start_build_with_parameters", config);	
+			return response;
+		}
+	}
 };

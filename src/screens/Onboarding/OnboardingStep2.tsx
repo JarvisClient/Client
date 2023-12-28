@@ -30,16 +30,16 @@ const OnboardingStep1: React.FC = () => {
 
 	const continueOnboarding = async () => {
 		try {
-					// Check if there are any jobs added to favorites
-		if (FavoriteProjects.length === 0) throw new Error("No jobs added to favorites");
+			// Check if there are any jobs added to favorites
+			if (FavoriteProjects.length === 0) throw new Error("No jobs added to favorites");
 
-		// Set Top most project url as currentProject
-		const baseUrl = StorageManager.get("baseurl");
-		if (!baseUrl) throw new Error("Base URL not found");
-		const currentProject = FavoriteProjects[0].url.replace(baseUrl + "job/", "");
-		await StorageManager.save("projectName", currentProject);
+			// Set Top most project url as currentProject
+			const baseUrl = StorageManager.get("baseurl");
+			if (!baseUrl) throw new Error("Base URL not found");
+			const currentProject = FavoriteProjects[0].url.replace(baseUrl + "job/", "");
+			await StorageManager.save("projectName", currentProject);
 
-		navigate("/onboarding/step_3");
+			navigate("/onboarding/step_3");
 
 		} catch (error) {
 			Logger.error(error);
@@ -92,7 +92,7 @@ const OnboardingStep1: React.FC = () => {
 				const newAllJobs = allProjects.filter((item) => !favoriteProjects.includes(item));
 				setAllJobs(newAllJobs);
 			} catch (error) {
-				
+				Logger.error("Error getting jobs:", error);
 			}
 		};
 

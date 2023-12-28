@@ -506,8 +506,8 @@ export class JarvisUtils {
 			 */
 			// List of all builds not finished
 			const buildsNotFinished: JobCardProps[] = this.jobCardProps.filter((element) => element.result === null);
-			const NotificationSet = JSON.parse(StorageManager.get("notificationSetJobs") || "{}")
-			const buildsinNotificationSet: String[] = NotificationSet[this.storedProjectName as string] || [];			
+			const NotificationSet = JSON.parse(StorageManager.get("notificationSetJobs") || "{}");
+			const buildsinNotificationSet: string[] = NotificationSet[this.storedProjectName as string] || [];			
 
 
 			if (buildsNotFinished.length !== 0) {
@@ -524,7 +524,7 @@ export class JarvisUtils {
 						this.notification.showNotification(`Build ${buildData.number} finished`, `Build ${buildData.number} finished with result ${buildData.result}`, "jenkins");
 						
 						// remove the build from the notification set
-						NotificationSet[this.storedProjectName as string] = NotificationSet[this.storedProjectName as string].filter((item: String) => item !== String(buildData.number));
+						NotificationSet[this.storedProjectName as string] = NotificationSet[this.storedProjectName as string].filter((item: string) => item !== String(buildData.number));
 						StorageManager.save("notificationSetJobs", JSON.stringify(NotificationSet));
 					}
 
