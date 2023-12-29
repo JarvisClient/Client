@@ -6,6 +6,8 @@ import StorageManager from "../../../../helpers/StorageManager";
 import { openLink, renderHTML } from "../../../../helpers/utils";
 import { IJenkinsProject } from "../../../../Interfaces/IProjectInterface";
 import { fetchUtils } from "../../Utils/fetchUtils";
+import ProjectHealthDisplay from "../../../../components/ProjectHealthDisplay/ProjectHealthDisplay";
+import { motion } from "framer-motion";
 
 interface Props {
 	buildData: IJenkinsProject | null;
@@ -39,8 +41,8 @@ const ProjectStatusView: React.FC<Props> = ({ buildData }) => {
 	return (
 		<div className="mx-10 my-10">
 			{buildData ? (
-
-				<div className="flex flex-col rounded-lg p-5 mb-10 transition select-none overflow-hidden">
+				<div className="flex flex-col rounded-lg p-5 mb-10 transition select-none overflow-hidden space-y-4">
+					{/* Title & Description */}
 					<div className="flex flex-row">
 						<div className="flex-shrink-0 mr-3 ">
 							<span className="relative flex h-[37px] w-[37px]">
@@ -59,32 +61,25 @@ const ProjectStatusView: React.FC<Props> = ({ buildData }) => {
 						</div>
 					</div>
 
+
 					{/* Health Report */}
-					{buildData.healthReport.length !== 0 ? (
-						<div className="grid grid-cols-[100px,auto] mx-4 mt-10">
-							<div className="w-16 flex justify-self-center">
-								<IoMdHeartEmpty size={50} />
-							</div>
-							<div className="flex flex-col pt-2">
-								<h1 className="text-2xl font-bold mb-1">Health Report</h1>
-								<p>
-									<b>Build stability: </b>
-									{buildData.healthReport[0].description.split(": ")[1]}
-								</p>
-								<p>
-									<b>Score: </b>
-									{buildData.healthReport[0].score}
-									%
-								</p>
-							</div>
-						</div>
-					) : null}
+					<div className="flex flex-row space-x-4 overflow-x-auto error-custom-scroll pb-4">
+						{buildData.healthReport.length !== 0 ? (
+							buildData.healthReport.map((healthReport, key) => (
+								<ProjectHealthDisplay healthReport={healthReport} key={key} _key={key} />
+							))
+						) : null}
+					</div>
 
 					{/* Last Artifact */}
 					{lastSuccessfulBuild ? (
-						<div className="grid grid-cols-[100px,auto] mx-4 mt-10">
-							<div className="w-16 flex justify-self-center">
-								<BiCube size={50} />
+						<motion.div
+							initial={{ opacity: 0, y: 50 }}
+							animate={{ opacity: 1, y: 0 }}
+							transition={{ duration: 0.5 }}
+							className="grid grid-cols-[100px,auto]">
+							<div className="w-16 h-16 flex justify-self-center items-center justify-center rounded-xl bg-background-sidebar p-2 shadow-md">
+								<BiCube size={42} />
 							</div>
 
 							<div className="flex flex-col pt-2">
@@ -99,7 +94,7 @@ const ProjectStatusView: React.FC<Props> = ({ buildData }) => {
 									</p>
 								))}
 							</div>
-						</div>
+						</motion.div>
 					) : null}
 				</div>
 

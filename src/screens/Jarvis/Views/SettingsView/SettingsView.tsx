@@ -15,6 +15,7 @@ import StorageManager from "../../../../helpers/StorageManager";
 import "./Settings.css";
 import LoadingScreenComponent from "../../../../components/LoadingScreenComponent/LoadingScreenComponent";
 import SelectList from "../../../../components/SelectList/SelectList";
+import { openLink } from "../../../../helpers/utils";
 
 const SettingsView: React.FC = () => {
 	const navigate = useNavigate();
@@ -101,7 +102,7 @@ const SettingsView: React.FC = () => {
 									<p className="mb-2 leading-5 text-comment-color">Help us Improve Jarvis by giving some Feedback. This will only take 1-2 Minutes.</p>
 								</div>
 								<div>
-									<button onClick={() => navigate("/onboarding/step_1")} className="button"> Open Feedback Form </button>
+									<button onClick={() => openLink("https://jarvisci.com/feedback")} className="button"> Open Feedback Form </button>
 								</div>
 							</div>
 						</div>

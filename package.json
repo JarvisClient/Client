@@ -15,12 +15,16 @@
     "test:e2e": "concurrently \"npm run preview\" \"cypress open\""
   },
   "dependencies": {
+    "@emotion/react": "^11.11.3",
+    "@emotion/styled": "^11.11.0",
     "@tauri-apps/api": "^1.5.2",
     "autoprefixer": "^10.4.16",
+    "chart.js": "^4.4.1",
     "dompurify": "^3.0.6",
     "framer-motion": "^10.16.16",
     "jsdom": "^23.0.1",
     "react": "^18.2.0",
+    "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^4.12.0",
     "react-router-dom": "^6.21.0",
