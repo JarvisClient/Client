@@ -103,5 +103,16 @@ export const fetchUtils = {
 			const response: string = await invoke("start_build_with_parameters", config);	
 			return response;
 		}
+	},
+
+	consoleText: async (storedProjectName: string | null, buildNumber: string): Promise<String[]> => {
+		const config = {
+			projectName: storedProjectName,
+			buildNumber: buildNumber,
+			...getAuthDetails(),
+		};
+
+		const response: string = await invoke("get_console_text", config);
+		return response.split("\n");
 	}
 };
