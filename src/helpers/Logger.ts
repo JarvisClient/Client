@@ -1,4 +1,4 @@
-import { writeTextFile, BaseDirectory } from "@tauri-apps/api/fs";
+import { writeTextFile, BaseDirectory, readTextFile } from "@tauri-apps/api/fs";
 import { appDataDir } from "@tauri-apps/api/path";
 import { arch, platform } from "@tauri-apps/api/os";
 import { ErrorInfo } from "react";
@@ -11,32 +11,22 @@ const Logger = {
 	warning: <T extends unknown[]>(...messages: T) => logMessage("WARNING", "color: #d97706;", ...messages),
 	error: <T extends unknown[]>(...messages: T) => logMessage("ERROR", "color: #ef4444;", ...messages),
 	fatal: <T extends unknown[]>(...messages: T) => logMessage("FATAL", "color: #ef4444; background: black", ...messages),
+	clearLogfile
 } as const;
 
-function getCurrentDateTime() {
-	const now = new Date();
+/**
+ * @return {Promise<number>} The size of the log file in bytes
+ */
+export async function getLogfileSize(): Promise<number> {
+	// read file content
+	const file = await readTextFile(LOGS_FILE, { dir: BaseDirectory.AppData });
 
-	const year = now.getFullYear();
-	const month = String(now.getMonth() + 1).padStart(2, "0"); // Months are 0-based
-	const day = String(now.getDate()).padStart(2, "0");
-	const hours = String(now.getHours()).padStart(2, "0");
-	const minutes = String(now.getMinutes()).padStart(2, "0");
-	const seconds = String(now.getSeconds()).padStart(2, "0");
+	console.log(file);
+	
 
-	return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+	// get file size
+	return file.length;
 }
-
-async function writeToLog<T extends unknown[]>(level: string, ...messages: T) {
-	try {
-		await writeTextFile(LOGS_FILE, `[${getCurrentDateTime()}] [${level}] ${messages.join(" ")}`, {
-			dir: BaseDirectory.AppData,
-			append: true,
-		});
-	} catch (error) {
-		console.error(error);
-	}
-}
-
 
 export async function writeEmergencyLog(error: Error, errorInfo: ErrorInfo): Promise<string> {
 	const emergency_log_file_name = `emergency_log_${Math.floor(Date.now() / 1000)}.log`;
@@ -75,6 +65,22 @@ export async function writeEmergencyLog(error: Error, errorInfo: ErrorInfo): Pro
 	return await appDataDir() + emergency_log_file_name;
 }
 
+/**
+ * 
+ * @returns true if the log file was cleared successfully
+ */
+export async function clearLogfile(): Promise<Boolean> {
+	try {
+		await writeTextFile(LOGS_FILE, "", { dir: BaseDirectory.AppData });
+		return true;
+	} catch (error) {
+		alert(`An Error occured while trying to clear the Log File: ${JSON.stringify(error)}`);
+		Logger.error("An Error occured while trying to clear the Log File: ", error);
+	}
+
+	return false;
+}
+
 export async function onStartup() {
 	await writeToLog("SYSTEM", "==================== JARVIS STARTUP ====================");
 }
@@ -100,6 +106,30 @@ function logMessage<T extends unknown[]>(level: string, css: string, ...messages
 		console.log("Logged Message: ", ...messages);
 
 		writeToLog("ERROR", error_msg);
+	}
+}
+
+function getCurrentDateTime() {
+	const now = new Date();
+
+	const year = now.getFullYear();
+	const month = String(now.getMonth() + 1).padStart(2, "0"); // Months are 0-based
+	const day = String(now.getDate()).padStart(2, "0");
+	const hours = String(now.getHours()).padStart(2, "0");
+	const minutes = String(now.getMinutes()).padStart(2, "0");
+	const seconds = String(now.getSeconds()).padStart(2, "0");
+
+	return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+}
+
+async function writeToLog<T extends unknown[]>(level: string, ...messages: T) {
+	try {
+		await writeTextFile(LOGS_FILE, `[${getCurrentDateTime()}] [${level}] ${messages.join(" ")}`, {
+			dir: BaseDirectory.AppData,
+			append: true,
+		});
+	} catch (error) {
+		console.error(error);
 	}
 }
 

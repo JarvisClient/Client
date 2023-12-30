@@ -1,7 +1,7 @@
 import { WebviewWindow } from "@tauri-apps/api/window";
-import Logger from "../../helpers/Logger";
+import Logger, { getLogfileSize } from "../../helpers/Logger";
 import { checkForUpdates } from "./updateChecker/updateChecker";
-import { DEFAULT_WINDOW_HEIGHT, DEFAULT_WINDOW_WIDTH } from "../../config/constants";
+import { DEFAULT_WINDOW_HEIGHT, DEFAULT_WINDOW_WIDTH, MAX_LOG_FILE_SIZE } from "../../config/constants";
 import { checkJenkinsConnection } from "./JenkinsConnectionChecker/JenkinsConnectionChecker";
 import { requestPermission } from "@tauri-apps/api/notification";
 import StorageManager from "../../helpers/StorageManager";
@@ -76,3 +76,20 @@ export const checkPermissions = async (): Promise<void> => {
 		}
 	}
 };
+
+/**
+ * 
+ * @returns true if log file was cleared
+ */
+export const checkLogFile = async (): Promise<Boolean> => {
+	const logFileSize = await getLogfileSize();
+
+	// if log file is bigger than 5MB
+	if (logFileSize > MAX_LOG_FILE_SIZE) {
+		Logger.info("Log file is bigger than " + MAX_LOG_FILE_SIZE + " MB. Clearing log file.");
+		// clear log file
+		let cleared = await Logger.clearLogfile();
+		return cleared;
+	}
+	return false;
+}

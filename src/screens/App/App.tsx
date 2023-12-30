@@ -6,7 +6,7 @@ import loading_anim from "../../assets/icons/loading_anim.webm";
 import Logger from "../../helpers/Logger";
 import StorageManager from "../../helpers/StorageManager";
 import { JARVIS_LOADING_MESSAGES } from "../../config/constants";
-import { checkPermissions, initJenkinsConnectionCheck, initUpdateChecker } from "./AppUtils";
+import { checkLogFile, checkPermissions, initJenkinsConnectionCheck, initUpdateChecker } from "./AppUtils";
 import { invoke } from "@tauri-apps/api";
 
 const App: React.FC = () => {
@@ -23,9 +23,11 @@ const App: React.FC = () => {
 
 			// Check for updates
 			setSpecificLoadingMessage("Checking for Updates...");
-			initUpdateChecker();
+			await initUpdateChecker();
 
-			
+			// Check Logfile Size
+			setSpecificLoadingMessage("Checking Logfile Size...");
+			await checkLogFile();
 			
 			// Onboarding Specific Checks:
 			if (decideOnboarding() === "/jarvis") {
@@ -45,7 +47,7 @@ const App: React.FC = () => {
 					invoke("closeApp");
 				}
 				navigate(decideOnboarding());
-			}, 1500);
+			}, 700);
 		};
 
 		startApp();
