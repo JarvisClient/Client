@@ -79,7 +79,10 @@ export class JarvisUtils {
 
 			return jobCardProps;
 		} catch (error) {
-			this.notification.showNotification("Error", "Error creating job card props. Please check your internet connection and try again.", "jenkins");
+			this.notification.showNotification("Error", "Error creating job card props. Please check your internet connection and try again.", "jenkins", {
+				soundOn: true,
+				soundType: "error",
+			});
 			Logger.error("Error creating job card props:", error);
 			return [];
 		}
@@ -114,7 +117,10 @@ export class JarvisUtils {
 			this.setActiveFeature("status");
 		} catch (error) {
 			Logger.error("Error fetching build data:", error);
-			this.notification.showNotification("Error", "Error fetching build data. Please check your internet connection and try again.", "jenkins");
+			this.notification.showNotification("Error", "Error fetching build data. Please check your internet connection and try again.", "jenkins", {
+				soundOn: true,
+				soundType: "error",
+			});
 		}
 	};
 
@@ -210,7 +216,10 @@ export class JarvisUtils {
 			this.setActiveFeature(feature);
 		} catch (error) {
 			Logger.error("Error handling feature button click:", error);
-			this.notification.showNotification("Error", "This Function is currently not available.", "error");
+			this.notification.showNotification("Error", "This Function is currently not available.", "error", {
+				soundOn: true,
+				soundType: "error",
+			});
 		}
 	};
 
@@ -374,7 +383,10 @@ export class JarvisUtils {
 			}
 			}
 		} catch (error) {
-			this.notification.showNotification("Error", "Error rendering job cards. Please check your internet connection and try again.", "error");
+			this.notification.showNotification("Error", "Error rendering job cards. Please check your internet connection and try again.", "error", {
+				soundOn: true,
+				soundType: "error",
+			});
 			Logger.error("Error rendering job cards:", error);
 		}
 	};
@@ -391,7 +403,10 @@ export class JarvisUtils {
 			return true;
 		} else {
 			// Build is not running
-			this.notification.showNotification("Error", "Build " + activeJobBuild.number + " is not running.", "jenkins");
+			this.notification.showNotification("Error", "Build " + activeJobBuild.number + " is not running.", "error", {
+				soundOn: true,
+				soundType: "error",
+			});
 			return false;
 		}
 
@@ -428,14 +443,20 @@ export class JarvisUtils {
 					try {
 						this.startJarvis_interval();
 					} catch (error) {
-						this.notification.showNotification("Error", "An Error occurred while trying to start Jarvis. Please check your internet connection and try again.", "jenkins");
+						this.notification.showNotification("Error", "An Error occurred while trying to start Jarvis. Please check your internet connection and try again.", "error", {
+							soundOn: true,
+							soundType: "error",
+						});
 						Logger.error("An Error occurred while trying to start Jarvis:", error);
 					}
 				}, JOBCARD_REFRESH_TIME);
 				Logger.info("Jarvis started with interval ID", this.intervalId);
 			}
 		} catch (error) {
-			this.notification.showNotification("Error", "An Error occurred while trying to start Jarvis. Please check your internet connection and try again.", "jenkins");
+			this.notification.showNotification("Error", "An Error occurred while trying to start Jarvis. Please check your internet connection and try again.", "error", {
+				soundOn: true,
+				soundType: "error",
+			});
 			Logger.error("Error starting Jarvis:", error);
 			this.setActiveFeature("settings");
 			return null;
@@ -521,8 +542,11 @@ export class JarvisUtils {
 					if (buildData.result !== null && buildsinNotificationSet.includes(String(buildData.number))) {
 						// Send Notification
 						sendNotification(`Build ${buildData.number} finished`, `Build ${buildData.number} finished with result ${buildData.result}`);
-						this.notification.showNotification(`Build ${buildData.number} finished`, `Build ${buildData.number} finished with result ${buildData.result}`, "jenkins");
-						
+						this.notification.showNotification(`Build ${buildData.number} finished`, `Build ${buildData.number} finished with result ${buildData.result}`, "success", {
+							soundOn: true,
+							soundType: "info",
+						});
+
 						// remove the build from the notification set
 						NotificationSet[this.storedProjectName as string] = NotificationSet[this.storedProjectName as string].filter((item: string) => item !== String(buildData.number));
 						StorageManager.save("notificationSetJobs", JSON.stringify(NotificationSet));
@@ -573,7 +597,10 @@ export class JarvisUtils {
 			}
 
 		} catch (error) {
-			this.notification.showNotification("Error", "An Error occured while trying to fetch project data. Please check your internet connection and try again.", "jenkins");
+			this.notification.showNotification("Error", "An Error occured while trying to fetch project data. Please check your internet connection and try again.", "error", {
+				soundOn: true,
+				soundType: "error",
+			});
 			Logger.error("Error fetching project data:", error);
 		}
 	};

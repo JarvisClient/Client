@@ -68,10 +68,16 @@ const BuildView: React.FC<Props> = ({ parameterDefinition, buildData }) => {
 				throw new Error("Most likely a Build is already in Queue! Please wait a few seconds and try again.");
 			}
 
-			notification.showNotification("Build started!", "The build was successfully started!\nIt might take up to 30 seconds for it to appear.", "build");
+			notification.showNotification("Build started!", "The build was successfully started!\nIt might take up to 30 seconds for it to appear.", "build", {
+				soundOn: true,
+				soundType: "success",
+			});
 		} catch (error) {
 			Logger.error(error);
-			notification.showNotification("Jenkins responded with an Error!", String(error), "error");
+			notification.showNotification("Jenkins responded with an Error!", String(error), "error", {
+				soundOn: true,
+				soundType: "error",
+			});
 		}
 	};
 

@@ -43,7 +43,10 @@ const OnboardingStep1: React.FC = () => {
 
 		} catch (error) {
 			Logger.error(error);
-			notification.showNotification("error", String(error), "error");
+			notification.showNotification("error", String(error), "error", {
+				soundOn: true,
+				soundType: "error",
+			});
 		}
 	};
 

@@ -42,24 +42,36 @@ const OnboardingStep1: React.FC = () => {
 	const continueOnboarding = async () => {
 		try {
 			if (!checkValidUrl(baseUrl)) {
-				notification.showNotification("Invalid URL", "Please check again.", "jenkins");
+				notification.showNotification("Invalid URL", "Please check again.", "error", {
+					soundOn: true,
+					soundType: "error",
+				});
 				return;
 			}
 	
 			if (username === "") {
-				notification.showNotification("Invalid Username", "Please check again.", "jenkins");
+				notification.showNotification("Invalid Username", "Please check again.", "error", {
+					soundOn: true,
+					soundType: "error",
+				});
 				return;
 			}
 	
 			if (apiToken === "") {
-				notification.showNotification("Invalid API Token", "Please check again.", "jenkins");
+				notification.showNotification("Invalid API Token", "Please check again.", "error", {
+					soundOn: true,
+					soundType: "error",
+				});
 				return;
 			}
 	
 			const response = await checkAuthentication(baseUrl, username, apiToken);
 	
 			if (response === false) {
-				notification.showNotification("Authentication failed", "Please check your Credentials.", "jenkins");
+				notification.showNotification("Authentication failed", "Please check your Credentials.", "error", {
+					soundOn: true,
+					soundType: "error",
+				});
 			} else {
 				StorageManager.save("baseurl", baseUrl);
 				StorageManager.save("username", username);
@@ -69,9 +81,15 @@ const OnboardingStep1: React.FC = () => {
 		} catch (error) {
 			// if error includes "error trying to connect" then show notification
 			if ((error as Error).toString().includes("error trying to connect")) {
-				notification.showNotification("Connection failed", "Could not connect to the Jenkins Server", "jenkins");
+				notification.showNotification("Connection failed", "Could not connect to the Jenkins Server", "error", {
+					soundOn: true,
+					soundType: "error",
+				});
 			} else {
-				notification.showNotification("An error occurred", "Please try again.", "jenkins");
+				notification.showNotification("An error occurred", "Please try again.", "error", {
+					soundOn: true,
+					soundType: "error",
+				});
 			}
 			Logger.error("OnboardingStep1 Error", error);
 		}

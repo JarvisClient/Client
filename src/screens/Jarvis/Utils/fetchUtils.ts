@@ -55,7 +55,7 @@ export const fetchUtils = {
 		const response: string = await invoke("get_jenkins_data", config);
 
 		if (!response) {
-			notification.showNotification("Error", "Something went wrong.", "jenkins");
+			notification.showNotification("Error", "Something went wrong.", "error");
 			return;
 		}
 

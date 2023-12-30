@@ -5,19 +5,37 @@ import { motion } from "framer-motion";
 import FeatureButtons from "../../config/FeatureButtons";
 import { Notification } from "../../Interfaces/INotification";
 
-import notifcationSoundAsset from "../../assets/sounds/notification.ogg";
 import { NOTIFICATION_CLOSE_TIME } from "../../config/constants";
 import Logger from "../../helpers/Logger";
 
-const notificationSound = new Audio(notifcationSoundAsset);
+// Audio
+import notification_info from "../../assets/sounds/notification_info.mp3";
+import notification_pop from "../../assets/sounds/notification_pop.mp3";
+import notification_success from "../../assets/sounds/notification_success.mp3";
+import notification_error from "../../assets/sounds/notification_error.mp3";
+
+
+const notificationSounds = {
+	info: new Audio(notification_info),
+	pop: new Audio(notification_pop),
+	success: new Audio(notification_success),
+	error: new Audio(notification_error),
+};
 
 
 interface Props_NotificationContext {
-  showNotification: (title: string, message: string, icon: string) => void;
+  showNotification: (title: string, message: string, icon: string, config?: SoundSettings) => void;
   hideNotification: (id: number) => void;
 }
 
 const NotificationContext = createContext<Props_NotificationContext | undefined>(undefined);
+
+export function playAudio(soundType: "success" | "error" | "pop" | "info") {
+	if (soundType === "success") notificationSounds.success.play();
+	else if (soundType === "error") notificationSounds.error.play();
+	else if (soundType === "info") notificationSounds.info.play();
+	else if (soundType === "pop") notificationSounds.pop.play();
+}
 
 export function useNotification() {
 	try {
@@ -38,10 +56,18 @@ interface Props_NotificationProvider {
   children: ReactNode;
 }
 
+interface SoundSettings {
+	soundOn: boolean;
+	soundType?: "success" | "error" | "pop" | "info";
+}
+
 export const NotificationProvider: React.FC<Props_NotificationProvider> = ({ children }) => {
 	const [notifications, setNotifications] = useState<Notification[]>([]);
 
-	const showNotification = (title: string, message: string, icon: string) => {
+	const showNotification = (title: string, message: string, icon: string, config: SoundSettings = {
+		soundOn: true,
+		soundType: "pop",
+	}) => {
 		if (!children) return showNotificationAsAlert(title, message);
 
 		const id = notificationIdCounter++;
@@ -50,7 +76,8 @@ export const NotificationProvider: React.FC<Props_NotificationProvider> = ({ chi
 		const newNotification: Notification = {
 			id, title, message, featureButtonData, variant: "visible",
 		}; // Initialize variant as 'visible'
-		notificationSound.play();
+		
+		if (config.soundOn) playAudio(config.soundType || "pop")
 
 		setNotifications((prevNotifications) => [...prevNotifications, newNotification]);
 
@@ -70,7 +97,7 @@ export const NotificationProvider: React.FC<Props_NotificationProvider> = ({ chi
 
 	return (
 		<NotificationContext.Provider value={{ showNotification, hideNotification }}>
-			<div className="absolute bottom-[30px] right-[30px] space-y-2 w-[300px] z-50">
+			<div className="absolute bottom-[30px] right-[30px] space-y-2 w-[300px] z-50 select-none cursor-pointer">
 				{notifications.map((notification) => (
 					<motion.div
 						id="toast-interactive"
@@ -81,7 +108,9 @@ export const NotificationProvider: React.FC<Props_NotificationProvider> = ({ chi
 						onClick={hideNotification.bind(null, notification.id)}
 					>
 						<div className="flex">
-							<div className={`inline-flex items-center justify-center flex-shrink-0 w-8 h-8 rounded-lg bg-[${notification.featureButtonData.bg_color}]`}>
+							<div 
+							style={{ backgroundColor: notification.featureButtonData.bg_color }}
+							className={`inline-flex items-center justify-center flex-shrink-0 w-8 h-8 rounded-lg`}>
 								{React.createElement(notification.featureButtonData.icon, { className: "w-5 h-5", color: notification.featureButtonData.icon_color })}
 							</div>
 							<div className="ms-3 text-sm font-normal">

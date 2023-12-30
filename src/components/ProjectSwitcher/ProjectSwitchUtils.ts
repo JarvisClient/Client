@@ -9,32 +9,41 @@ export const getAllProjects = async (): Promise<JenkinsDataJob[]> => {
 			return [];
 		}
 
+		let newJobsList = json.jobs;
+
 		/**
-         * Get Jobs from Multibranch Pipeline Projects and add them to the jobs array
-         * aswell as remove the multibranch project itself from the array
-         */
+		 * Get Jobs from Multibranch Pipeline Projects and add them to the jobs array
+		 * aswell as remove the multibranch project itself from the array
+		 */
 		for (const [index] of json.jobs.entries()) {
 			// Check if the job is a multibranch project and get the data
 			const job = json.jobs[index];
 			if (!job._class.includes("multibranch")) continue;
-			const data: IJenkinsProjectMultibranch | undefined = await fetchUtils.fetchProjectData(job.name);
-			if (!data || !data.jobs) continue;
-
-			for (const [, multibranchJob] of data.jobs.entries()) {
-				multibranchJob.name = job.name + "/" + multibranchJob.name;
-
-				// Check if the job is already in the jobs array and add it if not
-				if (!json.jobs.find((job: JenkinsDataJob) => job.name === multibranchJob.name)) {
-					json.jobs.push(multibranchJob);
-				}
-			}
-
-			// Remove the multibranch project from the jobs array
-			json.jobs.splice(index, 1);
+			const multibranchJobs = await splitMultibranchProject(job);
+			if (multibranchJobs.length === 0) continue;
+			// Remove the multibranch project from the array
+			newJobsList = newJobsList.filter((item) => item.name !== job.name);
+			// Add the multibranch jobs to the array
+			newJobsList = newJobsList.concat(multibranchJobs);
 		}
 
-		return json.jobs;
+
+		return newJobsList;
 	} catch (error) {
 		return [];
 	}
+};
+
+const splitMultibranchProject = async (job: JenkinsDataJob): Promise<any> => {
+	const data: IJenkinsProjectMultibranch | undefined = await fetchUtils.fetchProjectData(job.name);
+	if (!data || !data.jobs) return [];
+	const jobs = data.jobs;
+	const newJobs: JenkinsDataJob[] = [];
+	for (const [index] of jobs.entries()) {
+		const job = jobs[index];
+		job.name = `${data.displayName}/${job.name}`;
+		newJobs.push(job);
+	}
+	return newJobs;
+
 };

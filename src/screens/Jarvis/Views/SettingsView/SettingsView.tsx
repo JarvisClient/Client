@@ -162,7 +162,10 @@ const SettingsView: React.FC = () => {
 										onItemSelected={(selectedId) => {
 											StorageManager.save("titlebarStyle", selectedId);
 											setWindowIconStyle(selectedId);
-											notification.showNotification("Changed System Icon Style", "This will be applied on next Start", "success");
+											notification.showNotification("Changed System Icon Style", "This will be applied on next Start", "success", {
+												soundOn: true,
+												soundType: "success",
+											});
 										}}
 										setSelectedId={WindowIconStyle}
 									/>
@@ -221,7 +224,10 @@ const SettingsView: React.FC = () => {
 												onClick={() => {
 													StorageManager.save("titlebarStyle", "eggStyle");
 													setWindowIconStyle("eggStyle");
-													notification.showNotification("Changed System Icon Style", "This will be applied on next Start", "success");
+													notification.showNotification("Changed System Icon Style", "This will be applied on next Start", "success", {
+														soundOn: true,
+														soundType: "success",
+													});
 												}}
 												className="button_danger_zone"
 											>

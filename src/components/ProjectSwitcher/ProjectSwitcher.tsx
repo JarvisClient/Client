@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import SwitchProjectViewLoading from "../../screens/Jarvis/Views/SwitchProjectView/SwitchProjectViewLoading";
 import { JenkinsDataJob } from "../../Interfaces/IJenkinsData";
-import { useNotification } from "../NotificationManager/NotificationContext";
+import { playAudio, useNotification } from "../NotificationManager/NotificationContext";
 import { IJenkinsProject } from "../../Interfaces/IProjectInterface";
 import { fetchUtils } from "../../screens/Jarvis/Utils/fetchUtils";
 import StorageManager from "../../helpers/StorageManager";
@@ -51,7 +51,7 @@ const ProjectSwitcher = (): React.ReactElement => {
 	};
 
 	// Function to add or remove a project from favorites
-	const addToProjects = (project: JenkinsDataJob): void => {
+	const addOrRemoveFromFavorite = (project: JenkinsDataJob): void => {
 		const projects: JenkinsDataJob[] = JSON.parse(StorageManager.get("projects") || "[]");
 		const index = projects.findIndex((item: JenkinsDataJob) => item.url === project.url);
 		if (index !== -1) {
@@ -66,12 +66,14 @@ const ProjectSwitcher = (): React.ReactElement => {
 			notification.showNotification(
 				"Error",
 				"You need to have at least one project selected.",
-				"jenkins",
+				"error",
+				{ soundOn: true, soundType: "error" }
 			);
 			return;
 		}
 
 		StorageManager.save("projects", JSON.stringify(projects));
+		playAudio("pop");
 		refreshJobs(allJobs);
 	};
 
@@ -93,7 +95,7 @@ const ProjectSwitcher = (): React.ReactElement => {
 			setIsModalOpen(true); // Open the modal
 		} catch (error) {
 			Logger.error(error);
-			notification.showNotification("Error", "Something went wrong.", "jenkins");
+			notification.showNotification("Error", "Something went wrong.", "error");
 		}
 	};
 
@@ -143,7 +145,7 @@ const ProjectSwitcher = (): React.ReactElement => {
 								{/* Favorite */}
 								<div
 									className="cursor-pointer hover:text-jenkins-job-red transition hover:bg-background-card-selected active:scale-[0.99] px-4 py-4 rounded-md h-full"
-									onClick={() => addToProjects(job)}
+									onClick={() => addOrRemoveFromFavorite(job)}
 								>
 									{job.favorite ? (
 										<MdFavorite size={30} className="text-jenkins-job-red" />
@@ -154,7 +156,7 @@ const ProjectSwitcher = (): React.ReactElement => {
 
 								{/* Text */}
 								<div
-									className={`transition hover:bg-background-card-selected active:scale-[0.99] px-4 py-4 rounded-md ${selectedJob === job.name ? "bg-background-card-selected" : ""} w-full`}
+									className={`transition hover:bg-background-card-selected active:scale-[0.95] px-4 py-4 rounded-md ${selectedJob === job.name ? "bg-background-card-selected" : ""} w-full flex`}
 									onClick={() => selectJob(job)}
 								>
 									<p className="break-all">{job.name}</p>
@@ -162,10 +164,10 @@ const ProjectSwitcher = (): React.ReactElement => {
 
 								{/* Info */}
 								<div
-									className="cursor-pointer hover:text-jenkins-job-blue transition hover:bg-background-card-selected active:scale-[0.99] px-4 py-4 rounded-md h-full"
+									className="cursor-pointer hover:text-jenkins-job-blue transition hover:bg-background-card-selected active:scale-[0.95] px-4 py-4 rounded-md h-full"
 									onClick={() => openModal(job.name)}
 								>
-									<IoInformationCircleOutline size={30} />
+									<IoInformationCircleOutline size={30}/>
 								</div>
 							</div>
 						))}
