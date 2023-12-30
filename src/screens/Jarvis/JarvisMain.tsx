@@ -109,7 +109,7 @@ function JarvisMain(): React.ReactElement {
 	}, []);
 
 	return (
-		<div className="h-screen">
+		<div>
 			<TitleBarComponent
 				activeFeature={activeFeature}
 				windowTitle={miniUtils.decideWindowTitle(activeFeature, storedProjectName)}

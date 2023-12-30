@@ -8,7 +8,9 @@
   font-size: 16px;
   line-height: 24px;
   font-weight: 400;
-  border-radius: 1000px;
+
+  margin: 0;
+  padding: 0;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -16,9 +18,12 @@
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
 
+  overflow-y: hidden;
+
   /* Tailwind */
   @apply bg-background-view;
-  @apply text-text-color
+  @apply text-text-color;
+  @apply antialiased;
 }
 
 

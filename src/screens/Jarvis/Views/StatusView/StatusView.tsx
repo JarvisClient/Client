@@ -95,7 +95,7 @@ const StatusView: React.FC<Props> = ({ buildData }) => {
 	};
 
 	return (
-		<div className="mx-4 my-10">
+		<div className="mx-4 my-10 select-none">
 			{/* Information */}
 			<motion.div
 				initial={{ opacity: 0, y: 50 }}
