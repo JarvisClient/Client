@@ -3,7 +3,7 @@ import icoBow from "../../assets/icons/ico_bow.svg";
 import { renderSysButtons } from "./utils";
 
 const TitleBarComponentLight: React.FC = () => (
-	<div className="absolute w-full">
+	<div className="absolute w-full top-0 left-0 bg-background-view">
 		<div className="h-[44px] w-[calc(100%_-_8px)] ml-[4px] mt-[4px] absolute top-0 left-0 z-20" data-tauri-drag-region />
 		<div className="flex h-[48px] pl-[1px] select-none z-10 relative">
 			{/* Big Sidebar */}

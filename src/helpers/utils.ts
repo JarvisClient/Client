@@ -70,3 +70,13 @@ export const renderHTML = (html: string) => {
 	const sanitizedHTML = DOMPurify.sanitize(html);
 	return { __html: sanitizedHTML };
 };
+
+export const generateRandomString = (length: number) => {
+	const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result = '';
+    for (let i = 0; i < length; i++) {
+        const randomIndex = Math.floor(Math.random() * characters.length);
+        result += characters[randomIndex];
+    }
+    return result;
+}

@@ -19,6 +19,7 @@ import ErrorBoundary from "./screens/ErrorBoundary/ErrorBoundary"; // Import the
 import CauseError from "./screens/ErrorBoundary/CauseError";
 import UpdateAvailable from "./screens/App/updateChecker/UpdateAvailable";
 import JenkinsConnectionFailedView from "./screens/App/JenkinsConnectionChecker/JenkinsConnectionFailedView";
+import FullConsoleLog from "./screens/Jarvis/Views/ConsoleView/FullConsoleLog";
 
 function AppContainer() {
 	return (
@@ -36,6 +37,7 @@ function AppContainer() {
 						<Route path="/updateAvailable" element={<UpdateAvailable />} />
 						<Route path="/jenkinsUnavailable" element={<JenkinsConnectionFailedView />} />
 						<Route path="/cause-error" element={<CauseError />} />
+						<Route path="/fullLog" element={<FullConsoleLog />} />
 					</Routes>
 				</BrowserRouter>
 			</NotificationProvider>

@@ -7,7 +7,15 @@ import StorageManager from "../../../../helpers/StorageManager";
 import { IStylingDict } from "../../../../Interfaces/StylingDict";
 import ConsoleViewLoading from "./ConsoleViewLoading";
 import { fetchUtils } from "../../Utils/fetchUtils";
-import { CONSOLE_RELOAD_TIME } from "../../../../config/constants";
+import { CONSOLE_RELOAD_TIME, DEFAULT_WINDOW_HEIGHT, DEFAULT_WINDOW_WIDTH } from "../../../../config/constants";
+import { BiArrowToBottom } from "react-icons/bi";
+import { RxRows, RxTextAlignBottom } from "react-icons/rx";
+import { HiMiniArrowSmallDown } from "react-icons/hi2";
+import { motion } from "framer-motion";
+import { IoDocumentTextOutline, IoRemoveOutline } from "react-icons/io5";
+import { WebviewWindow } from "@tauri-apps/api/window";
+import { formatConsoleData } from "./ConsoleViewUtils";
+import { generateRandomString } from "../../../../helpers/utils";
 
 interface Props {
 	buildData: IJenkinsBuild;
@@ -18,16 +26,10 @@ const ConsoleView: React.FC<Props> = ({ buildData }) => {
 	const [consoleData, setConsoleData] = useState<string>("");
 	const [isLoading, setIsLoading] = useState<boolean>(true);
 	const [consoleFetchInterval, setConsoleFetchInterval] = useState<NodeJS.Timeout>();
+	const [autoScroll, setAutoScroll] = useState<boolean>(false);
 
-	const handleApplyStyledDataWebWorker = (data: string, stylingDict: IStylingDict) => {
-		const worker = new Worker(new URL("./worker", import.meta.url), { type: "module" });
-		worker.onmessage = (e) => {
-			setConsoleData(e.data);
-			worker.terminate();
-		};
 
-		worker.postMessage({ data, stylingDict });
-	};
+	
 
 	const fetchAndSetConsoleData = async () => {
 		try {
@@ -36,24 +38,40 @@ const ConsoleView: React.FC<Props> = ({ buildData }) => {
 
 			const lines = await fetchUtils.consoleText(projectName, buildNumber)
 
-			// Process each line to replace URLs with clickable links
-			const formattedLines = lines.map((line) => line.replace(
-				/https?:\/\/[^\s]+/g,
-				(match) => `<a href="${match}" target="_blank">${match}</a>`,
-			));
-
-			// Join the formatted lines back together with newline characters
-			const formattedData = formattedLines.join("\n");
-
-			const stylingDict: IStylingDict = await getConsoleViewStyleDict();
-
-			// Apply styles based on the dictionary
-			handleApplyStyledDataWebWorker(formattedData, stylingDict);
-
+			const formattedData = await formatConsoleData(lines);
+			
 			setIsLoading(false);
 			setConsoleData(formattedData);
 		} catch (error) {
 			Logger.error("Error invoking get_build_data:", error);
+		}
+	};
+
+	const openFullConsole = () => {
+		let projectName = StorageManager.get("projectName");
+
+		const webview = new WebviewWindow(generateRandomString(10), {
+			url: "/fullLog?buildNumber=" + buildData.id + "&projectName=" + projectName + "&buildUrl=" + buildData.url,
+			title: "Read Full Console Log",
+			width: DEFAULT_WINDOW_HEIGHT ,
+			height: DEFAULT_WINDOW_WIDTH - 500,
+			decorations: false,
+		});
+
+		webview.center();
+
+		webview.once("tauri://created", () => {
+			Logger.info("Webview created");
+		});
+
+		webview.once("tauri://error", (e) => {
+			Logger.error(`Error in webview: ${e}`);
+		});
+	}
+
+	const scrollToBottom = () => {
+		if (consoleRef.current) {
+			consoleRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
 		}
 	};
 
@@ -62,6 +80,11 @@ const ConsoleView: React.FC<Props> = ({ buildData }) => {
 		if (buildData.result !== null) {
 			clearInterval(consoleFetchInterval);
 		}
+
+		if (autoScroll) {
+			scrollToBottom();
+		}
+		
 	}, [buildData]);
 
 	// Start the interval to fetch console data
@@ -88,11 +111,44 @@ const ConsoleView: React.FC<Props> = ({ buildData }) => {
 				? (
 					<>
 						{/* Console Data */}
-						<div ref={consoleRef} className="bg-console-background border-2 border-border rounded-md shadow-lg px-6 py-5 overflow-auto">
-							<pre
-								ref={preElementRef} // Use preElementRef as the ref for the <pre> element
-								dangerouslySetInnerHTML={{ __html: consoleData }}
-							/>
+						<div ref={consoleRef} className="bg-console-background border-2 border-border rounded-md shadow-lg overflow-auto">
+							<div className="px-6 py-3 border-b-2 border-border flex justify-between items-center">
+								<p className="font-medium text-sm select-none">Console Output</p>
+								<div className="flex space-x-2">
+								<div
+									onClick={() => scrollToBottom()}
+									className="w-8 h-8 flex justify-self-center items-center justify-center rounded-md bg-white/5 ring-1 ring-white/10 p-2 shadow-md transition hover:scale-[1.05] active:scale-[0.95]">
+									<p><BiArrowToBottom /></p>
+								</div>
+								<div
+									onClick={() => openFullConsole()}
+									className="w-8 h-8 flex justify-self-center items-center justify-center rounded-md bg-white/5 ring-1 ring-white/10 p-2 shadow-md transition hover:scale-[1.05] active:scale-[0.95]">
+									<p><IoDocumentTextOutline /></p>
+								</div>
+										</div>
+								{/* <p className="font-medium text-sm cursor-pointer">Full Output</p> */}
+							</div>
+							<div>
+								<pre
+									className="overflow-auto px-6 py-4 console-custom-scroll"
+									ref={preElementRef} // Use preElementRef as the ref for the <pre> element
+									dangerouslySetInnerHTML={{ __html: consoleData }}
+								/>
+							</div>
+						</div>
+						<div
+							onClick={() => setAutoScroll(!autoScroll)}
+							className="absolute bottom-8 right-8 flex justify-center items-center select-none cursor-pointer">
+							<motion.div
+								className="flex justify-center items-center w-14 h-14 bg-background-sidebar rounded-xl"
+								onClick={() => setAutoScroll(!autoScroll)}
+								animate={{
+									scale: autoScroll ? 0.9 : 1,
+									
+								}}
+							>
+								{autoScroll ? <HiMiniArrowSmallDown size={28} /> : <IoRemoveOutline size={28} />}
+							</motion.div>
 						</div>
 					</>
 				)
