@@ -22,15 +22,16 @@ export const fetchUtils = {
 		return JSON.parse(response);
 	},
 
-	fetchBuildData: async (buildNumber: number, storedProjectName: string | null): Promise<IJenkinsBuild> => {
+	fetchBuildData: async (buildNumber: number, storedProjectName: string | null, debugID: number): Promise<IJenkinsBuild> => {
 		if (!storedProjectName) return {} as IJenkinsBuild;
 
 		const config = {
+			debugID: debugID.toString(),
 			projectName: storedProjectName.toString(),
 			buildNumber: buildNumber.toString(),
 			...getAuthDetails(),
 		};
-		const response: string = await invoke("get_build_data", config);
+		const response: string = await invoke("get_build_data", config);	
 
 		return JSON.parse(response);
 	},

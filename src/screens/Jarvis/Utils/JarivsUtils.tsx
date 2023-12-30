@@ -16,6 +16,7 @@ import { JobCardProps } from "../../../Interfaces/IJobCardProps";
 import { IPinnedANDNotificatonJobs } from "../../../Interfaces/IPinnedANDNotificatonJobs";
 import { miniUtils } from "./miniUtils";
 import { sendNotification } from "../../../helpers/notification";
+import { setIntervalId, clearIntervalId, getIntervalId } from './IntervalManager';
 
 /**
  * Utility class for handling job card related functionality.
@@ -72,7 +73,7 @@ export class JarvisUtils {
 		// Parse pinned jobs and notification set jobs from local storage
 		try {
 			const jobCardProps = await Promise.all(builds.map(async (build: IJenkinsProjectBuild) => {
-				const details = await fetchUtils.fetchBuildData(build.number, this.storedProjectName);
+				const details = await fetchUtils.fetchBuildData(build.number, this.storedProjectName, 1);
 				if (!details) throw new Error("No build details found for build number " + build.number);
 				return this.createJobCardPropsForBuild(details);
 			}));
@@ -112,7 +113,7 @@ export class JarvisUtils {
 		try {
 			this.setActiveJobBuildNumber(buildNumber);
 			this.activeJobBuild = buildNumber;
-			const buildData = await fetchUtils.fetchBuildData(buildNumber, this.storedProjectName);
+			const buildData = await fetchUtils.fetchBuildData(buildNumber, this.storedProjectName, 2);
 			this.setSelectedBuildData(buildData);
 			this.setActiveFeature("status");
 		} catch (error) {
@@ -397,7 +398,7 @@ export class JarvisUtils {
 			this.notification.showNotification("Stopping Build", "Stopping build " + activeJobBuild.number + "...", "jenkins");
 			await fetchUtils.stopBuild(this.storedProjectName, String(activeJobBuild.number));
 			// refresh jobcard data 
-			this.startJarvis_interval();
+			getIntervalId() && clearIntervalId();
 			activeJobBuild.result = "ABORTED";
 
 			return true;
@@ -427,7 +428,7 @@ export class JarvisUtils {
 	 */
 	startJarvis = async (): Promise<NodeJS.Timeout | null> => {
 		try {
-			if (this.intervalId === null) {
+			if (getIntervalId() === null) {
 				// Fetch project data & set job card props
 				const projectData = await fetchUtils.fetchProjectData(this.storedProjectName);
 				if (!projectData) throw new Error("No project data found, please check your internet connection and try again.");
@@ -439,18 +440,20 @@ export class JarvisUtils {
 				this.setJobCardsLoading(false);
 
 				// Start interval
-				this.intervalId = setInterval(() => {
-					try {
-						this.startJarvis_interval();
-					} catch (error) {
-						this.notification.showNotification("Error", "An Error occurred while trying to start Jarvis. Please check your internet connection and try again.", "error", {
-							soundOn: true,
-							soundType: "error",
-						});
-						Logger.error("An Error occurred while trying to start Jarvis:", error);
-					}
-				}, JOBCARD_REFRESH_TIME);
-				Logger.info("Jarvis started with interval ID", this.intervalId);
+				setIntervalId(
+					setInterval(() => {
+						try {
+							this.startJarvis_interval();
+						} catch (error) {
+							this.notification.showNotification("Error", "An Error occurred while trying to start Jarvis. Please check your internet connection and try again.", "error", {
+								soundOn: true,
+								soundType: "error",
+							});
+							Logger.error("An Error occurred while trying to start Jarvis:", error);
+						}
+					}, JOBCARD_REFRESH_TIME)
+				)
+				Logger.info("Jarvis started with interval ID", getIntervalId());
 			}
 		} catch (error) {
 			this.notification.showNotification("Error", "An Error occurred while trying to start Jarvis. Please check your internet connection and try again.", "error", {
@@ -462,16 +465,15 @@ export class JarvisUtils {
 			return null;
 		}
 
-		return this.intervalId;
+		return getIntervalId();
 	};
 
 	/**
 	 * Stop Jarvis.
 	 */
 	stopJarvis = () => {
-		if (this.intervalId !== null) {
-			clearInterval(this.intervalId);
-			this.intervalId = null;
+		if (getIntervalId() !== null) {
+			clearIntervalId();
 			Logger.info("Jarvis stopped");
 		} else {
 			Logger.info("Jarvis is not running");
@@ -511,7 +513,7 @@ export class JarvisUtils {
 				});
 
 				for (const [index, element] of newBuildsAdded.entries()) {
-					const builData = await fetchUtils.fetchBuildData(element, this.storedProjectName);
+					const builData = await fetchUtils.fetchBuildData(element, this.storedProjectName, 3);
 					const newJobCardProps = this.createJobCardPropsForBuild(builData);
 					// add the new build to the jobCardProps array if it is not already in there
 					if (!this.jobCardProps.find((item) => item.buildNumber === newJobCardProps.buildNumber)) {
@@ -536,7 +538,7 @@ export class JarvisUtils {
 				for (const [index, element] of buildsNotFinished.entries()) {
 					if (!element.buildNumber) continue;
 					// Gather the latest build data
-					const buildData = await fetchUtils.fetchBuildData(element.buildNumber, this.storedProjectName);
+					const buildData = await fetchUtils.fetchBuildData(element.buildNumber, this.storedProjectName, 4);
 
 					// Check if the build is finished and if it is in the notification set
 					if (buildData.result !== null && buildsinNotificationSet.includes(String(buildData.number))) {

@@ -1,21 +1,19 @@
 import React, { useEffect, useState, useRef } from "react";
-import { getConsoleViewStyleDict } from "./ConsoleViewStyleDict";
 import Logger from "../../../../helpers/Logger";
 import { IJenkinsBuild } from "../../../../Interfaces/IBuildInterface";
 
 import StorageManager from "../../../../helpers/StorageManager";
-import { IStylingDict } from "../../../../Interfaces/StylingDict";
 import ConsoleViewLoading from "./ConsoleViewLoading";
 import { fetchUtils } from "../../Utils/fetchUtils";
 import { CONSOLE_RELOAD_TIME, DEFAULT_WINDOW_HEIGHT, DEFAULT_WINDOW_WIDTH } from "../../../../config/constants";
 import { BiArrowToBottom } from "react-icons/bi";
-import { RxRows, RxTextAlignBottom } from "react-icons/rx";
 import { HiMiniArrowSmallDown } from "react-icons/hi2";
 import { motion } from "framer-motion";
 import { IoDocumentTextOutline, IoRemoveOutline } from "react-icons/io5";
 import { WebviewWindow } from "@tauri-apps/api/window";
 import { formatConsoleData } from "./ConsoleViewUtils";
 import { generateRandomString } from "../../../../helpers/utils";
+import { clearIntervalId, setIntervalId } from "./IntervalManager";
 
 interface Props {
 	buildData: IJenkinsBuild;
@@ -25,12 +23,8 @@ const ConsoleView: React.FC<Props> = ({ buildData }) => {
 	const preElementRef = useRef<HTMLPreElement | null>(null);
 	const [consoleData, setConsoleData] = useState<string>("");
 	const [isLoading, setIsLoading] = useState<boolean>(true);
-	const [consoleFetchInterval, setConsoleFetchInterval] = useState<NodeJS.Timeout>();
 	const [autoScroll, setAutoScroll] = useState<boolean>(false);
-
-
 	
-
 	const fetchAndSetConsoleData = async () => {
 		try {
 			let projectName = StorageManager.get("projectName");
@@ -42,6 +36,7 @@ const ConsoleView: React.FC<Props> = ({ buildData }) => {
 			
 			setIsLoading(false);
 			setConsoleData(formattedData);
+			if (buildData.result !== null) return clearIntervalId();
 		} catch (error) {
 			Logger.error("Error invoking get_build_data:", error);
 		}
@@ -78,30 +73,27 @@ const ConsoleView: React.FC<Props> = ({ buildData }) => {
 	// Check if the build is finished
 	useEffect(() => {
 		if (buildData.result !== null) {
-			clearInterval(consoleFetchInterval);
+			clearIntervalId();
 		}
 
 		if (autoScroll) {
 			scrollToBottom();
 		}
 		
-	}, [buildData]);
+	}, [consoleData]);
 
 	// Start the interval to fetch console data
 	useEffect(() => {
-		if (!consoleFetchInterval) {
 			// Start Interval to update console data
-			const interval = setInterval(() => {
+			setIntervalId(setInterval(() => {
 				fetchAndSetConsoleData();
-			}, CONSOLE_RELOAD_TIME);
-
-			setConsoleFetchInterval(interval);
-		}
+			}, CONSOLE_RELOAD_TIME))
+		
 
 		// On unmount, clear the interval
 		return () => {
-			clearInterval(consoleFetchInterval);
-			Logger.info("Clearing Console");
+			clearIntervalId();
+			Logger.info("Cleaning up ConsoleView Interval");
 		};
 	}, []);
 
@@ -115,17 +107,17 @@ const ConsoleView: React.FC<Props> = ({ buildData }) => {
 							<div className="px-6 py-3 border-b-2 border-border flex justify-between items-center">
 								<p className="font-medium text-sm select-none">Console Output</p>
 								<div className="flex space-x-2">
-								<div
-									onClick={() => scrollToBottom()}
-									className="w-8 h-8 flex justify-self-center items-center justify-center rounded-md bg-white/5 ring-1 ring-white/10 p-2 shadow-md transition hover:scale-[1.05] active:scale-[0.95]">
-									<p><BiArrowToBottom /></p>
+									<div
+										onClick={() => scrollToBottom()}
+										className="w-8 h-8 flex justify-self-center items-center justify-center rounded-md bg-white/5 ring-1 ring-white/10 p-2 shadow-md transition hover:scale-[1.05] active:scale-[0.95]">
+										<p><BiArrowToBottom /></p>
+									</div>
+									<div
+										onClick={() => openFullConsole()}
+										className="w-8 h-8 flex justify-self-center items-center justify-center rounded-md bg-white/5 ring-1 ring-white/10 p-2 shadow-md transition hover:scale-[1.05] active:scale-[0.95]">
+										<p><IoDocumentTextOutline /></p>
+									</div>
 								</div>
-								<div
-									onClick={() => openFullConsole()}
-									className="w-8 h-8 flex justify-self-center items-center justify-center rounded-md bg-white/5 ring-1 ring-white/10 p-2 shadow-md transition hover:scale-[1.05] active:scale-[0.95]">
-									<p><IoDocumentTextOutline /></p>
-								</div>
-										</div>
 								{/* <p className="font-medium text-sm cursor-pointer">Full Output</p> */}
 							</div>
 							<div>
@@ -136,20 +128,22 @@ const ConsoleView: React.FC<Props> = ({ buildData }) => {
 								/>
 							</div>
 						</div>
-						<div
-							onClick={() => setAutoScroll(!autoScroll)}
-							className="absolute bottom-8 right-8 flex justify-center items-center select-none cursor-pointer">
-							<motion.div
-								className="flex justify-center items-center w-14 h-14 bg-background-sidebar rounded-xl"
+						{buildData.result === null && (
+							<div
 								onClick={() => setAutoScroll(!autoScroll)}
-								animate={{
-									scale: autoScroll ? 0.9 : 1,
-									
-								}}
-							>
-								{autoScroll ? <HiMiniArrowSmallDown size={28} /> : <IoRemoveOutline size={28} />}
-							</motion.div>
-						</div>
+								className="absolute bottom-8 right-8 flex justify-center items-center select-none cursor-pointer">
+								<motion.div
+									className="flex justify-center items-center w-14 h-14 bg-background-sidebar rounded-xl"
+									onClick={() => setAutoScroll(!autoScroll)}
+									animate={{
+										scale: autoScroll ? 0.9 : 1,
+
+									}}
+								>
+									{autoScroll ? <HiMiniArrowSmallDown size={28} /> : <IoRemoveOutline size={28} />}
+								</motion.div>
+							</div>
+						)}
 					</>
 				)
 				:

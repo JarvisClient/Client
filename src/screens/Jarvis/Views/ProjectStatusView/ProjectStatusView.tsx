@@ -28,7 +28,7 @@ const ProjectStatusView: React.FC<Props> = ({ buildData }) => {
 		const getLastSuccessfulBuild = async () => {
 			const lastSuccessfulBuild: number | undefined = buildData?.lastSuccessfulBuild.number;
 			if (!lastSuccessfulBuild) return null;
-			const response = await fetchUtils.fetchBuildData(lastSuccessfulBuild, StorageManager.get("projectName"));
+			const response = await fetchUtils.fetchBuildData(lastSuccessfulBuild, StorageManager.get("projectName"), 5);
 			return response;
 		};
 		if (buildData) {
