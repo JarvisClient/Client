@@ -587,6 +587,7 @@ export class JarvisUtils {
 				...element,
 				pinned: pinnedJobs[this.storedProjectName as string]?.includes(String(element.buildNumber)),
 				notification_set: notificationSetJobs[this.storedProjectName as string]?.includes(String(element.buildNumber)),
+				active: element.buildNumber === this.activeJobBuild,
 			}));
 
 			// Set the new jobCardProps
