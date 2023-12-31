@@ -16,7 +16,7 @@ import { JobCardProps } from "../../../Interfaces/IJobCardProps";
 import { IPinnedANDNotificatonJobs } from "../../../Interfaces/IPinnedANDNotificatonJobs";
 import { miniUtils } from "./miniUtils";
 import { sendNotification } from "../../../helpers/notification";
-import { setIntervalId, clearIntervalId, getIntervalId } from './IntervalManager';
+import { setIntervalId, clearIntervalId, getIntervalId } from "./IntervalManager";
 
 /**
  * Utility class for handling job card related functionality.
@@ -452,7 +452,7 @@ export class JarvisUtils {
 							Logger.error("An Error occurred while trying to start Jarvis:", error);
 						}
 					}, JOBCARD_REFRESH_TIME)
-				)
+				);
 				Logger.info("Jarvis started with interval ID", getIntervalId());
 			}
 		} catch (error) {

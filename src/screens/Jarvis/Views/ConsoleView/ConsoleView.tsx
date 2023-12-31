@@ -27,10 +27,10 @@ const ConsoleView: React.FC<Props> = ({ buildData }) => {
 	
 	const fetchAndSetConsoleData = async () => {
 		try {
-			let projectName = StorageManager.get("projectName");
-			let buildNumber = buildData.id.toString();
+			const projectName = StorageManager.get("projectName");
+			const buildNumber = buildData.id.toString();
 
-			const lines = await fetchUtils.consoleText(projectName, buildNumber)
+			const lines = await fetchUtils.consoleText(projectName, buildNumber);
 
 			const formattedData = await formatConsoleData(lines);
 			
@@ -43,7 +43,7 @@ const ConsoleView: React.FC<Props> = ({ buildData }) => {
 	};
 
 	const openFullConsole = () => {
-		let projectName = StorageManager.get("projectName");
+		const projectName = StorageManager.get("projectName");
 
 		const webview = new WebviewWindow(generateRandomString(10), {
 			url: "/fullLog?buildNumber=" + buildData.id + "&projectName=" + projectName + "&buildUrl=" + buildData.url,
@@ -62,7 +62,7 @@ const ConsoleView: React.FC<Props> = ({ buildData }) => {
 		webview.once("tauri://error", (e) => {
 			Logger.error(`Error in webview: ${e}`);
 		});
-	}
+	};
 
 	const scrollToBottom = () => {
 		if (consoleRef.current) {
@@ -84,10 +84,10 @@ const ConsoleView: React.FC<Props> = ({ buildData }) => {
 
 	// Start the interval to fetch console data
 	useEffect(() => {
-			// Start Interval to update console data
-			setIntervalId(setInterval(() => {
-				fetchAndSetConsoleData();
-			}, CONSOLE_RELOAD_TIME))
+		// Start Interval to update console data
+		setIntervalId(setInterval(() => {
+			fetchAndSetConsoleData();
+		}, CONSOLE_RELOAD_TIME));
 		
 
 		// On unmount, clear the interval

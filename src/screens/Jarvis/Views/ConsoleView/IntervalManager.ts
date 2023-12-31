@@ -5,26 +5,26 @@ declare global {
     }
   }
   
-  // Initialize the property on the window object
-  if (typeof window.jarvisConsoleIntervalId === 'undefined') {
-    window.jarvisConsoleIntervalId = null;
-  }
+// Initialize the property on the window object
+if (typeof window.jarvisConsoleIntervalId === "undefined") {
+	window.jarvisConsoleIntervalId = null;
+}
   
-  export function setIntervalId(newIntervalId: NodeJS.Timeout | null) {
-    if (window.jarvisConsoleIntervalId !== null) {
-      clearInterval(window.jarvisConsoleIntervalId);
-    }
-    window.jarvisConsoleIntervalId = newIntervalId;
-  }
+export function setIntervalId(newIntervalId: NodeJS.Timeout | null) {
+	if (window.jarvisConsoleIntervalId !== null) {
+		clearInterval(window.jarvisConsoleIntervalId);
+	}
+	window.jarvisConsoleIntervalId = newIntervalId;
+}
   
-  export function getIntervalId(): NodeJS.Timeout | null {
-    return window.jarvisConsoleIntervalId;
-  }
+export function getIntervalId(): NodeJS.Timeout | null {
+	return window.jarvisConsoleIntervalId;
+}
   
-  export function clearIntervalId() {
-    if (window.jarvisConsoleIntervalId !== null) {
-      clearInterval(window.jarvisConsoleIntervalId);
-      window.jarvisConsoleIntervalId = null;
-    }
-  }
+export function clearIntervalId() {
+	if (window.jarvisConsoleIntervalId !== null) {
+		clearInterval(window.jarvisConsoleIntervalId);
+		window.jarvisConsoleIntervalId = null;
+	}
+}
   

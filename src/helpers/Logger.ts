@@ -69,7 +69,7 @@ export async function writeEmergencyLog(error: Error, errorInfo: ErrorInfo): Pro
  * 
  * @returns true if the log file was cleared successfully
  */
-export async function clearLogfile(): Promise<Boolean> {
+export async function clearLogfile(): Promise<boolean> {
 	try {
 		await writeTextFile(LOGS_FILE, "", { dir: BaseDirectory.AppData });
 		return true;

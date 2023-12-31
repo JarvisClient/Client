@@ -54,7 +54,7 @@ module.exports = {
 			"always"
 		],
 		"@typescript-eslint/no-explicit-any": [
-			"warn"
+			"error"
 		],
 		"no-prototype-builtins":"off",
 	}

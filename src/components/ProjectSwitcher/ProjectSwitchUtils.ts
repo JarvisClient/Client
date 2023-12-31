@@ -34,7 +34,7 @@ export const getAllProjects = async (): Promise<JenkinsDataJob[]> => {
 	}
 };
 
-const splitMultibranchProject = async (job: JenkinsDataJob): Promise<any> => {
+const splitMultibranchProject = async (job: JenkinsDataJob): Promise<JenkinsDataJob[]> => {
 	const data: IJenkinsProjectMultibranch | undefined = await fetchUtils.fetchProjectData(job.name);
 	if (!data || !data.jobs) return [];
 	const jobs = data.jobs;

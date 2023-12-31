@@ -81,15 +81,15 @@ export const checkPermissions = async (): Promise<void> => {
  * 
  * @returns true if log file was cleared
  */
-export const checkLogFile = async (): Promise<Boolean> => {
+export const checkLogFile = async (): Promise<boolean> => {
 	const logFileSize = await getLogfileSize();
 
 	// if log file is bigger than 5MB
 	if (logFileSize > MAX_LOG_FILE_SIZE) {
 		Logger.info("Log file is bigger than " + MAX_LOG_FILE_SIZE + " MB. Clearing log file.");
 		// clear log file
-		let cleared = await Logger.clearLogfile();
+		const cleared = await Logger.clearLogfile();
 		return cleared;
 	}
 	return false;
-}
+};

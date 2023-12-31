@@ -106,7 +106,7 @@ export const fetchUtils = {
 		}
 	},
 
-	consoleText: async (storedProjectName: string | null, buildNumber: string): Promise<String[]> => {
+	consoleText: async (storedProjectName: string | null, buildNumber: string): Promise<string[]> => {
 		const config = {
 			projectName: storedProjectName,
 			buildNumber: buildNumber,

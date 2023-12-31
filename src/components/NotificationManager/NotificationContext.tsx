@@ -77,7 +77,7 @@ export const NotificationProvider: React.FC<Props_NotificationProvider> = ({ chi
 			id, title, message, featureButtonData, variant: "visible",
 		}; // Initialize variant as 'visible'
 		
-		if (config.soundOn) playAudio(config.soundType || "pop")
+		if (config.soundOn) playAudio(config.soundType || "pop");
 
 		setNotifications((prevNotifications) => [...prevNotifications, newNotification]);
 
@@ -109,8 +109,8 @@ export const NotificationProvider: React.FC<Props_NotificationProvider> = ({ chi
 					>
 						<div className="flex">
 							<div 
-							style={{ backgroundColor: notification.featureButtonData.bg_color }}
-							className={`inline-flex items-center justify-center flex-shrink-0 w-8 h-8 rounded-lg`}>
+								style={{ backgroundColor: notification.featureButtonData.bg_color }}
+								className={"inline-flex items-center justify-center flex-shrink-0 w-8 h-8 rounded-lg"}>
 								{React.createElement(notification.featureButtonData.icon, { className: "w-5 h-5", color: notification.featureButtonData.icon_color })}
 							</div>
 							<div className="ms-3 text-sm font-normal">

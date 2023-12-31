@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import { IoMdHeartEmpty } from "react-icons/io";
 import { BiCube } from "react-icons/bi";
 import { IJenkinsBuild, JenkinsBuildArtifact } from "../../../../Interfaces/IBuildInterface";
 import StorageManager from "../../../../helpers/StorageManager";
