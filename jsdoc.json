@@ -1,0 +1,29 @@
+
+{
+    "tags": {
+      "allowUnknownTags": true,
+      "dictionaries": ["jsdoc", "closure"]
+    },
+    "source": {
+      "include": ["src"],
+      "includePattern": ".+\\.(ts|tsx|js|jsx)$",
+      "excludePattern": "(^|\\/|\\\\)_"
+    },
+    "plugins": [
+      "plugins/markdown",
+      "jsdoc-ts-utils",
+      "node_modules/better-docs/typescript"
+    ],
+    "templates": {
+      "cleverLinks": false,
+      "monospaceLinks": false
+    },
+    "opts": {
+      "encoding": "utf8",
+      "destination": "docs/",
+      "recurse": true,
+      "verbose": true,
+        "template": "node_modules/better-docs"
+      }
+  }
+  
