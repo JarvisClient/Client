@@ -8,6 +8,7 @@ import { getConsoleViewStyleDict } from "../ConsoleView/ConsoleViewStyleDict";
 import Logger from "../../../../helpers/Logger";
 
 import StorageManager from "../../../../helpers/StorageManager";
+import { clearIntervalId } from "../../Utils/IntervalManager";
 
 export const editConsoleStyling = async () => {
 	try {
@@ -53,7 +54,7 @@ export const openLogs = async () => {
 export const clearAllData = async () => {
 	try {
 		StorageManager.clearAll();
-		window.location.reload();
+		clearIntervalId();
 	} catch (error) {
 		alert(`Error clearing data! \n${error}`);
 		Logger.error("Error clearing data:", error);

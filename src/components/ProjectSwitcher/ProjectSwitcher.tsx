@@ -156,7 +156,7 @@ const ProjectSwitcher = (): React.ReactElement => {
 
 								{/* Text */}
 								<div
-									className={`transition hover:bg-background-card-selected active:scale-[0.95] px-4 py-4 rounded-md ${selectedJob === job.name ? "bg-background-card-selected" : ""} w-full flex`}
+									className={`transition hover:bg-background-card-selected active:scale-[0.95] px-4 py-4 rounded-md ${selectedJob === job.name + "/" ? "bg-background-card-selected" : ""} w-full flex`}
 									onClick={() => selectJob(job)}
 								>
 									<p className="break-all">{job.name}</p>
