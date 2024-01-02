@@ -24,6 +24,8 @@
   @apply bg-background-view;
   @apply text-text-color;
   @apply antialiased;
+
+  overscroll-behavior-y: none;
 }
 
 
