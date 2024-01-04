@@ -5,6 +5,7 @@ import { DEFAULT_WINDOW_HEIGHT, DEFAULT_WINDOW_WIDTH, MAX_LOG_FILE_SIZE } from "
 import { checkJenkinsConnection } from "./JenkinsConnectionChecker/JenkinsConnectionChecker";
 import { requestPermission } from "@tauri-apps/api/notification";
 import StorageManager from "../../helpers/StorageManager";
+import { BaseDirectory, createDir } from "@tauri-apps/api/fs";
 
 export const initUpdateChecker = async () => {
 	const updateState = await checkForUpdates();
@@ -93,3 +94,10 @@ export const checkLogFile = async (): Promise<boolean> => {
 	}
 	return false;
 };
+
+export const createPathsIfNotExists = async () => {
+	await createDir('', {
+		dir: BaseDirectory.AppData,
+		recursive: true,
+	});
+}

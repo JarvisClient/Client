@@ -178,41 +178,41 @@ export class JarvisUtils {
 		try {
 
 			switch (feature) {
-			case "settings":
-				this.setActiveJobBuildNumber(null);
-				this.activeJobBuild = null;
-				break;
-			case "status_for_project":
-				if (!selectedBuildData) throw new Error("selectedBuildData is undefined");
-				this.setActiveJobBuildNumber(null);
-				this.activeJobBuild = null;
-				this.setSelectedBuildData({} as IJenkinsBuild);
-				break;
-			case "jenkins":
-				if (!selectedBuildData) throw new Error("selectedBuildData is undefined");
-				openLink(selectedBuildData.url);
-				return;
-				break;
-			case "pin": {
-				if (!selectedBuildData) throw new Error("selectedBuildData is undefined");
-				this.handleJobCardFeautreButtonInteraction("pinnedJobs", jobCardProps, activeJobBuild);
-				return;
-				break;
-			}
-			case "notification": {
-				if (!selectedBuildData) throw new Error("selectedBuildData is undefined");
-				this.handleJobCardFeautreButtonInteraction("notificationSetJobs", jobCardProps, activeJobBuild);
-				return;
-				break;
-			}
-			case "stop_build": {
-				if (!selectedBuildData) throw new Error("selectedBuildData is undefined");
-				this.stopBuild(activeJobBuild);
-				return;
-				break;
-			}
-			default:
-				break;
+				case "settings":
+					this.setActiveJobBuildNumber(null);
+					this.activeJobBuild = null;
+					break;
+				case "status_for_project":
+					if (!selectedBuildData) throw new Error("selectedBuildData is undefined");
+					this.setActiveJobBuildNumber(null);
+					this.activeJobBuild = null;
+					this.setSelectedBuildData({} as IJenkinsBuild);
+					break;
+				case "jenkins":
+					if (!selectedBuildData) throw new Error("selectedBuildData is undefined");
+					openLink(selectedBuildData.url);
+					return;
+					break;
+				case "pin": {
+					if (!selectedBuildData) throw new Error("selectedBuildData is undefined");
+					this.handleJobCardFeautreButtonInteraction("pinnedJobs", jobCardProps, activeJobBuild);
+					return;
+					break;
+				}
+				case "notification": {
+					if (!selectedBuildData) throw new Error("selectedBuildData is undefined");
+					this.handleJobCardFeautreButtonInteraction("notificationSetJobs", jobCardProps, activeJobBuild);
+					return;
+					break;
+				}
+				case "stop_build": {
+					if (!selectedBuildData) throw new Error("selectedBuildData is undefined");
+					this.stopBuild(activeJobBuild);
+					return;
+					break;
+				}
+				default:
+					break;
 			}
 			this.setActiveFeature(feature);
 		} catch (error) {
@@ -312,76 +312,76 @@ export class JarvisUtils {
 
 		try {
 			switch (searchQuery) {
-			case "%failed%": {
-				const failedJobCards = jobCardProps.filter((element) => element.result === "FAILURE");
-				if (failedJobCards.length === 0) return renderNoJobsFound();
+				case "%failed%": {
+					const failedJobCards = jobCardProps.filter((element) => element.result === "FAILURE");
+					if (failedJobCards.length === 0) return renderNoJobsFound();
 
-				return failedJobCards.map((props: JSX.IntrinsicAttributes & JobCardProps, index: React.Key | null | undefined) => (
-					<JobCardComponent key={index} {...props} />
-				));
-			}
-			case "%unstable%": {
-				const unstableJobCards = jobCardProps.filter((element) => element.result === "UNSTABLE");
-				if (unstableJobCards.length === 0) return renderNoJobsFound();
+					return failedJobCards.map((props: JSX.IntrinsicAttributes & JobCardProps, index: React.Key | null | undefined) => (
+						<JobCardComponent key={index} {...props} />
+					));
+				}
+				case "%unstable%": {
+					const unstableJobCards = jobCardProps.filter((element) => element.result === "UNSTABLE");
+					if (unstableJobCards.length === 0) return renderNoJobsFound();
 
-				return unstableJobCards.map((props: JSX.IntrinsicAttributes & JobCardProps, index: React.Key | null | undefined) => (
-					<JobCardComponent key={index} {...props} />
-				));
-			}
-			case "%success%": {
-				const successJobCards = jobCardProps.filter((element) => element.result === "SUCCESS");
-				if (successJobCards.length === 0) return renderNoJobsFound();
+					return unstableJobCards.map((props: JSX.IntrinsicAttributes & JobCardProps, index: React.Key | null | undefined) => (
+						<JobCardComponent key={index} {...props} />
+					));
+				}
+				case "%success%": {
+					const successJobCards = jobCardProps.filter((element) => element.result === "SUCCESS");
+					if (successJobCards.length === 0) return renderNoJobsFound();
 
-				return successJobCards.map((props: JSX.IntrinsicAttributes & JobCardProps, index: React.Key | null | undefined) => (
-					<JobCardComponent key={index} {...props} />
-				));
-			}
-			case "%aborted%": {
+					return successJobCards.map((props: JSX.IntrinsicAttributes & JobCardProps, index: React.Key | null | undefined) => (
+						<JobCardComponent key={index} {...props} />
+					));
+				}
+				case "%aborted%": {
 
-				const abortedJobCards = jobCardProps.filter((element) => element.result === "ABORTED");
-				if (abortedJobCards.length === 0) return renderNoJobsFound();
+					const abortedJobCards = jobCardProps.filter((element) => element.result === "ABORTED");
+					if (abortedJobCards.length === 0) return renderNoJobsFound();
 
-				return abortedJobCards.map((props: JSX.IntrinsicAttributes & JobCardProps, index: React.Key | null | undefined) => (
-					<JobCardComponent key={index} {...props} />
-				));
-			}
-			case "%pinned%": {
-				const pinnedJobCards = jobCardProps.filter((element) => element.pinned);
-				if (pinnedJobCards.length === 0) return renderNoJobsFound();
+					return abortedJobCards.map((props: JSX.IntrinsicAttributes & JobCardProps, index: React.Key | null | undefined) => (
+						<JobCardComponent key={index} {...props} />
+					));
+				}
+				case "%pinned%": {
+					const pinnedJobCards = jobCardProps.filter((element) => element.pinned);
+					if (pinnedJobCards.length === 0) return renderNoJobsFound();
 
-				return pinnedJobCards.map((props: JSX.IntrinsicAttributes & JobCardProps, index: React.Key | null | undefined) => (
-					<JobCardComponent key={index} {...props} />
-				));
-			}
-			case "%notification_set%": {
-				const notificationSetJobCards = jobCardProps.filter((element) => element.notification_set);
-				if (notificationSetJobCards.length === 0) return renderNoJobsFound();
+					return pinnedJobCards.map((props: JSX.IntrinsicAttributes & JobCardProps, index: React.Key | null | undefined) => (
+						<JobCardComponent key={index} {...props} />
+					));
+				}
+				case "%notification_set%": {
+					const notificationSetJobCards = jobCardProps.filter((element) => element.notification_set);
+					if (notificationSetJobCards.length === 0) return renderNoJobsFound();
 
-				return notificationSetJobCards.map((props: JSX.IntrinsicAttributes & JobCardProps, index: React.Key | null | undefined) => (
-					<JobCardComponent key={index} {...props} />
-				));
-			}
-			default: {
-				const filteredJobCards = searchQuery && searchQuery.length > 0
-					? jobCardProps.filter((element) =>
-						(element.displayName?.includes(searchQuery) || element.description?.includes(searchQuery))
-					)
-					: jobCardProps;
+					return notificationSetJobCards.map((props: JSX.IntrinsicAttributes & JobCardProps, index: React.Key | null | undefined) => (
+						<JobCardComponent key={index} {...props} />
+					));
+				}
+				default: {
+					const filteredJobCards = searchQuery && searchQuery.length > 0
+						? jobCardProps.filter((element) =>
+							(element.displayName?.includes(searchQuery) || element.description?.includes(searchQuery))
+						)
+						: jobCardProps;
 
-				// Sort the filteredJobCards array so that pinned cards come first
-				const sortedJobCards = [...filteredJobCards].sort((a, b) => (b.pinned ? 1 : -1) - (a.pinned ? 1 : -1));
+					// Sort the filteredJobCards array so that pinned cards come first
+					const sortedJobCards = [...filteredJobCards].sort((a, b) => (b.pinned ? 1 : -1) - (a.pinned ? 1 : -1));
 
-				if (sortedJobCards.length === 0 && searchQuery) return renderNoJobsFound();
+					if (sortedJobCards.length === 0 && searchQuery) return renderNoJobsFound();
 
-				if (sortedJobCards.length === 0) return (
-					<p>No Jobs found</p>
-				);
+					if (sortedJobCards.length === 0) return (
+						<p>No Jobs found</p>
+					);
 
-				return sortedJobCards.map((props, index) => (
-					<JobCardComponent key={index} {...props} />
-				));
+					return sortedJobCards.map((props, index) => (
+						<JobCardComponent key={index} {...props} />
+					));
 
-			}
+				}
 			}
 		} catch (error) {
 			this.notification.showNotification("Error", "Error rendering job cards. Please check your internet connection and try again.", "error", {
@@ -455,11 +455,17 @@ export class JarvisUtils {
 				);
 				Logger.info("Jarvis started with interval ID", getIntervalId());
 			}
-		} catch (error) {
+		} catch (error: any) {
 			this.notification.showNotification("Error", "An Error occurred while trying to start Jarvis. Please check your internet connection and try again.", "error", {
 				soundOn: true,
 				soundType: "error",
 			});
+
+			if (error.message.includes("name not found in Storage Manager")) {
+				this.notification.showBannerNotification("Storage Manager possibly corrupted.", "There was an error while trying to fetch the project data. You can try deleting the Local Storage file in the settings and restarting Jarvis.")
+			}
+
+
 			Logger.error("Error starting Jarvis:", error);
 			this.setActiveFeature("settings");
 			return null;
@@ -530,7 +536,7 @@ export class JarvisUtils {
 			// List of all builds not finished
 			const buildsNotFinished: JobCardProps[] = this.jobCardProps.filter((element) => element.result === null);
 			const NotificationSet = JSON.parse(StorageManager.get("notificationSetJobs") || "{}");
-			const buildsinNotificationSet: string[] = NotificationSet[this.storedProjectName as string] || [];			
+			const buildsinNotificationSet: string[] = NotificationSet[this.storedProjectName as string] || [];
 
 
 			if (buildsNotFinished.length !== 0) {
@@ -577,7 +583,7 @@ export class JarvisUtils {
 				this.jobCardProps = newJobCardProps;
 			}
 
-			
+
 			// Set Pinned and Notification Set Jobs.
 			// Ideally this is temporary fix since the jobCardProps should already have the correct values.
 			const pinnedJobs = JSON.parse(StorageManager.get("pinnedJobs") || "{}");
@@ -599,11 +605,19 @@ export class JarvisUtils {
 				this.setSelectedBuildData(selectedBuild);
 			}
 
-		} catch (error) {
+		} catch (error: any) {
 			this.notification.showNotification("Error", "An Error occured while trying to fetch project data. Please check your internet connection and try again.", "error", {
 				soundOn: true,
 				soundType: "error",
 			});
+
+			console.info(error);
+
+
+			if (error.message.includes("name not found in Storage Manager")) {
+				this.notification.showBannerNotification("Storage Manager possibly corrupted.", "There was an error while trying to fetch the project data. You can try deleting the Local Storage file in the settings and restarting Jarvis.")
+			}
+
 			Logger.error("Error fetching project data:", error);
 		}
 	};

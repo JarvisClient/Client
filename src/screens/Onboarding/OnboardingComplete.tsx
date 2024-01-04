@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { appWindow, LogicalSize } from "@tauri-apps/api/window";
 import { motion } from "framer-motion";
 import { relaunch } from "@tauri-apps/api/process";
-import icon from "../../assets/icons/ico_bow.svg";
+import icon from "../../assets/brand/ico_bow.svg";
 
 import "./Onboarding.css";
 import { DEFAULT_WINDOW_HEIGHT, DEFAULT_WINDOW_WIDTH } from "../../config/constants";

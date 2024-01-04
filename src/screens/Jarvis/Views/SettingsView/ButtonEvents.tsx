@@ -9,6 +9,7 @@ import Logger from "../../../../helpers/Logger";
 
 import StorageManager from "../../../../helpers/StorageManager";
 import { clearIntervalId } from "../../Utils/IntervalManager";
+import { Props_NotificationContext } from "@/Interfaces/IProps_NotificationContext";
 
 export const editConsoleStyling = async () => {
 	try {
@@ -51,12 +52,16 @@ export const openLogs = async () => {
 	}
 };
 
-export const clearAllData = async () => {
+export const clearAllData = async (notification: Props_NotificationContext) => {
 	try {
 		StorageManager.clearAll();
 		clearIntervalId();
+		notification.showBannerNotification("Successfully cleared all data!", "The Interval Manager has been stopped. Please restart Jarvis to continue.")
 	} catch (error) {
-		alert(`Error clearing data! \n${error}`);
+		notification.showNotification("Error clearing data!", "error", "error", {
+			soundOn: true,
+			soundType: "error"
+		});
 		Logger.error("Error clearing data:", error);
 	}
 };

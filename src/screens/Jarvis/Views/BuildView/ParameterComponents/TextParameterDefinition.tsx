@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
-import { BiText } from "react-icons/bi";
 
 import { IJenkinsProjectParameterDefinition } from "../../../../../Interfaces/IProjectInterface";
+import { IcoQuote } from "@/Icons/pack_1";
 
 interface Props {
   parameters: IJenkinsProjectParameterDefinition;
@@ -17,7 +17,7 @@ const TextParameterDefinition: React.FC<Props> = ({ parameters, value, onChange 
 	return (
 		<div className="grid items-center">
 			<div className="flex items-center mr-2">
-				<BiText size={30} />
+				<IcoQuote size={30} />
 				<div className="ml-5">
 					<h1 className="text-2xl font-bold text-text-color">{parameters.name}</h1>
 					<p className="text-md text-comment-color">{parameters.description}</p>

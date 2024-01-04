@@ -1,6 +1,6 @@
 import React from "react";
-import { BsFillKeyFill } from "react-icons/bs";
 import { JenkinsBuildParameter } from "../../../../../Interfaces/IBuildInterface";
+import { IcoPasskey } from "@/Icons/pack_1";
 
 interface Props {
     parameter: JenkinsBuildParameter;
@@ -9,7 +9,7 @@ interface Props {
 const CredentialsParameterValue: React.FC<Props> = ({ parameter }): React.JSX.Element => (
 	<div className="grid items-center">
 		<div className="flex items-center mr-2">
-			<BsFillKeyFill size={30} />
+			<IcoPasskey size={30} />
 			<div className="ml-5">
 				<h1 className="text-2xl font-bold text-text-color">{parameter.name}</h1>
 				<p className="text-md text-comment-color">{parameter.description}</p>

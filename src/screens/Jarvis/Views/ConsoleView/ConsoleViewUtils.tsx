@@ -1,8 +1,15 @@
+import Logger from "@/helpers/Logger";
 import { IStylingDict } from "../../../../Interfaces/StylingDict";
 import { getConsoleViewStyleDict } from "./ConsoleViewStyleDict";
 import { type } from "@tauri-apps/api/os";
 
-const osType = await type();
+let osType: string;
+
+(async () => {
+	osType = await type();
+	Logger.info(`OS Type: ${osType}`);
+})();
+
 
 const handleApplyStyledDataWebWorker = (data: string, stylingDict: IStylingDict): Promise<string> => {
 	return new Promise((resolve, reject) => {
@@ -31,9 +38,6 @@ export const formatConsoleData = async (lines: string[]) => {
 
 	// Join the formatted lines back together with newline characters
 	const formattedData = formattedLines.join("\n");
-    
-	console.log(osType);
-    
 
 	// If Browser is Safari return the formatted data
 	if (osType === "Darwin") {

@@ -1,19 +1,6 @@
-import { FaCheck, FaGear } from "react-icons/fa6";
-
-import {
-	IoMdListBox, IoIosSwitch, IoIosNotificationsOutline, IoIosNotifications, IoIosList,
-} from "react-icons/io";
-import { BiSolidTerminal } from "react-icons/bi";
-import { MdErrorOutline, MdOutlineOpenInBrowser } from "react-icons/md";
-import { LuTestTube2 } from "react-icons/lu";
-
-import { HiHome } from "react-icons/hi";
-import { FaRegStopCircle } from "react-icons/fa";
-import { BsPlayFill } from "react-icons/bs";
-import { TbPin, TbPinnedFilled } from "react-icons/tb";
-
 import StorageManager from "../helpers/StorageManager";
 import { FeatureButtonProps } from "../Interfaces/IFeatureButtonProps";
+import { IcoArrowTriangleRight, IcoBell, IcoBellFilled, IcoBook, IcoConsole, IcoCover, IcoError, IcoGlobe, IcoPin, IcoPinFilled, IcoSettings, IcoSliders, IcoStop, IcoSuccess, IcoTestTube, IcoWindow } from "@/Icons/pack_1";
 
 const projectName = StorageManager.get("projectName");
 
@@ -24,7 +11,7 @@ const FeatureButtons: { [key: string]: FeatureButtonProps } = {
 		titleBar: "Project Status",
 		bg_color: "#292929",
 		icon_color: "#ffffff",
-		icon: HiHome,
+		icon: IcoGlobe,
 		hidden: !projectName,
 		purpose: "BOTH",
 	},
@@ -34,7 +21,7 @@ const FeatureButtons: { [key: string]: FeatureButtonProps } = {
 		titleBar: "Switch Projects",
 		bg_color: "#292929",
 		icon_color: "#ffffff",
-		icon: IoIosList,
+		icon: IcoCover,
 		hidden: !projectName,
 		purpose: "PROJECT",
 	},
@@ -44,7 +31,7 @@ const FeatureButtons: { [key: string]: FeatureButtonProps } = {
 		titleBar: "Build Status",
 		bg_color: "#353535",
 		icon_color: "#ffffff",
-		icon: IoMdListBox,
+		icon: IcoBook,
 		purpose: "JOB",
 	},
 	build: {
@@ -53,7 +40,7 @@ const FeatureButtons: { [key: string]: FeatureButtonProps } = {
 		titleBar: "Build",
 		bg_color: "#2D483A",
 		icon_color: "#84FFB3",
-		icon: BsPlayFill,
+		icon: IcoArrowTriangleRight,
 		hidden: !projectName,
 		purpose: "BOTH",
 	},
@@ -63,7 +50,7 @@ const FeatureButtons: { [key: string]: FeatureButtonProps } = {
 		titleBar: "Stop Build",
 		bg_color: "#421B1E",
 		icon_color: "#F22C3D",
-		icon: FaRegStopCircle,
+		icon: IcoStop,
 		hidden: false,
 		purpose: "JOB",
 	},
@@ -73,7 +60,7 @@ const FeatureButtons: { [key: string]: FeatureButtonProps } = {
 		titleBar: "Console",
 		bg_color: "#2C3F49",
 		icon_color: "#84DBFF",
-		icon: BiSolidTerminal,
+		icon: IcoConsole,
 		purpose: "JOB",
 	},
 	parameters: {
@@ -82,7 +69,7 @@ const FeatureButtons: { [key: string]: FeatureButtonProps } = {
 		titleBar: "View Build Parameters",
 		bg_color: "#2F2331",
 		icon_color: "#B479AC",
-		icon: IoIosSwitch,
+		icon: IcoSliders,
 		purpose: "JOB",
 	},
 	testReport: {
@@ -91,7 +78,7 @@ const FeatureButtons: { [key: string]: FeatureButtonProps } = {
 		titleBar: "View Test Reports",
 		bg_color: "#403D2F",
 		icon_color: "#E8D17D",
-		icon: LuTestTube2,
+		icon: IcoTestTube,
 		purpose: "JOB",
 	},
 	settings: {
@@ -100,7 +87,7 @@ const FeatureButtons: { [key: string]: FeatureButtonProps } = {
 		titleBar: "Settings",
 		bg_color: "#292929",
 		icon_color: "#ffffff",
-		icon: FaGear,
+		icon: IcoSettings,
 		purpose: "PROJECT",
 		hidden: true,
 	},
@@ -111,8 +98,8 @@ const FeatureButtons: { [key: string]: FeatureButtonProps } = {
 		titleBar: "Pin",
 		bg_color: "#1D2038",
 		icon_color: "#4657CE",
-		icon: TbPin,
-		secondaryIcon: TbPinnedFilled,
+		icon: IcoPin,
+		secondaryIcon: IcoPinFilled,
 		purpose: "JOB",
 		hidden: false,
 	},
@@ -123,8 +110,8 @@ const FeatureButtons: { [key: string]: FeatureButtonProps } = {
 		titleBar: "Notification",
 		bg_color: "#3B2E42",
 		icon_color: "#DB9DFF",
-		icon: IoIosNotificationsOutline,
-		secondaryIcon: IoIosNotifications,
+		icon: IcoBell,
+		secondaryIcon: IcoBellFilled,
 		purpose: "JOB",
 		hidden: false,
 	},
@@ -134,7 +121,7 @@ const FeatureButtons: { [key: string]: FeatureButtonProps } = {
 		titleBar: "Jenkins",
 		bg_color: "#44272B",
 		icon_color: "#F45B69",
-		icon: MdOutlineOpenInBrowser,
+		icon: IcoWindow,
 		purpose: "JOB",
 	},
 	// Just for Notifications
@@ -144,7 +131,7 @@ const FeatureButtons: { [key: string]: FeatureButtonProps } = {
 		titleBar: "Success",
 		bg_color: "#2D483A",
 		icon_color: "#84FFB3",
-		icon: FaCheck,
+		icon: IcoSuccess,
 		hidden: true,
 		purpose: "BOTH",
 	},
@@ -154,7 +141,7 @@ const FeatureButtons: { [key: string]: FeatureButtonProps } = {
 		titleBar: "Error",
 		bg_color: "#44272B",
 		icon_color: "#F45B69",
-		icon: MdErrorOutline,
+		icon: IcoError,
 		hidden: true,
 		purpose: "BOTH",
 	}

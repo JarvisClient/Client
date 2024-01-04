@@ -1,5 +1,5 @@
 import React from "react";
-import icoBow from "../../assets/icons/ico_bow.svg";
+import icoBow from "../../assets/brand/ico_bow.svg";
 import FeatureButtons from "../../config/FeatureButtons";
 import { renderSysButtons } from "./utils";
 

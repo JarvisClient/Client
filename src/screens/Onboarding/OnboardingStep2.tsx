@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { appWindow, LogicalSize } from "@tauri-apps/api/window";
-import { IoClose } from "react-icons/io5";
-import icon from "../../assets/icons/ico_bow.svg";
+import icon from "../../assets/brand/ico_bow.svg";
 
 import "./Onboarding.css";
 import { useNavigate } from "react-router-dom";
@@ -13,6 +12,7 @@ import projectURLIMG from "../../assets/faq/faq_projectURL.webp";
 import {JenkinsDataJob } from "../../Interfaces/IJenkinsData";
 import Logger from "../../helpers/Logger";
 import { getAllProjects } from "../../components/ProjectSwitcher/ProjectSwitchUtils";
+import { IcoCross } from "@/Icons/pack_1";
 
 const OnboardingStep1: React.FC = () => {
 	const [FavoriteProjects, setFavoriteProjects] = useState<JenkinsDataJob[]>([]);
@@ -174,7 +174,7 @@ const OnboardingStep1: React.FC = () => {
 							onClick={() => setShowHelpModal(false)}
 							className="absolute top-4 right-4 cursor-pointer"
 						>
-							<IoClose
+							<IcoCross
 								size={32}
 								className="transition hover:brightness-75 hover:scale-105 active:brightness-105 active:scale-95"
 							/>

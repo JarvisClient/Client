@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { appWindow, LogicalSize } from "@tauri-apps/api/window";
-import icon from "../../assets/icons/ico_bow.svg";
+import icon from "../../assets/brand/ico_bow.svg";
 
 import "./Onboarding.css";
 import { useNavigate } from "react-router-dom";
@@ -9,11 +9,11 @@ import { useNotification } from "../../components/NotificationManager/Notificati
 import { motion } from "framer-motion";
 
 import StorageManager from "../../helpers/StorageManager";
-import { IoClose } from "react-icons/io5";
 
 import baseURLIMG from "../../assets/faq/faq_baseURL.webp";
 import usernameIMG from "../../assets/faq/faq_username.webp";
 import Logger from "../../helpers/Logger";
+import { IcoCross } from "@/Icons/pack_1";
 
 const OnboardingStep1: React.FC = () => {
 	const [baseUrl, setBaseUrl] = useState(StorageManager.get("baseurl") || "");
@@ -196,7 +196,7 @@ const OnboardingStep1: React.FC = () => {
 							onClick={() => setShowHelpModal(false)}
 							className="absolute top-4 right-4 cursor-pointer"
 						>
-							<IoClose
+							<IcoCross
 								size={32}
 								className="transition hover:brightness-75 hover:scale-105 active:brightness-105 active:scale-95"
 							/>

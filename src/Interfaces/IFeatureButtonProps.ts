@@ -5,7 +5,7 @@ export interface FeatureButtonProps {
   titleBar: string;
   bg_color: string;
   icon_color: string;
-  icon: React.ElementType;
+  icon: any;
   secondaryIcon?: React.ElementType;
   purpose: "JOB" | "PROJECT" | "BOTH";
   hidden?: boolean;

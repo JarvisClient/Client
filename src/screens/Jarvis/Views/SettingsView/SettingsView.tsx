@@ -72,7 +72,7 @@ const SettingsView: React.FC = () => {
 				<>
 					<h1 className="text-3xl font-bold">Settings</h1>
 					<p>
-    Jarvis v
+						Jarvis v
 						{appVersion}
 					</p>
 
@@ -84,7 +84,7 @@ const SettingsView: React.FC = () => {
 								<h2 className="text-2xl font-bold">Jarvis Setup</h2>
 								{authenticated
 									? <span className="inline-flex items-center rounded-md bg-[#122a2d] px-2 py-1 text-xs font-medium text-green-300 ring-1 ring-inset ring-green-600/20">Authenticated</span>
-									:									<span className="inline-flex items-center rounded-md bg-[#28222f] px-2 py-1 text-xs font-medium text-red-300 ring-1 ring-inset ring-red-600/20">Not Authenticated</span>}
+									: <span className="inline-flex items-center rounded-md bg-[#28222f] px-2 py-1 text-xs font-medium text-red-300 ring-1 ring-inset ring-red-600/20">Not Authenticated</span>}
 							</div>
 
 							<div className="grid grid-cols-2 gap-4 space-y-4">
@@ -187,7 +187,7 @@ const SettingsView: React.FC = () => {
 									<p className="mb-2 leading-5 text-comment-color">Warning: This action will permanently delete all stored data, including Pinned Jobs, Notification Jobs, Tokens, Projects, and more.</p>
 								</div>
 								<div className="h-full">
-									<button onClick={clearAllData} className="button_danger_zone">Delete Data</button>
+									<button onClick={() => clearAllData(notification)} className="button_danger_zone">Delete Data</button>
 								</div>
 							</div>
 						</div>
@@ -211,13 +211,13 @@ const SettingsView: React.FC = () => {
 												onClick={() => navigate("/cause-error")}
 												className="button_danger_zone"
 											>
-    Button
+												Cause Error
 											</button>
 										</div>
 										{/* Clear Local Storage */}
 										<div className="flex flex-col h-full">
-											<p className="mb-2 text-lg font-bold">Special Icons</p>
-											<p className="mb-2 leading-5 text-comment-color">;)</p>
+											<p className="mb-2 text-lg font-bold">Custom TitleBar Icons</p>
+											<p className="mb-2 leading-5 text-comment-color">...</p>
 										</div>
 										<div className="h-full">
 											<button
@@ -231,7 +231,21 @@ const SettingsView: React.FC = () => {
 												}}
 												className="button_danger_zone"
 											>
-    egg
+												Set Icons
+											</button>
+										</div>
+										{/* Show Banner */}
+										<div className="flex flex-col h-full">
+											<p className="mb-2 text-lg font-bold">Banner Test</p>
+											<p className="mb-2 leading-5 text-comment-color">...</p>
+										</div>
+										<div className="h-full">
+											<button
+												onClick={() => {
+													notification.showBannerNotification("Lorem ipsum dolor sit amet", "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Porttitor massa id neque aliquam vestibulum morbi blandit cursus. Turpis egestas maecenas pharetra convallis posuere morbi. ");
+												}}
+												className="button_danger_zone">
+												Show Banner
 											</button>
 										</div>
 									</div>

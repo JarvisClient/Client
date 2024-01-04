@@ -3,7 +3,7 @@ import React, {
 } from "react";
 import { motion } from "framer-motion";
 import FeatureButtons from "../../config/FeatureButtons";
-import { Notification } from "../../Interfaces/INotification";
+import { BannerNotificcation, Notification } from "../../Interfaces/INotification";
 
 import { NOTIFICATION_CLOSE_TIME } from "../../config/constants";
 import Logger from "../../helpers/Logger";
@@ -13,6 +13,8 @@ import notification_info from "../../assets/sounds/notification_info.mp3";
 import notification_pop from "../../assets/sounds/notification_pop.mp3";
 import notification_success from "../../assets/sounds/notification_success.mp3";
 import notification_error from "../../assets/sounds/notification_error.mp3";
+import { IcoCross } from "@/Icons/pack_1";
+import { Props_NotificationContext, SoundSettings } from "@/Interfaces/IProps_NotificationContext";
 
 
 const notificationSounds = {
@@ -23,10 +25,7 @@ const notificationSounds = {
 };
 
 
-interface Props_NotificationContext {
-  showNotification: (title: string, message: string, icon: string, config?: SoundSettings) => void;
-  hideNotification: (id: number) => void;
-}
+
 
 const NotificationContext = createContext<Props_NotificationContext | undefined>(undefined);
 
@@ -46,23 +45,21 @@ export function useNotification() {
 		return context;
 	} catch (error) {
 		Logger.error("Error using notification:", error);
-		return { showNotification: () => {}, hideNotification: () => {} };
+		return { showNotification: () => { }, showBannerNotification: () => { }, hideNotification: () => { } };
 	}
 }
 
 let notificationIdCounter = 0;
 
 interface Props_NotificationProvider {
-  children: ReactNode;
+	children: ReactNode;
 }
 
-interface SoundSettings {
-	soundOn: boolean;
-	soundType?: "success" | "error" | "pop" | "info";
-}
+
 
 export const NotificationProvider: React.FC<Props_NotificationProvider> = ({ children }) => {
 	const [notifications, setNotifications] = useState<Notification[]>([]);
+	const [bannerNotification, setBannerNotification] = useState<BannerNotificcation | null>(null);
 
 	const showNotification = (title: string, message: string, icon: string, config: SoundSettings = {
 		soundOn: true,
@@ -76,7 +73,7 @@ export const NotificationProvider: React.FC<Props_NotificationProvider> = ({ chi
 		const newNotification: Notification = {
 			id, title, message, featureButtonData, variant: "visible",
 		}; // Initialize variant as 'visible'
-		
+
 		if (config.soundOn) playAudio(config.soundType || "pop");
 
 		setNotifications((prevNotifications) => [...prevNotifications, newNotification]);
@@ -91,12 +88,23 @@ export const NotificationProvider: React.FC<Props_NotificationProvider> = ({ chi
 		alert(`${title}\n\n${message}`);
 	};
 
+	const showBannerNotification = (title: string, message: string, permanent?: boolean) => {
+		const newNotification: BannerNotificcation = {
+			id: notificationIdCounter++,
+			title,
+			message,
+			permanent: permanent || false,
+		};
+
+		setBannerNotification(newNotification);
+	};
+
 	const hideNotification = (id: number) => {
 		setNotifications((prevNotifications) => prevNotifications.filter((n) => n.id !== id));
 	};
 
 	return (
-		<NotificationContext.Provider value={{ showNotification, hideNotification }}>
+		<NotificationContext.Provider value={{ showNotification, showBannerNotification, hideNotification }}>
 			<div className="absolute bottom-[30px] right-[30px] space-y-2 w-[300px] z-50 select-none cursor-pointer">
 				{notifications.map((notification) => (
 					<motion.div
@@ -108,7 +116,7 @@ export const NotificationProvider: React.FC<Props_NotificationProvider> = ({ chi
 						onClick={hideNotification.bind(null, notification.id)}
 					>
 						<div className="flex">
-							<div 
+							<div
 								style={{ backgroundColor: notification.featureButtonData.bg_color }}
 								className={"inline-flex items-center justify-center flex-shrink-0 w-8 h-8 rounded-lg"}>
 								{React.createElement(notification.featureButtonData.icon, { className: "w-5 h-5", color: notification.featureButtonData.icon_color })}
@@ -128,6 +136,21 @@ export const NotificationProvider: React.FC<Props_NotificationProvider> = ({ chi
 					</motion.div>
 				))}
 			</div>
+			{bannerNotification && (
+				<motion.div 
+					initial={{ opacity: 0, y: 50 }}
+					animate={{ opacity: 1, y: 0 }}
+					className="bg-jenkins-job-red absolute bottom-0 left-0 w-screen min-h-[50px] z-50 flex flex-row items-center justify-between p-4 select-none">
+					<p><b>{bannerNotification.title}</b> {bannerNotification.message}</p>
+					{bannerNotification.permanent ?? 
+					<span 
+						className="mx-8"
+						onClick={() => setBannerNotification(null)}>
+						<IcoCross className="hover:scale-[1.1] active:scale-[0.95] transition cursor-pointer" />
+					</span>
+					}
+				</motion.div>
+			)}
 			{children}
 		</NotificationContext.Provider>
 	);

@@ -19,7 +19,20 @@
     "strict": true,
     "noUnusedLocals": false,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+
+    "baseUrl": "./src",
+    "paths": {
+      "@/*": ["*"],
+      "@components/*": ["/components/*"],
+      "@screens/*": ["screens/*"],
+      "@helpers/*": ["helpers/*"],
+      "@interfaces/*": ["Interfaces/*"],
+      "@config/*": ["config/*"],
+      "@assets/*": ["assets/*"],
+      "@icons/*": ["/Icons/*"],
+    }
+    
   },
   "include": ["src", "tests/src/helpers/utils/utils.test.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]

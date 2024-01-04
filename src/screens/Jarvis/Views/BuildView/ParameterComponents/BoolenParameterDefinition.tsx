@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
-import { RxSwitch } from "react-icons/rx";
 
 import { IJenkinsProjectParameterDefinition } from "../../../../../Interfaces/IProjectInterface";
+import { IcoBool } from "@/Icons/pack_1";
 
 interface Props {
   parameters: IJenkinsProjectParameterDefinition;
@@ -25,7 +25,7 @@ const BooleanParameterDefinition: React.FC<Props> = ({ parameters, value, onChan
 	return (
 		<div className="grid items-center">
 			<div className="flex items-center mr-2">
-				<RxSwitch size={30} />
+				<IcoBool size={30} />
 				<div className="ml-5">
 					<h1 className="text-2xl font-bold text-text-color">{parameters.name}</h1>
 					<p className="text-md text-comment-color">{parameters.description}</p>

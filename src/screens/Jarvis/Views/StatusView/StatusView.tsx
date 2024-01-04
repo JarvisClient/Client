@@ -1,13 +1,10 @@
 import React from "react";
-
-import {
-	BiCube, BiCodeAlt, BiTimer, BiInfoCircle,
-} from "react-icons/bi";
 import { openLink } from "../../../../helpers/utils";
 
 import StorageManager from "../../../../helpers/StorageManager";
 import { IJenkinsBuild, JenkinsBuildAction, JenkinsBuildArtifact } from "../../../../Interfaces/IBuildInterface";
 import { motion } from "framer-motion";
+import { IcoCodeBracket, IcoCube, IcotInformation, IcoPerson } from "@/Icons/pack_1";
 
 interface Props {
 	buildData: IJenkinsBuild;
@@ -103,23 +100,16 @@ const StatusView: React.FC<Props> = ({ buildData }) => {
 				transition={{ duration: 0.5 }}
 				className="grid grid-cols-[100px,auto] mx-10 my-10">
 				<div className="w-16 h-16 flex justify-self-center items-center justify-center rounded-xl bg-background-sidebar p-2 shadow-md">
-					<BiInfoCircle size={42} />
+					<IcotInformation size={42} />
 				</div>
 
 				<div className="flex flex-col pt-2">
 					<h1 className="text-2xl font-bold mb-1 cursor-pointer" onClick={() => openBuildTimeTrend()}>Information</h1>
-					<p>
-						Build ID: #
-						{buildData?.id}
-					</p>
-					<p>
-						Started {startedAgo()} ago.
-					</p>
-					{buildData?.duration > 0 ? (
-						<p>
-							Duration: {formatMilliseconds(buildData?.duration)}
-						</p>
-					) : null}
+					<p>Build ID: #{buildData?.id}</p>
+					<p>Started {startedAgo()} ago.</p>
+					{buildData?.duration >= 0 && <p>Duration: {formatMilliseconds(buildData?.duration)}</p>}
+					{buildData?.estimatedDuration >= 0 && <p>Estimated Duration: {formatMilliseconds(buildData?.estimatedDuration)}</p>}
+					
 				</div>
 			</motion.div>
 
@@ -130,7 +120,7 @@ const StatusView: React.FC<Props> = ({ buildData }) => {
 				transition={{ duration: 0.5, delay: 0.1 }}
 				className="grid grid-cols-[100px,auto] mx-10 my-10">
 				<div className="w-16 h-16 flex justify-self-center items-center justify-center rounded-xl bg-background-sidebar p-2 shadow-md">
-					<BiCube size={42} />
+					<IcoCube size={42} />
 				</div>
 
 				<div className="flex flex-col pt-2">
@@ -156,7 +146,7 @@ const StatusView: React.FC<Props> = ({ buildData }) => {
 				transition={{ duration: 0.5, delay: 0.2 }}
 				className="grid grid-cols-[100px,auto] mx-10 my-10">
 				<div className="w-16 h-16 flex justify-self-center items-center justify-center rounded-xl bg-background-sidebar p-2 shadow-md">
-					<BiCodeAlt size={42} />
+					<IcoCodeBracket size={42} />
 				</div>
 
 				<div className="flex flex-col pt-2">
@@ -172,7 +162,7 @@ const StatusView: React.FC<Props> = ({ buildData }) => {
 				transition={{ duration: 0.5, delay: 0.3 }}
 				className="grid grid-cols-[100px,auto] mx-10 my-10">
 				<div className="w-16 h-16 flex justify-self-center items-center justify-center rounded-xl bg-background-sidebar p-2 shadow-md">
-					<BiTimer size={42} />
+					<IcoPerson size={42} />
 				</div>
 
 				<div className="flex flex-col pt-2">

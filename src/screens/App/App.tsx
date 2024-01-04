@@ -2,11 +2,11 @@ import React, { useEffect } from "react";
 import { appWindow, LogicalSize } from "@tauri-apps/api/window";
 
 import { useNavigate } from "react-router-dom";
-import loading_anim from "../../assets/icons/loading_anim.webm";
+import loading_anim from "../../assets/animations/loading_anim.webm";
 import Logger from "../../helpers/Logger";
 import StorageManager from "../../helpers/StorageManager";
 import { JARVIS_LOADING_MESSAGES } from "../../config/constants";
-import { checkLogFile, checkPermissions, initJenkinsConnectionCheck, initUpdateChecker } from "./AppUtils";
+import { checkLogFile, checkPermissions, createPathsIfNotExists, initJenkinsConnectionCheck, initUpdateChecker } from "./AppUtils";
 import { invoke } from "@tauri-apps/api";
 
 const App: React.FC = () => {
@@ -24,6 +24,10 @@ const App: React.FC = () => {
 			// Check for updates
 			setSpecificLoadingMessage("Checking for Updates...");
 			await initUpdateChecker();
+
+			// Check Paths
+			setSpecificLoadingMessage("Checking Paths...");
+			await createPathsIfNotExists();
 
 			// Check Logfile Size
 			setSpecificLoadingMessage("Checking Logfile Size...");

@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
-import { TbSelect } from "react-icons/tb";
 import { IJenkinsProjectParameterDefinition } from "../../../../../Interfaces/IProjectInterface";
+import { IcoCheckbox } from "@/Icons/pack_1";
 
 interface Props {
     parameters: IJenkinsProjectParameterDefinition;
@@ -18,7 +18,7 @@ const ChoiceParameterDefinition: React.FC<Props> = ({ parameters, value, onChang
 	return (
 		<div className="grid items-center">
 			<div className="flex items-center mr-2">
-				<TbSelect size={30} />
+				<IcoCheckbox size={30} />
 				<div className="ml-5">
 					<h1 className="text-2xl font-bold text-text-color">{parameters.name}</h1>
 					<p className="text-md text-comment-color">{parameters.description}</p>

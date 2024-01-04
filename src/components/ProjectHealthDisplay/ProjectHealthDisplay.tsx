@@ -18,7 +18,7 @@ const ProjectHealthDisplay: React.FC<Props> = ({ healthReport, _key }) => {
 				initial={{ opacity: 0, x: 50 }}
 				animate={{ opacity: 1, x: 0 }}
 				transition={{ duration: 0.5, delay: _key * 0.1}}
-				className='bg-background-sidebar h-24 min-w-96 rounded-lg flex flex-row items-center'>
+				className='bg-background-sidebar h-24 min-w-96 pr-4 rounded-lg flex flex-row items-center'>
 				{/* Graph */}
 				<Pie
 					className='h-full w-full p-4 ml-2 mb-2'

@@ -1,6 +1,6 @@
 import React from "react";
-import { AiOutlineQuestionCircle } from "react-icons/ai";
 import { JenkinsBuildParameter } from "../../../../../Interfaces/IBuildInterface";
+import { IcoQuestionmark } from "@/Icons/pack_1";
 
 interface Props {
     parameter: JenkinsBuildParameter;
@@ -9,7 +9,7 @@ interface Props {
 const OtherParameterValue: React.FC<Props> = ({ parameter }): React.JSX.Element => (
 	<div className="grid items-center">
 		<div className="flex items-center mr-2">
-			<AiOutlineQuestionCircle size={30} />
+			<IcoQuestionmark size={30} />
 			<div className="ml-5">
 				<h1 className="text-2xl font-bold text-text-color">{parameter.name}</h1>
 				<p className="text-md text-comment-color">{parameter.description}</p>

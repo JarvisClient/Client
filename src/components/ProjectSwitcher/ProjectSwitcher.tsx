@@ -6,12 +6,11 @@ import { IJenkinsProject } from "../../Interfaces/IProjectInterface";
 import { fetchUtils } from "../../screens/Jarvis/Utils/fetchUtils";
 import StorageManager from "../../helpers/StorageManager";
 import Logger from "../../helpers/Logger";
-import { MdFavorite, MdFavoriteBorder } from "react-icons/md";
-import { IoInformationCircleOutline } from "react-icons/io5";
 import Modal from "../../screens/Jarvis/Views/SwitchProjectView/Modal";
 
 import IcoSearch from "../../assets/icons/ico_search.svg";
 import { getAllProjects } from "./ProjectSwitchUtils";
+import { IcoFavorite, IcoFavoriteFilled, IcotInformation } from "@/Icons/pack_1";
 
 const ProjectSwitcher = (): React.ReactElement => {
 	// Define state variables
@@ -89,7 +88,7 @@ const ProjectSwitcher = (): React.ReactElement => {
 	const openModal = async (name: string): Promise<void> => {
 		try {
 			// get project data
-			const data = await fetchUtils.fetchProjectData(name);
+			const data = await fetchUtils.fetchProjectData(name.replace("/", "/job/"));
 
 			setModalData(data);
 			setIsModalOpen(true); // Open the modal
@@ -148,9 +147,9 @@ const ProjectSwitcher = (): React.ReactElement => {
 									onClick={() => addOrRemoveFromFavorite(job)}
 								>
 									{job.favorite ? (
-										<MdFavorite size={30} className="text-jenkins-job-red" />
+										<IcoFavoriteFilled size={30} className="text-jenkins-job-red" />
 									) : (
-										<MdFavoriteBorder size={30} />
+										<IcoFavorite size={30} />
 									)}
 								</div>
 
@@ -167,7 +166,7 @@ const ProjectSwitcher = (): React.ReactElement => {
 									className="cursor-pointer hover:text-jenkins-job-blue transition hover:bg-background-card-selected active:scale-[0.95] px-4 py-4 rounded-md h-full"
 									onClick={() => openModal(job.name)}
 								>
-									<IoInformationCircleOutline size={30}/>
+									<IcotInformation size={30}/>
 								</div>
 							</div>
 						))}

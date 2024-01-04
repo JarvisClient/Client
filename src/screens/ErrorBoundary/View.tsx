@@ -1,5 +1,5 @@
 import React, { ErrorInfo } from "react";
-import icon from "../../assets/icons/ico_bow.svg";
+import icon from "../../assets/brand/ico_bow.svg";
 import { relaunch } from "@tauri-apps/api/process";
 import "../Jarvis/App.css";
 

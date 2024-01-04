@@ -38,7 +38,7 @@ const FullConsoleLog: React.FC = () => {
 	return (
 		<>
 			<TitleBarComponentLight />
-			<div className="h-screen w-screen overflow-auto console-custom-scroll">
+			<div className="h-screen w-screen overflow-auto console-custom-scroll bg-background-sidebar">
 				<div className="m-12">
 					<h1 className="font-bold text-3xl mt-16 mb-8">Full Log for Build #{buildNumber} of {projectName}</h1>
 					{!isLoading ? (
@@ -51,7 +51,6 @@ const FullConsoleLog: React.FC = () => {
 					)}
 				</div>
 			</div>
-
 		</>
 	);
 

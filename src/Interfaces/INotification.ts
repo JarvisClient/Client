@@ -5,6 +5,13 @@ export interface Notification {
     title: string;
     message: string;
     featureButtonData: FeatureButtonProps;
-    variant: string; // Add the "variant" property
+    variant: string;
   }
   
+
+export interface BannerNotificcation {
+    id: number;
+    title: string;
+    message: string;
+    permanent: boolean;
+  }

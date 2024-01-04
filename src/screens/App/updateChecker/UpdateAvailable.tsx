@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { motion } from "framer-motion";
 import DOMPurify from "dompurify";
 import { getUpdateInfo } from "./updateChecker";
-import icon from "../../../assets/icons/ico_bow.svg";
+import icon from "../../../assets/brand/ico_bow.svg";
 import { ReleaseInfo } from "../../../Interfaces/IReleaseInfo";
 import { openLink } from "../../../helpers/utils";
 import TitleBarComponentLight from "../../../components/TitleBar/TitleBarComponentLight";

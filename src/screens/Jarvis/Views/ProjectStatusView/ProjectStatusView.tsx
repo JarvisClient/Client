@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import { BiCube } from "react-icons/bi";
 import { IJenkinsBuild, JenkinsBuildArtifact } from "../../../../Interfaces/IBuildInterface";
 import StorageManager from "../../../../helpers/StorageManager";
 import { openLink, renderHTML } from "../../../../helpers/utils";
@@ -7,6 +6,7 @@ import { IJenkinsProject } from "../../../../Interfaces/IProjectInterface";
 import { fetchUtils } from "../../Utils/fetchUtils";
 import ProjectHealthDisplay from "../../../../components/ProjectHealthDisplay/ProjectHealthDisplay";
 import { motion } from "framer-motion";
+import { IcoCube } from "@/Icons/pack_1";
 
 interface Props {
 	buildData: IJenkinsProject | null;
@@ -78,7 +78,7 @@ const ProjectStatusView: React.FC<Props> = ({ buildData }) => {
 							transition={{ duration: 0.5 }}
 							className="grid grid-cols-[100px,auto]">
 							<div className="w-16 h-16 flex justify-self-center items-center justify-center rounded-xl bg-background-sidebar p-2 shadow-md">
-								<BiCube size={42} />
+								<IcoCube size={42} />
 							</div>
 
 							<div className="flex flex-col pt-2">

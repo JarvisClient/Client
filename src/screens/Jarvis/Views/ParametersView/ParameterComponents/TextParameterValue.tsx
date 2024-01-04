@@ -1,6 +1,6 @@
 import React from "react";
-import { BiText } from "react-icons/bi";
 import { JenkinsBuildParameter } from "../../../../../Interfaces/IBuildInterface";
+import { IcoQuote } from "@/Icons/pack_1";
 
 interface Props {
     parameter: JenkinsBuildParameter;
@@ -9,7 +9,7 @@ interface Props {
 const TextParameterValue: React.FC<Props> = ({ parameter }): JSX.Element => (
 	<div className="grid items-center">
 		<div className="flex items-center mr-2">
-			<BiText size={30} />
+			<IcoQuote size={30} />
 			<div className="ml-5">
 				<h1 className="text-2xl font-bold text-text-color">{parameter.name}</h1>
 				<p className="text-md text-comment-color">{parameter.description}</p>

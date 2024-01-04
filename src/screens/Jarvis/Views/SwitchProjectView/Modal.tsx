@@ -1,9 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { IoClose } from "react-icons/io5";
-import { BiInfoCircle } from "react-icons/bi";
-import { IoMdHeartEmpty } from "react-icons/io";
 import { IJenkinsProject } from "../../../../Interfaces/IProjectInterface";
+import { IcoCross, IcoFavorite, IcotInformation } from "@/Icons/pack_1";
 
 interface Props {
     isOpen: boolean;
@@ -28,7 +26,7 @@ const Modal: React.FC<Props> = ({ isOpen, closeModal, modalData }) => (isOpen ? 
 				onClick={() => closeModal()}
 				className="absolute top-4 right-4 cursor-pointer"
 			>
-				<IoClose
+				<IcoCross
 					size={32}
 					className="transition hover:brightness-75 hover:scale-105 active:brightness-105 active:scale-95"
 				/>
@@ -53,7 +51,7 @@ const Modal: React.FC<Props> = ({ isOpen, closeModal, modalData }) => (isOpen ? 
 			{/* Information */}
 			<div className="grid grid-cols-[100px,auto] mt-8 ">
 				<div className="w-16 flex justify-self-center">
-					<BiInfoCircle size={50} />
+					<IcotInformation size={50} />
 				</div>
 
 				<div className="flex flex-col pt-2">
@@ -97,7 +95,7 @@ const Modal: React.FC<Props> = ({ isOpen, closeModal, modalData }) => (isOpen ? 
 			{modalData?.healthReport.length !== 0 ? (
 				<div className="grid grid-cols-[100px,auto] mt-8 ">
 					<div className="w-16 flex justify-self-center">
-						<IoMdHeartEmpty size={50} />
+						<IcoFavorite size={50} />
 					</div>
 
 					<div className="flex flex-col pt-2">

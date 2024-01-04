@@ -1,6 +1,6 @@
 // Refresh time in milliseconds
 export const CONSOLE_RELOAD_TIME = 2000; // 2 seconds
-export const JOBCARD_REFRESH_TIME = 5000; // 30 seconds
+export const JOBCARD_REFRESH_TIME = 10000; // 30 seconds
 
 // Close time in milliseconds
 export const BUILD_VIEW_BANNER_CLOSE_TIME = 5000;

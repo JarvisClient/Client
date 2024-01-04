@@ -6,14 +6,13 @@ import StorageManager from "../../../../helpers/StorageManager";
 import ConsoleViewLoading from "./ConsoleViewLoading";
 import { fetchUtils } from "../../Utils/fetchUtils";
 import { CONSOLE_RELOAD_TIME, DEFAULT_WINDOW_HEIGHT, DEFAULT_WINDOW_WIDTH } from "../../../../config/constants";
-import { BiArrowToBottom } from "react-icons/bi";
-import { HiMiniArrowSmallDown } from "react-icons/hi2";
+
 import { motion } from "framer-motion";
-import { IoDocumentTextOutline, IoRemoveOutline } from "react-icons/io5";
 import { WebviewWindow } from "@tauri-apps/api/window";
 import { formatConsoleData } from "./ConsoleViewUtils";
 import { generateRandomString } from "../../../../helpers/utils";
 import { clearIntervalId, setIntervalId } from "./IntervalManager";
+import { IcoArrowDown, IcoDownload, IcoFile, IcoLinear } from "@/Icons/pack_1";
 
 interface Props {
 	buildData: IJenkinsBuild;
@@ -24,7 +23,7 @@ const ConsoleView: React.FC<Props> = ({ buildData }) => {
 	const [consoleData, setConsoleData] = useState<string>("");
 	const [isLoading, setIsLoading] = useState<boolean>(true);
 	const [autoScroll, setAutoScroll] = useState<boolean>(false);
-	
+
 	const fetchAndSetConsoleData = async () => {
 		try {
 			const projectName = StorageManager.get("projectName");
@@ -33,7 +32,7 @@ const ConsoleView: React.FC<Props> = ({ buildData }) => {
 			const lines = await fetchUtils.consoleText(projectName, buildNumber);
 
 			const formattedData = await formatConsoleData(lines);
-			
+
 			setIsLoading(false);
 			setConsoleData(formattedData);
 			if (buildData.result !== null) return clearIntervalId();
@@ -48,7 +47,7 @@ const ConsoleView: React.FC<Props> = ({ buildData }) => {
 		const webview = new WebviewWindow(generateRandomString(10), {
 			url: "/fullLog?buildNumber=" + buildData.id + "&projectName=" + projectName + "&buildUrl=" + buildData.url,
 			title: "Read Full Console Log",
-			width: DEFAULT_WINDOW_HEIGHT ,
+			width: DEFAULT_WINDOW_HEIGHT,
 			height: DEFAULT_WINDOW_WIDTH - 500,
 			decorations: false,
 		});
@@ -79,7 +78,7 @@ const ConsoleView: React.FC<Props> = ({ buildData }) => {
 		if (autoScroll) {
 			scrollToBottom();
 		}
-		
+
 	}, [consoleData]);
 
 	// Start the interval to fetch console data
@@ -88,7 +87,7 @@ const ConsoleView: React.FC<Props> = ({ buildData }) => {
 		setIntervalId(setInterval(() => {
 			fetchAndSetConsoleData();
 		}, CONSOLE_RELOAD_TIME));
-		
+
 
 		// On unmount, clear the interval
 		return () => {
@@ -110,13 +109,15 @@ const ConsoleView: React.FC<Props> = ({ buildData }) => {
 									<div
 										onClick={() => scrollToBottom()}
 										className="w-8 h-8 flex justify-self-center items-center justify-center rounded-md bg-white/5 ring-1 ring-white/10 p-2 shadow-md transition hover:scale-[1.05] active:scale-[0.95]">
-										<p><BiArrowToBottom /></p>
+										<p><IcoDownload size={20} /></p>
 									</div>
-									<div
-										onClick={() => openFullConsole()}
-										className="w-8 h-8 flex justify-self-center items-center justify-center rounded-md bg-white/5 ring-1 ring-white/10 p-2 shadow-md transition hover:scale-[1.05] active:scale-[0.95]">
-										<p><IoDocumentTextOutline /></p>
-									</div>
+									{buildData.result !== null && (
+										<div
+											onClick={() => openFullConsole()}
+											className="w-8 h-8 flex justify-self-center items-center justify-center rounded-md bg-white/5 ring-1 ring-white/10 p-2 shadow-md transition hover:scale-[1.05] active:scale-[0.95]">
+											<p><IcoFile size={20} /></p>
+										</div>
+									)}
 								</div>
 								{/* <p className="font-medium text-sm cursor-pointer">Full Output</p> */}
 							</div>
@@ -140,7 +141,7 @@ const ConsoleView: React.FC<Props> = ({ buildData }) => {
 
 									}}
 								>
-									{autoScroll ? <HiMiniArrowSmallDown size={28} /> : <IoRemoveOutline size={28} />}
+									{autoScroll ? <IcoArrowDown size={28} /> : <IcoLinear size={28} />}
 								</motion.div>
 							</div>
 						)}

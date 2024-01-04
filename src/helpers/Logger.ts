@@ -21,9 +21,6 @@ export async function getLogfileSize(): Promise<number> {
 	// read file content
 	const file = await readTextFile(LOGS_FILE, { dir: BaseDirectory.AppData });
 
-	console.log(file);
-	
-
 	// get file size
 	return file.length;
 }

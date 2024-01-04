@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { IoIosNotifications } from "react-icons/io";
 import circleColor from "../../config/getCircleColor";
-import FeatureButtons from "../../config/FeatureButtons";
 import { JobCardProps } from "../../Interfaces/IJobCardProps";
+import { IcoBellFilled, IcoPinFilled } from "@/Icons/pack_1";
 
 const JobCardComponent: React.FC<JobCardProps> = ({
 	active = false, buildNumber, displayName, description, result, pinned, notification_set, onClick,
@@ -14,8 +13,6 @@ const JobCardComponent: React.FC<JobCardProps> = ({
 			onClick();
 		}
 	};
-
-	const { secondaryIcon: IconComponent } = FeatureButtons.pin;
 
 	useEffect(() => {
 		setBuildData({ displayName, description, result });
@@ -44,8 +41,8 @@ const JobCardComponent: React.FC<JobCardProps> = ({
 				{/* Two rows for Title and Comment */}
 				<div className="text-lg text-text-color font-bold overflow-hidden flex items-center">
 					{buildData.displayName}
-					{pinned && IconComponent ? <IconComponent className="inline-block ml-1" color="ffffff" size={20} /> : null}
-					{notification_set && <IoIosNotifications className="inline-block ml-1" color="ffffff" size={20} />}
+					{pinned && <IcoPinFilled className="inline-block ml-1" size={20} />}
+					{notification_set && <IcoBellFilled className="inline-block ml-1" size={20} />}
 				</div>
 				<div className="text-sm text-comment-color overflow-hidden line-clamp-2">
 					{buildData.description}

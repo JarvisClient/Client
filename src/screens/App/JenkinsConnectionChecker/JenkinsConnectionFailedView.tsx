@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import TitleBarComponentLight from "../../../components/TitleBar/TitleBarComponentLight";
 import { motion } from "framer-motion";
 
-import icon from "../../../assets/icons/ico_bow.svg";
+import icon from "../../../assets/brand/ico_bow.svg";
 import { useNavigate } from "react-router-dom";
 
 const JenkinsConnectionFailedView: React.FC = () => {
