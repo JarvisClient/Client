@@ -13,24 +13,25 @@ export const IcoSearch = ({ size = 24, color = "currentColor", className }: Icon
 	</svg>
 );
 
-// Icon Pack: Phosphor Icons
-// License: MIT - Copyright (c) 2023 Phosphor Icons
+// Icon Pack: Ionicons
+// License: MIT - Copyright (c) 2024 Ionic Icons
 // Used in: Feature Buttons
 export const IcoBook = ({ size = 24, color = "currentColor", className }: IconProps) => (
-	<svg className={className} width={size} height={size} viewBox="0 0 256 256" fill="none">
-		<rect width="256" height="256" fill="none" />
-		<path d="M48,208a24,24,0,0,1,24-24H208V32H72A24,24,0,0,0,48,56Z" fill="none" stroke={color} stroke-linecap="round" stroke-linejoin="round" stroke-width={size} />
-		<polyline points="48 208 48 224 192 224" fill="none" stroke={color} stroke-linecap="round" stroke-linejoin="round" stroke-width={size} />	</svg>
+	<svg className={className} width={size} height={size} viewBox="0 0 24 24" fill={color}>
+		<path fill-rule="evenodd" clip-rule="evenodd" d="M20.25 18V3C20.25 2.80109 20.171 2.61032 20.0303 2.46967C19.8897 2.32902 19.6989 2.25 19.5 2.25H6.75C5.95435 2.25 5.19129 2.56607 4.62868 3.12868C4.06607 3.69129 3.75 4.45435 3.75 5.25V21C3.75 21.1989 3.82902 21.3897 3.96967 21.5303C4.11032 21.671 4.30109 21.75 4.5 21.75H18C18.1989 21.75 18.3897 21.671 18.5303 21.5303C18.671 21.3897 18.75 21.1989 18.75 21C18.75 20.8011 18.671 20.6103 18.5303 20.4697C18.3897 20.329 18.1989 20.25 18 20.25H5.25C5.25 19.8522 5.40804 19.4706 5.68934 19.1893C5.97064 18.908 6.35218 18.75 6.75 18.75H19.5C19.6989 18.75 19.8897 18.671 20.0303 18.5303C20.171 18.3897 20.25 18.1989 20.25 18ZM8 6C7.44772 6 7 6.44772 7 7C7 7.55228 7.44772 8 8 8H17C17.5523 8 18 7.55228 18 7C18 6.44772 17.5523 6 17 6H8Z" fill="white" />
+	</svg>
+
+
 );
 
 // Icon Pack: Phosphor Icons
 // License: MIT - Copyright (c) 2023 Phosphor Icons
 // Used in: Feature Buttons
 export const IcoConsole = ({ size = 24, color = "currentColor", className }: IconProps) => (
-	<svg className={className} width={size} height={size} viewBox="0 0 256 256" fill="none">
-		<rect width="256" height="256" fill="none" /><polyline points="80 96 120 128 80 160" fill="none" stroke={color} stroke-linecap="round" stroke-linejoin="round" stroke-width={size} />
-		<line x1="144" y1="160" x2="176" y2="160" fill="none" stroke={color} stroke-linecap="round" stroke-linejoin="round" stroke-width={size} />
-		<rect x="32" y="48" width="192" height="160" rx="8" fill="none" stroke={color} stroke-linecap="round" stroke-linejoin="round" stroke-width={size} />	</svg>
+	<svg className={className} width={size} height={size} viewBox="0 0 256 256" fill={color}>
+		<path d="M120,137,48,201A12,12,0,1,1,32,183l61.91-55L32,73A12,12,0,1,1,48,55l72,64A12,12,0,0,1,120,137Zm96,43H120a12,12,0,0,0,0,24h96a12,12,0,0,0,0-24Z">
+		</path>
+	</svg>
 );
 
 // Icon Pack: Phosphor Icons
@@ -44,30 +45,20 @@ export const IcoGlobe = ({ size = 24, color = "currentColor", className }: IconP
 // License: MIT - Copyright (c) 2023 Phosphor Icons
 // Used in: Feature Buttons
 export const IcoPinFilled = ({ size = 24, color = "currentColor", className }: IconProps) => (
-	<svg className={className} width={size} height={size} viewBox="0 0 256 256" fill={color}>
-		<path d="M235.33,104l-53.47,53.65c4.56,12.67,6.45,33.89-13.19,60A15.93,15.93,0,0,1,157,224c-.38,0-.75,0-1.13,0a16,16,0,0,1-11.32-4.69L96.29,171,53.66,213.66a8,8,0,0,1-11.32-11.32L85,159.71l-48.3-48.3A16,16,0,0,1,38,87.63c25.42-20.51,49.75-16.48,60.4-13.14L152,20.7a16,16,0,0,1,22.63,0l60.69,60.68A16,16,0,0,1,235.33,104Z">
-		</path>
-	</svg>
+	<svg className={className} width={size} height={size} viewBox="0 0 24 24" fill={color}>
+<path d="M22.0622 9.75L17.4965 14.3311C17.2235 14.605 17.142 15.0101 17.2235 15.3881C17.4833 16.5948 17.3688 18.3361 15.8128 20.4047C15.684 20.5768 15.5196 20.7191 15.3308 20.8218C15.142 20.9246 14.9332 20.9854 14.7188 21C14.6831 21 14.6484 21 14.6128 21C14.4157 21 14.2205 20.9612 14.0384 20.8858C13.8563 20.8103 13.6909 20.6997 13.5516 20.5603L9.73455 16.7393C9.34399 16.3484 8.71035 16.3483 8.31972 16.7392L5.03063 20.0306C4.8899 20.1714 4.69903 20.2504 4.50001 20.2504C4.30098 20.2504 4.11011 20.1714 3.96938 20.0306C3.82865 19.8899 3.74959 19.699 3.74959 19.5C3.74959 19.301 3.82865 19.1101 3.96938 18.9694L7.26115 15.6799C7.65191 15.2894 7.65202 14.6561 7.2614 14.2655L3.44063 10.4447C3.29179 10.2957 3.17601 10.117 3.10081 9.92022C3.02561 9.72348 2.99269 9.51311 3.00419 9.30281C3.01569 9.0925 3.07134 8.88697 3.16754 8.6996C3.26373 8.51223 3.39831 8.34722 3.56251 8.21531C5.55584 6.607 7.47769 6.60826 8.63732 6.83495C9.00338 6.9065 9.39017 6.81768 9.65344 6.55348L14.25 1.94062C14.3893 1.8013 14.5547 1.69078 14.7367 1.61537C14.9187 1.53997 15.1138 1.50116 15.3108 1.50116C15.5078 1.50116 15.7029 1.53997 15.8849 1.61537C16.0669 1.69078 16.2323 1.8013 16.3716 1.94062L22.0613 7.62937C22.3425 7.91052 22.5005 8.29183 22.5007 8.68949C22.5009 9.08714 22.3432 9.4686 22.0622 9.75Z" fill={color}/>
+</svg>
+
 );
 
 // Icon Pack: Phosphor Icons
 // License: MIT - Copyright (c) 2023 Phosphor Icons
 // Used in: Feature Buttons
 export const IcoPin = ({ size = 24, color = "currentColor", className }: IconProps) => (
-	<svg className={className} width={size} height={size} viewBox="0 0 256 256" fill={color}>
-		<path d="M238.15,78.54,177.46,17.86a20,20,0,0,0-28.3,0L97.2,70c-12.43-3.33-36.68-5.72-61.74,14.5a20,20,0,0,0-1.6,29.73l45.46,45.47-39.8,39.8a12,12,0,0,0,17,17l39.8-39.81,45.47,45.46A20,20,0,0,0,155.91,228c.46,0,.93,0,1.4-.05A20,20,0,0,0,171.87,220c4.69-6.23,11-16.13,14.44-28s3.45-22.88.16-33.4l51.7-51.87A20,20,0,0,0,238.15,78.54Zm-74.26,68.79a12,12,0,0,0-2.23,13.84c3.43,6.86,6.9,21-6.28,40.65L54.08,100.53c21.09-14.59,39.53-6.64,41-6a11.67,11.67,0,0,0,13.81-2.29l54.43-54.61,55,55Z">
-		</path>
-	</svg>
-);
+	<svg className={className} width={size} height={size} viewBox="0 0 24 24" fill={color}>
+<path d="M22.3266 7.36311L16.6369 1.67436C16.4627 1.50003 16.256 1.36173 16.0283 1.26738C15.8007 1.17302 15.5567 1.12445 15.3103 1.12445C15.0639 1.12445 14.8199 1.17302 14.5923 1.26738C14.3647 1.36173 14.1579 1.50003 13.9838 1.67436L9.52084 6.15274C9.26823 6.40623 8.90093 6.49928 8.54802 6.43997C7.29584 6.22955 5.338 6.29714 3.32438 7.92186C3.11922 8.08693 2.95112 8.29335 2.83104 8.52769C2.71096 8.76204 2.64159 9.01905 2.62743 9.28199C2.61328 9.54492 2.65467 9.80789 2.74891 10.0538C2.84315 10.2997 2.98812 10.5229 3.17438 10.7091L6.7293 14.2648C7.11975 14.6553 7.11972 15.2884 6.72922 15.6789L3.705 18.7031C3.49366 18.9145 3.37493 19.2011 3.37493 19.5C3.37493 19.7989 3.49366 20.0855 3.705 20.2969C3.91635 20.5082 4.20299 20.6269 4.50188 20.6269C4.80076 20.6269 5.08741 20.5082 5.29875 20.2969L8.32297 17.2719C8.71345 16.8813 9.34663 16.8812 9.7372 17.2717L13.2928 20.8266C13.6441 21.1774 14.1201 21.3746 14.6166 21.375C14.6597 21.375 14.7038 21.375 14.7478 21.3703C15.0154 21.351 15.2758 21.2744 15.5112 21.1458C15.7467 21.0173 15.9519 20.8396 16.1128 20.625C16.5525 20.0409 17.1441 19.1128 17.4666 18C17.7258 17.1054 17.7773 16.263 17.6273 15.4546C17.5595 15.0894 17.6458 14.704 17.908 14.4409L22.3284 10.0059C22.6771 9.65441 22.8726 9.17925 22.8723 8.68413C22.8719 8.18901 22.6757 7.71413 22.3266 7.36311ZM15.3647 13.8122C15.1982 13.9792 15.0885 14.1944 15.051 14.4272C15.0135 14.6601 15.0501 14.8988 15.1556 15.1097C15.4111 15.6206 15.669 16.5624 15.1445 17.8518C14.9071 18.4353 14.1522 18.506 13.7068 18.0606L5.91765 10.2722C5.47635 9.83098 5.54303 9.08447 6.1279 8.8668C7.62955 8.30796 8.8013 8.81322 8.91375 8.86218C9.12375 8.97121 9.36344 9.00922 9.59686 8.97051C9.83029 8.9318 10.0449 8.81846 10.2084 8.64749L14.6041 4.23724C14.9945 3.84562 15.6285 3.8451 16.0195 4.23608L19.7621 7.97869C20.152 8.36853 20.1528 9.00035 19.7639 9.39115L15.3647 13.8122Z" fill={color}/>
+</svg>
 
-// Icon Pack: Phosphor Icons
-// License: MIT - Copyright (c) 2023 Phosphor Icons
-// Used in: Feature Buttons
-export const IcoUnpin = ({ size = 24, color = "currentColor", className }: IconProps) => (
-	<svg className={className} width={size} height={size} viewBox="0 0 256 256" fill={color}>
-		<path d="M56.88,31.93A12,12,0,1,0,39.12,48.07L60,71A76,76,0,0,0,35.46,84.51a20,20,0,0,0-1.6,29.73l45.46,45.47-39.8,39.8a12,12,0,0,0,17,17l39.8-39.81,45.47,45.46A20,20,0,0,0,155.9,228c.47,0,.94,0,1.41-.05A20,20,0,0,0,171.87,220a97.47,97.47,0,0,0,9.54-15.46l17.72,19.49a12,12,0,1,0,17.76-16.14Zm98.49,169.88L54.08,100.52C62,95,70.31,92.12,78.91,91.83l84.51,93A62,62,0,0,1,155.37,201.81Zm82.78-95-39,39.11a12,12,0,1,1-17-16.95l36.19-36.3-55-55L130.59,70.5a12,12,0,0,1-17-16.94l35.57-35.69a20,20,0,0,1,28.3,0l60.69,60.68A20,20,0,0,1,238.15,106.83Z">
-		</path>
-	</svg>
 );
 
 // Icon Pack: Phosphor Icons
@@ -77,18 +68,34 @@ export const IcoWindow = ({ size = 24, color = "currentColor", className }: Icon
 	<svg className={className} width={size} height={size} fill={color} viewBox="0 0 256 256"><path d="M220,32H76A20,20,0,0,0,56,52V72H36A20,20,0,0,0,16,92V204a20,20,0,0,0,20,20H180a20,20,0,0,0,20-20V184h20a20,20,0,0,0,20-20V52A20,20,0,0,0,220,32ZM176,96v16H40V96Zm0,104H40V136H176Zm40-40H200V92a20,20,0,0,0-20-20H80V56H216Z"></path></svg>
 );
 
-// Icon Pack: Phosphor Icons
-// License: MIT - Copyright (c) 2023 Phosphor Icons
+// Icon Pack: Jarvis
+// License: MIT - Copyright (c) 2024 JNSAPH
 // Used in: Feature Buttons
 export const IcoArrowTriangleRight = ({ size = 24, color = "currentColor", className }: IconProps) => (
-	<svg className={className} width={size} height={size} fill={color} viewBox="0 0 256 256"><path d="M240,128a15.74,15.74,0,0,1-7.6,13.51L88.32,229.65a16,16,0,0,1-16.2.3A15.86,15.86,0,0,1,64,216.13V39.87a15.86,15.86,0,0,1,8.12-13.82,16,16,0,0,1,16.2.3L232.4,114.49A15.74,15.74,0,0,1,240,128Z"></path></svg>
+	<svg className={className} width={size} height={size} fill={color} viewBox="0 0 24 24">
+		<g clip-path="url(#clip0_655_73)">
+			<path d="M19.6039 8.81427C21.8216 9.91805 21.8216 13.082 19.6039 14.1857L7.58673 20.1669C5.59236 21.1595 3.25 19.7089 3.25 17.4811L3.25 5.51887C3.25 3.29112 5.59235 1.84051 7.58673 2.83314L19.6039 8.81427Z" fill={color} />
+		</g>
+		<defs>
+			<clipPath id="clip0_655_73">
+				<rect width="24" height="24" fill={color} />
+			</clipPath>
+		</defs>
+	</svg>
 );
 
-// Icon Pack: Phosphor Icons
-// License: MIT - Copyright (c) 2023 Phosphor Icons
+// Icon Pack: Jarvis
+// License: MIT - Copyright (c) 2024 JNSAPH
 // Used in: Feature Buttons
 export const IcoTestTube = ({ size = 24, color = "currentColor", className }: IconProps) => (
-	<svg className={className} width={size} height={size} fill={color} viewBox="0 0 256 256"><path d="M237.66,86.34l-60-60a8,8,0,0,0-11.32,0L37.11,155.57a44.77,44.77,0,0,0,63.32,63.32L212.32,107l22.21-7.4a8,8,0,0,0,3.13-13.25Zm-32.19,6.07a8,8,0,0,0-3.13,1.93l-39.57,39.57c-8.47,2.9-21.75,4-39.07-5-10.6-5.54-20.18-8-28.56-8.73L172,43.31,217.19,88.5Z"></path></svg>
+	<svg className={className} width={size} height={size} fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+		<circle cx="20.9139" cy="6.63626" r="0.927271" fill={color} />
+		<circle cx="19.523" cy="3.39091" r="1.39091" fill={color} />
+		<path d="M14.8533 5.74206L19.3095 10.2595L9.12904 20.3018C7.88158 21.5323 5.87277 21.5186 4.64224 20.2711C3.41172 19.0237 3.42544 17.0149 4.6729 15.7843L14.8533 5.74206Z" stroke={color} stroke-width="2" />
+		<path d="M13.5518 4.31873L20.7146 11.5805" stroke={color} stroke-width="2" stroke-linecap="round" />
+		<path fill-rule="evenodd" clip-rule="evenodd" d="M17.473 12.8704L9.30645 20.9505C8.02915 22.2143 5.97278 22.1998 4.71341 20.9181C3.45405 19.6365 3.46858 17.5731 4.74588 16.3093L6.89845 14.1795L17.473 12.8704Z" fill={color} />
+	</svg>
+
 );
 
 // Icon Pack: Phosphor Icons
@@ -105,11 +112,16 @@ export const IcoBellFilled = ({ size = 24, color = "currentColor", className }: 
 	<svg className={className} width={size} height={size} fill={color} viewBox="0 0 256 256"><path d="M221.8,175.94C216.25,166.38,208,139.33,208,104a80,80,0,1,0-160,0c0,35.34-8.26,62.38-13.81,71.94A16,16,0,0,0,48,200H88.81a40,40,0,0,0,78.38,0H208a16,16,0,0,0,13.8-24.06ZM128,216a24,24,0,0,1-22.62-16h45.24A24,24,0,0,1,128,216Z"></path></svg>
 );
 
-// Icon Pack: Phosphor Icons
-// License: MIT - Copyright (c) 2023 Phosphor Icons
+// Icon Pack: Jarvis
+// License: MIT - Copyright (c) 2024 JNSAPH
 // Used in: Feature Buttons
 export const IcoCover = ({ size = 24, color = "currentColor", className }: IconProps) => (
-	<svg className={className} width={size} height={size} fill={color} viewBox="0 0 256 256"><path d="M224,152v40a16,16,0,0,1-16,16H48a16,16,0,0,1-16-16V152a16,16,0,0,1,16-16H208A16,16,0,0,1,224,152ZM208,48H48A16,16,0,0,0,32,64v40a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V64A16,16,0,0,0,208,48Z"></path></svg>
+	<svg className={className} width={size} height={size} fill="none" viewBox="0 0 24 24">
+		<path d="M11.9412 18.5803V5.41976C11.9412 4.18388 13.0509 3.24379 14.27 3.44697L20.3288 4.45677C21.2932 4.6175 22 5.45188 22 6.42956V17.5705C22 18.5481 21.2932 19.3825 20.3288 19.5433L14.27 20.5531C13.0509 20.7562 11.9412 19.8161 11.9412 18.5803Z" stroke={color} stroke-width="2" />
+		<path d="M7.47058 4.17651L7.47058 19.8236" stroke={color} stroke-width="2" stroke-linecap="round" />
+		<path d="M3 5.29413L3 18.7059" stroke={color} stroke-width="2" stroke-linecap="round" />
+	</svg>
+
 );
 
 // Icon Pack: Phosphor Icons
