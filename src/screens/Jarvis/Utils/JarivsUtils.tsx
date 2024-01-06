@@ -462,7 +462,7 @@ export class JarvisUtils {
 			});
 
 			if (error.message.includes("name not found in Storage Manager")) {
-				this.notification.showBannerNotification("Storage Manager possibly corrupted.", "There was an error while trying to fetch the project data. You can try deleting the Local Storage file in the settings and restarting Jarvis.")
+				this.notification.showBannerNotification("Storage Manager possibly corrupted.", "There was an error while trying to fetch the project data. You can try deleting the Local Storage file in the settings and restarting Jarvis.", false)
 			}
 
 
@@ -615,7 +615,7 @@ export class JarvisUtils {
 
 
 			if (error.message.includes("name not found in Storage Manager")) {
-				this.notification.showBannerNotification("Storage Manager possibly corrupted.", "There was an error while trying to fetch the project data. You can try deleting the Local Storage file in the settings and restarting Jarvis.")
+				this.notification.showBannerNotification("Storage Manager possibly corrupted.", "There was an error while trying to fetch the project data. You can try deleting the Local Storage file in the settings and restarting Jarvis.", false)
 			}
 
 			Logger.error("Error fetching project data:", error);

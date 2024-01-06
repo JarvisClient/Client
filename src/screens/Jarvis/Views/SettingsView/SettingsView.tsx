@@ -242,7 +242,7 @@ const SettingsView: React.FC = () => {
 										<div className="h-full">
 											<button
 												onClick={() => {
-													notification.showBannerNotification("Lorem ipsum dolor sit amet", "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Porttitor massa id neque aliquam vestibulum morbi blandit cursus. Turpis egestas maecenas pharetra convallis posuere morbi. ");
+													notification.showBannerNotification("Lorem ipsum dolor sit amet", "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Porttitor massa id neque aliquam vestibulum morbi blandit cursus. Turpis egestas maecenas pharetra convallis posuere morbi. ", false);
 												}}
 												className="button_danger_zone">
 												Show Banner

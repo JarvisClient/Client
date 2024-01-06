@@ -88,12 +88,12 @@ export const NotificationProvider: React.FC<Props_NotificationProvider> = ({ chi
 		alert(`${title}\n\n${message}`);
 	};
 
-	const showBannerNotification = (title: string, message: string, permanent?: boolean) => {
+	const showBannerNotification = (title: string, message: string, permanent: boolean = false) => {
 		const newNotification: BannerNotificcation = {
 			id: notificationIdCounter++,
 			title,
 			message,
-			permanent: permanent || false,
+			permanent: permanent,
 		};
 
 		setBannerNotification(newNotification);
@@ -141,14 +141,14 @@ export const NotificationProvider: React.FC<Props_NotificationProvider> = ({ chi
 					initial={{ opacity: 0, y: 50 }}
 					animate={{ opacity: 1, y: 0 }}
 					className="bg-jenkins-job-red absolute bottom-0 left-0 w-screen min-h-[50px] z-50 flex flex-row items-center justify-between p-4 select-none">
-					<p><b>{bannerNotification.title}</b> {bannerNotification.message}</p>
-					{bannerNotification.permanent ?? 
-					<span 
+					<p><b>{bannerNotification.title}</b> {String(bannerNotification.message)}</p>
+					{!bannerNotification.permanent && (
+						<span 
 						className="mx-8"
 						onClick={() => setBannerNotification(null)}>
 						<IcoCross className="hover:scale-[1.1] active:scale-[0.95] transition cursor-pointer" />
 					</span>
-					}
+					)}
 				</motion.div>
 			)}
 			{children}

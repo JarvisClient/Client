@@ -1,6 +1,7 @@
 import { open } from "@tauri-apps/api/shell";
 import DOMPurify from "dompurify";
 import StorageManager from "./StorageManager";
+import showdown from "showdown";
 
 export const formatBuildDate = (timestamp: number) => {
 	const date = new Date(timestamp);
@@ -80,3 +81,10 @@ export const generateRandomString = (length: number) => {
 	}
 	return result;
 };
+
+export const MarkdownRenderer: React.FC<{ markdownText: string }> = ({ markdownText }) => {
+	const converter = new showdown.Converter();
+
+	return converter.makeHtml(markdownText)
+};
+  

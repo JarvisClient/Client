@@ -18,8 +18,8 @@ export const checkForUpdates = async () => {
 		throw new Error(data.error);
 	}
 
-	Logger.log(`Current version: ${currentVersion}`);
-	Logger.log(`Latest version: ${data.version}`);
+	Logger.info(`Current version: ${currentVersion}`);
+	Logger.info(`Latest version: ${data.version}`);
 
 	const latestVersion = data.version;
 	return currentVersion !== latestVersion;

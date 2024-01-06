@@ -5,7 +5,6 @@ import { ErrorInfo } from "react";
 import { LOGS_FILE } from "../config/constants";
 
 const Logger = {
-	log: <T extends unknown[]>(...messages: T) => logMessage("LOG", "color: #;", ...messages),
 	info: <T extends unknown[]>(...messages: T) => logMessage("INFO", "color: #3b82f6;", ...messages),
 	debug: <T extends unknown[]>(...messages: T) => logMessage("DEBUG", "color: #7c3aed;", ...messages),
 	warning: <T extends unknown[]>(...messages: T) => logMessage("WARNING", "color: #d97706;", ...messages),
