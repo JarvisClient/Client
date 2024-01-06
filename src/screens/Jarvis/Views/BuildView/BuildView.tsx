@@ -116,7 +116,6 @@ const BuildView: React.FC<Props> = ({ parameterDefinition, buildData }) => {
 			return (
 				<ChoiceParameterDefinition
 					parameters={parameter}
-					value={parameterValues[parameter.name] || ""}
 					onChange={(value) => setParameterValues((prev) => ({ ...prev, [parameter.name]: value }))}
 				/>
 			);

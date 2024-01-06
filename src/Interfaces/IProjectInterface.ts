@@ -51,7 +51,7 @@ export interface IJenkinsProjectParameterDefinition {
 export interface IJenkinsProjectParameterValue {
     _class: string;
     name?: string;
-    value: unknown;
+    value: string;
 }
 
 export interface IJenkinsProjectBuild {
