@@ -56,7 +56,7 @@ export const clearAllData = async (notification: Props_NotificationContext) => {
 	try {
 		StorageManager.clearAll();
 		clearIntervalId();
-		notification.showBannerNotification("Successfully cleared all data!", "The Interval Manager has been stopped. Please restart Jarvis to continue.", true)
+		notification.showBannerNotification("Successfully cleared all data!", "The Interval Manager has been stopped. Please restart Jarvis to continue.", true);
 	} catch (error) {
 		notification.showNotification("Error clearing data!", "error", "error", {
 			soundOn: true,

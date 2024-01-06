@@ -96,16 +96,16 @@ export const checkLogFile = async (): Promise<boolean> => {
 };
 
 export const createPathsIfNotExists = async () => {
-	await createDir('', {
+	await createDir("", {
 		dir: BaseDirectory.AppData,
 		recursive: true,
 	});
 
 	// if jarvis_logs file does not exist, create it
-	let logsFileExists = await exists(LOGS_FILE, { dir: BaseDirectory.AppData });
+	const logsFileExists = await exists(LOGS_FILE, { dir: BaseDirectory.AppData });
 
 	if (!logsFileExists) {
 		Logger.info("Logs file does not exist. Creating it.");
 		await writeTextFile(LOGS_FILE, "", { dir: BaseDirectory.AppData });
 	}
-}
+};

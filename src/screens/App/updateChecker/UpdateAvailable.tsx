@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import { motion } from "framer-motion";
 import { getUpdateInfo } from "./updateChecker";
 import icon from "../../../assets/brand/ico_bow.svg";
 import { ReleaseInfo } from "../../../Interfaces/IReleaseInfo";
@@ -7,7 +6,7 @@ import { openLink } from "../../../helpers/utils";
 import TitleBarComponentLight from "../../../components/TitleBar/TitleBarComponentLight";
 import showdown from "showdown";
 
-import "./UpdateAvailable.css"
+import "./UpdateAvailable.css";
 
 const UpdateAvailable: React.FC = () => {
 	const [updateInfo, setUpdateInfo] = React.useState<ReleaseInfo>();
@@ -52,16 +51,16 @@ const UpdateAvailable: React.FC = () => {
 		<>
 			{updateInfo?.error ? (
 				<div className="bg-background-sidebar h-screen error-custom-scroll overflow-y-scroll">
-				<TitleBarComponentLight />
+					<TitleBarComponentLight />
 
-				<div className="flex flex-col items-center justify-center select-none mt-24">
-					<div className="flex flex-col items-center">
-						<img src={icon} alt="Welcome icon" className="w-16 h-16 mb-4" />
-						<p className="text-2xl font-medium">Error!</p>
-						<p>{updateInfo.error}</p>
+					<div className="flex flex-col items-center justify-center select-none mt-24">
+						<div className="flex flex-col items-center">
+							<img src={icon} alt="Welcome icon" className="w-16 h-16 mb-4" />
+							<p className="text-2xl font-medium">Error!</p>
+							<p>{updateInfo.error}</p>
+						</div>
 					</div>
 				</div>
-			</div>
 			) : (
 				<div className="bg-background-sidebar h-screen error-custom-scroll overflow-y-scroll">
 					<TitleBarComponentLight />

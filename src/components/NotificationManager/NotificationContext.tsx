@@ -144,10 +144,10 @@ export const NotificationProvider: React.FC<Props_NotificationProvider> = ({ chi
 					<p><b>{bannerNotification.title}</b> {String(bannerNotification.message)}</p>
 					{!bannerNotification.permanent && (
 						<span 
-						className="mx-8"
-						onClick={() => setBannerNotification(null)}>
-						<IcoCross className="hover:scale-[1.1] active:scale-[0.95] transition cursor-pointer" />
-					</span>
+							className="mx-8"
+							onClick={() => setBannerNotification(null)}>
+							<IcoCross className="hover:scale-[1.1] active:scale-[0.95] transition cursor-pointer" />
+						</span>
 					)}
 				</motion.div>
 			)}

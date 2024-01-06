@@ -85,6 +85,6 @@ export const generateRandomString = (length: number) => {
 export const MarkdownRenderer: React.FC<{ markdownText: string }> = ({ markdownText }) => {
 	const converter = new showdown.Converter();
 
-	return converter.makeHtml(markdownText)
+	return converter.makeHtml(markdownText);
 };
   
