@@ -24,7 +24,7 @@ const ChoiceParameterDefinition: React.FC<Props> = ({ parameters, onChange }): R
 
 		const filteredChoices = parameters.choices?.filter((choice) => choice.includes(value));
 		setChoices(filteredChoices || []);
-	}
+	};
 
 	return (
 		<div className="grid items-center">
@@ -37,12 +37,12 @@ const ChoiceParameterDefinition: React.FC<Props> = ({ parameters, onChange }): R
 			</div>
 			<div className="ml-[50px] mt-2">
 				{/* Search bar */}
-					<span className="relative w-full">
+				<span className="relative w-full">
 					<input
-					onChange={(e) => onSearchChange(e.target.value)}
-					type="text"
-					placeholder="Search..."
-					className="w-[310px] h-[40px] text-[15px] w-full bg-transparent font-medium border-2 border-border rounded-md placeholder-comment-color text-comment-color pr-10 pl-9"
+						onChange={(e) => onSearchChange(e.target.value)}
+						type="text"
+						placeholder="Search..."
+						className="w-[310px] h-[40px] text-[15px] w-full bg-transparent font-medium border-2 border-border rounded-md placeholder-comment-color text-comment-color pr-10 pl-9"
 					/>
 					<span className="absolute top-[11px] left-[10px] -mt-2.5">
 						<IcoSearch size={22} />

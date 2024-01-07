@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { arch } from '@tauri-apps/api/os';
+import { arch } from "@tauri-apps/api/os";
 import { type } from "@tauri-apps/api/os";
 import { getUpdateInfo } from "./updateChecker";
 import icon from "../../../assets/brand/ico_bow.svg";
@@ -25,22 +25,22 @@ const UpdateAvailable: React.FC = () => {
 			}
 
 			switch (await type()) {
-				case "Windows_NT":
-					setDownloadLink(updateState.platforms["windows-x86_64"].url)
-					break;
-				case "Linux":
-					setDownloadLink(updateState.platforms["linux-x86_64"].url)
-					break;
-				case "Darwin":
-					if (await arch() === "x86_64") {
-						setDownloadLink(updateState.platforms["darwin-x86_64"].url)
-					} else {
-						setDownloadLink(updateState.platforms["darwin-aarch64"].url)
-					}
-					break;
-				default:
-					setDownloadLink(updateState.platforms["windows-x86_64"].url)
-					break;
+			case "Windows_NT":
+				setDownloadLink(updateState.platforms["windows-x86_64"].url);
+				break;
+			case "Linux":
+				setDownloadLink(updateState.platforms["linux-x86_64"].url);
+				break;
+			case "Darwin":
+				if (await arch() === "x86_64") {
+					setDownloadLink(updateState.platforms["darwin-x86_64"].url);
+				} else {
+					setDownloadLink(updateState.platforms["darwin-aarch64"].url);
+				}
+				break;
+			default:
+				setDownloadLink(updateState.platforms["windows-x86_64"].url);
+				break;
 			}
 
 			setNotes(updateState.notes);
@@ -48,14 +48,6 @@ const UpdateAvailable: React.FC = () => {
 
 		initUpdateInfoGetter();
 	}, []);
-
-	const openDownloadLink = (version?: string) => {
-		if (version) {
-			openLink(version);
-		}
-	};
-
-	const removeFirstAndLastChar = (str: string) => str.slice(1, -1);
 
 	const renderChangelogs = (str: string): { __html: string } => {
 		const converter = new showdown.Converter();
