@@ -9,6 +9,7 @@ import { BaseDirectory, createDir, exists, writeTextFile } from "@tauri-apps/api
 
 export const initUpdateChecker = async () => {
 	const updateState = await checkForUpdates();
+
 	if (updateState) {
 		Logger.info("Update available, opening update window");
 		const webview = new WebviewWindow("checkUpdate", {

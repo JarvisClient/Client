@@ -21,29 +21,48 @@ const App: React.FC = () => {
 			appWindow.setSize(new LogicalSize(270, 350));
 			appWindow.center();
 
-			// Check for updates
-			setSpecificLoadingMessage("Checking for Updates...");
-			await initUpdateChecker();
-
-			// Check Paths
-			setSpecificLoadingMessage("Checking Paths...");
-			await createPathsIfNotExists();
-
-			// Check Logfile Size
-			setSpecificLoadingMessage("Checking Logfile Size...");
-			await checkLogFile();
-			
-			// Onboarding Specific Checks:
-			if (decideOnboarding() === "/jarvis") {
-				// Check Jenkins Connection
-				setSpecificLoadingMessage("Checking Jenkins Connection...");
-				abortStartup = await !initJenkinsConnectionCheck();
-
-				// Check Config Files
-				setSpecificLoadingMessage("Checking for Permissions...");
-				checkPermissions();
+			try {
+				// Check for updates
+				setSpecificLoadingMessage("Checking for Updates...");
+				await initUpdateChecker();
+			} catch (error) {
+				setSpecificLoadingMessage("An error occured while checking for updates");
+				Logger.error("An error occured while checking for updates", error);
 			}
-			
+
+			try {
+				// Check Paths
+				setSpecificLoadingMessage("Checking Paths...");
+				await createPathsIfNotExists();
+			} catch (error) {
+				setSpecificLoadingMessage("An error occured while creating paths");
+				Logger.error("An error occured while creating paths", error);
+			}
+
+			try {
+				// Check Logfile Size
+				setSpecificLoadingMessage("Checking Logfile Size...");
+				await checkLogFile();
+			} catch (error) {
+				setSpecificLoadingMessage("An error occured while checking logfile size");
+				Logger.error("An error occured while checking logfile size", error);
+			}
+
+			try {
+				// Onboarding Specific Checks:
+				if (decideOnboarding() === "/jarvis") {
+					// Check Jenkins Connection
+					setSpecificLoadingMessage("Checking Jenkins Connection...");
+					abortStartup = await !initJenkinsConnectionCheck();
+
+					// Check Config Files
+					setSpecificLoadingMessage("Checking for Permissions...");
+					checkPermissions();
+				}
+			} catch (error) {
+				Logger.error("An error occured while checking jenkins connection", error);
+			}
+
 			// Navigate to onboarding or jarvis
 			setTimeout(() => {
 				setSpecificLoadingMessage("Checking Setup...");
