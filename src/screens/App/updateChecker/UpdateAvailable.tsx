@@ -1,4 +1,6 @@
 import React, { useEffect } from "react";
+import { arch } from '@tauri-apps/api/os';
+import { type } from "@tauri-apps/api/os";
 import { getUpdateInfo } from "./updateChecker";
 import icon from "../../../assets/brand/ico_bow.svg";
 import { ReleaseInfo } from "../../../Interfaces/IReleaseInfo";
@@ -11,6 +13,7 @@ import "./UpdateAvailable.css";
 const UpdateAvailable: React.FC = () => {
 	const [updateInfo, setUpdateInfo] = React.useState<ReleaseInfo>();
 	const [notes, setNotes] = React.useState<string>("");
+	const [downloadLink, setDownloadLink] = React.useState<string>("");
 
 	useEffect(() => {
 		const initUpdateInfoGetter = async () => {
@@ -21,13 +24,26 @@ const UpdateAvailable: React.FC = () => {
 				return;
 			}
 
-			const notes: string[] = updateState.notes.slice(1, -1).split(", ");
-			let notesString = "";
+			switch (await type()) {
+				case "Windows_NT":
+					setDownloadLink(updateState.platforms["windows-x86_64"].url)
+					break;
+				case "Linux":
+					setDownloadLink(updateState.platforms["linux-x86_64"].url)
+					break;
+				case "Darwin":
+					if (await arch() === "x86_64") {
+						setDownloadLink(updateState.platforms["darwin-x86_64"].url)
+					} else {
+						setDownloadLink(updateState.platforms["darwin-aarch64"].url)
+					}
+					break;
+				default:
+					setDownloadLink(updateState.platforms["windows-x86_64"].url)
+					break;
+			}
 
-			notes.forEach((note) => notesString += removeFirstAndLastChar(note) + "\n");
-
-
-			setNotes(notesString);
+			setNotes(updateState.notes);
 		};
 
 		initUpdateInfoGetter();
@@ -35,7 +51,7 @@ const UpdateAvailable: React.FC = () => {
 
 	const openDownloadLink = (version?: string) => {
 		if (version) {
-			openLink(`https://cdn.jarvisci.com/releases/${version}`);
+			openLink(version);
 		}
 	};
 
@@ -70,7 +86,7 @@ const UpdateAvailable: React.FC = () => {
 							<img src={icon} alt="Welcome icon" className="w-16 h-16 mb-4" />
 							<p className="text-2xl font-medium">New Update available!</p>
 							<p>Version <b>{updateInfo?.version}</b> ({updateInfo?.pub_date}) is now Available.</p>
-							<button onClick={() => openDownloadLink(updateInfo?.version)} className="button my-8"> Download </button>
+							<button onClick={() => openLink(downloadLink)} className="button my-8"> Download </button>
 						</div>
 					</div>
 
