@@ -29,7 +29,7 @@ const OnboardingStep3: React.FC = () => {
 				transition={{ duration: 0.5, delay: 0.5 }}
 				width="560"
 				height="315"
-				src="https://www.youtube.com/embed/dQw4w9WgXcQ?si=ecyt2CWMagU1EQDn"
+				src="https://www.youtube.com/embed/mi6j6CIPRcw?si=3VmTzPpG1XajLKPp"
 				title="YouTube video player"
 				allow="autoplay"
 			/>
