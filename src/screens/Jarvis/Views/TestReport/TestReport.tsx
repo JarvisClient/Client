@@ -11,7 +11,7 @@ import StorageManager from "../../../../helpers/StorageManager";
 import { fetchUtils } from "../../Utils/fetchUtils";
 import { TestResult, TestSuite } from "../../../../Interfaces/ITestReport";
 
-import testJson from "./testJSON.json"; // For testing purposes
+// import testJson from "./testJSON.json"; // For testing purposes
 
 interface Props {
 	buildData: IJenkinsBuild;
@@ -101,8 +101,8 @@ const TestReport: React.FC<Props> = ({ buildData }) => {
 					Uncomment the below code to use the testJson file for testing purposes
 					Dont forget the import statement at the top
 				*/
-				setTestReport(testJson);
-				setShowBanner(false);
+				// setTestReport(testJson);
+				// setShowBanner(false);
 
 			}
 		};
