@@ -20,8 +20,7 @@ export async function getConsoleViewStyleDict(): Promise<IStylingDict> {
 		await writeTextFile(CONSOLE_VIEW_STYLE_FILE, await JSON.stringify(defaultStylingDict), { dir: BaseDirectory.AppData });
 		return defaultStylingDict;
 	} catch (error) {
-		Logger.error(error);
-		alert(`Error getting ${CONSOLE_VIEW_STYLE_FILE} \n${error}`);
+		Logger.error(`Error getting ${CONSOLE_VIEW_STYLE_FILE}. The File might be empty.  \n${error}`);
 		return defaultStylingDict;
 	}
 }
