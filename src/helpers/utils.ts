@@ -3,7 +3,7 @@ import DOMPurify from "dompurify";
 import StorageManager from "./StorageManager";
 import showdown from "showdown";
 
-export const formatBuildDate = (timestamp: number) => {
+export const formatBuildDate = (timestamp: number | string) => {
 	const date = new Date(timestamp);
 
 	const day = String(date.getDate()).padStart(2, "0");

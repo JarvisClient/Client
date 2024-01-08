@@ -32,14 +32,14 @@ export function renderTestReportCard(suite: TestSuite): React.JSX.Element[] {
 						<div className="flex flex-col">
 							{testcase.failedSince ? (
 								<p className="font-bold">
-    Failed Since: <span className="font-normal">{testcase.failedSince}</span>
+									Failed Since: <span className="font-normal">{testcase.failedSince}</span>
 								</p>
 							) : null}
 							{testcase.duration ? (
 								<p className="font-bold">
-    Duration: <span className="font-normal">
+									Duration: <span className="font-normal">
 										{testcase.duration}
-    s
+										s
 									</span>
 								</p>
 							) : null}
@@ -75,7 +75,7 @@ export function renderTestReportCard(suite: TestSuite): React.JSX.Element[] {
 					<p>{testcase.errorStackTrace}</p>
 				</div>
 			)}
-			{}
+			{ }
 		</div>
 	));
 }
