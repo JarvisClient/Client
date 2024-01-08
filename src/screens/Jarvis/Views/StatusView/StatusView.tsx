@@ -151,7 +151,12 @@ const StatusView: React.FC<Props> = ({ buildData }) => {
 
 				<div className="flex flex-col pt-2">
 					<h1 className="text-2xl font-bold mb-1">Changes</h1>
-					<p>Needs to be Implemented...</p>
+					<p>
+						{buildData?.changeSet?.items?.length ?? 0} change{buildData?.changeSet?.items?.length == 1 ? "" : "s"} in{" "}
+						<b >
+							{buildData?.changeSet?.kind ?? ""}
+						</b>
+					</p>
 				</div>
 			</motion.div>
 
@@ -159,7 +164,7 @@ const StatusView: React.FC<Props> = ({ buildData }) => {
 			<motion.div
 				initial={{ opacity: 0, y: 50 }}
 				animate={{ opacity: 1, y: 0 }}
-				transition={{ duration: 0.5, delay: 0.3 }}
+				transition={{ duration: 0.5, delay: 0.2 }}
 				className="grid grid-cols-[100px,auto] mx-10 my-10">
 				<div className="w-16 h-16 flex justify-self-center items-center justify-center rounded-xl bg-background-sidebar p-2 shadow-md">
 					<IcoPerson size={42} />
