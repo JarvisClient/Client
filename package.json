@@ -21,7 +21,7 @@
     "@tauri-apps/api": "^1.5.2",
     "autoprefixer": "^10.4.16",
     "chart.js": "^4.4.1",
-    "dompurify": "^3.0.6",
+    "dompurify": "^3.0.8",
     "framer-motion": "^10.16.16",
     "jsdom": "^23.0.1",
     "react": "^18.2.0",
