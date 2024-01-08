@@ -5,7 +5,7 @@ import { IJenkinsBuild } from "../../../../Interfaces/IBuildInterface";
 import StorageManager from "../../../../helpers/StorageManager";
 import ConsoleViewLoading from "./ConsoleViewLoading";
 import { fetchUtils } from "../../Utils/fetchUtils";
-import { CONSOLE_RELOAD_TIME, DEFAULT_WINDOW_HEIGHT, DEFAULT_WINDOW_WIDTH } from "../../../../config/constants";
+import { CONSOLE_RELOAD_TIME } from "../../../../config/constants";
 
 import { motion } from "framer-motion";
 import { WebviewWindow } from "@tauri-apps/api/window";
@@ -47,8 +47,8 @@ const ConsoleView: React.FC<Props> = ({ buildData }) => {
 		const webview = new WebviewWindow(generateRandomString(10), {
 			url: "/fullLog?buildNumber=" + buildData.id + "&projectName=" + projectName + "&buildUrl=" + buildData.url,
 			title: "Read Full Console Log",
-			width: DEFAULT_WINDOW_HEIGHT,
-			height: DEFAULT_WINDOW_WIDTH - 500,
+			width: 1400,
+			height: 900,
 			decorations: false,
 		});
 

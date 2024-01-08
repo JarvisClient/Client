@@ -43,7 +43,9 @@ const FullConsoleLog: React.FC = () => {
 					<h1 className="font-bold text-3xl mt-16 mb-8">Full Log for Build #{buildNumber} of {projectName}</h1>
 					{!isLoading ? (
 						<>
-							<pre dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(consoleData) }} />
+							<pre
+								className="text-sm"
+								dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(consoleData) }} />
 						</>) : (
 						<>
 							<ConsoleViewLoading />

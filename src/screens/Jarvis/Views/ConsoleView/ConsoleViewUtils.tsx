@@ -45,6 +45,13 @@ export const formatConsoleData = async (lines: string[]) => {
 	}
 
 	const stylingDict: IStylingDict = await getConsoleViewStyleDict();
+	// if stylingDict is empty return the formatted data
+	if (!stylingDict || Object.keys(stylingDict).length === 0) {
+		console.log("stylingDict is empty");
+		
+		return formattedData;
+	}
+
 
 	// Apply styles based on the dictionary and get the styled data
 	const styledData = await handleApplyStyledDataWebWorker(formattedData, stylingDict);
