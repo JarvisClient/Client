@@ -5,7 +5,7 @@ import { IJenkinsBuild } from "../../../../Interfaces/IBuildInterface";
 import StorageManager from "../../../../helpers/StorageManager";
 import ConsoleViewLoading from "./ConsoleViewLoading";
 import { fetchUtils } from "../../Utils/fetchUtils";
-import { CONSOLE_RELOAD_TIME } from "../../../../config/constants";
+import { CONSOLE_RELOAD_TIME, CONSOLE_VIEW_CHUNK_SIZE } from "../../../../config/constants";
 
 import { motion } from "framer-motion";
 import { WebviewWindow } from "@tauri-apps/api/window";
@@ -32,7 +32,7 @@ const ConsoleView: React.FC<Props> = ({ buildData }) => {
 			const lines = await fetchUtils.consoleText(projectName, buildNumber);
 
 
-			const chunkSize = 100;
+			const chunkSize = CONSOLE_VIEW_CHUNK_SIZE;
 			const chunks = Array.from({ length: Math.ceil(lines.length / chunkSize) }, (_, index) =>
 				lines.slice(index * chunkSize, (index + 1) * chunkSize)
 			);
