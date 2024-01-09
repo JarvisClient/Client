@@ -16,6 +16,7 @@ import "./Settings.css";
 import LoadingScreenComponent from "../../../../components/LoadingScreenComponent/LoadingScreenComponent";
 import SelectList from "../../../../components/SelectList/SelectList";
 import { openLink } from "../../../../helpers/utils";
+import LicenseModal from "./Modals/license.modal";
 
 const SettingsView: React.FC = () => {
 	const navigate = useNavigate();
@@ -25,6 +26,9 @@ const SettingsView: React.FC = () => {
 	const [isLoadingPage, setIsLoadingPage] = useState(true);
 	const [showDevZone, setShowDevZone] = useState(false);
 	const [WindowIconStyle, setWindowIconStyle] = useState(StorageManager.get("titlebarStyle") || "macStyle");
+	
+	// Modals
+	const [showLicenseModal, setShowLicenseModal] = useState(false);
 
 	const notification = useNotification();
 
@@ -103,6 +107,14 @@ const SettingsView: React.FC = () => {
 								</div>
 								<div>
 									<button onClick={() => openLink("https://jarvisci.com/feedback")} className="button"> Open Feedback Form </button>
+								</div>
+								{/* License */}
+								<div className="flex flex-col">
+									<p className="mb-2 text-lg font-bold">License Disclaimers</p>
+									<p className="mb-2 leading-5 text-comment-color">View licensing details for software, packages, and other assets used in Jarvis.</p>
+								</div>
+								<div>
+									<button onClick={() => setShowLicenseModal(true)} className="button"> See License Disclaimers </button>
 								</div>
 							</div>
 						</div>
@@ -254,6 +266,7 @@ const SettingsView: React.FC = () => {
 						) : null}
 
 					</div>
+					<LicenseModal isOpen={showLicenseModal} closeModal={() => setShowLicenseModal(false)}/>
 				</>
 			)}
 		</div>
