@@ -107,8 +107,8 @@ const StatusView: React.FC<Props> = ({ buildData }) => {
 					<h1 className="text-2xl font-bold mb-1 cursor-pointer" onClick={() => openBuildTimeTrend()}>Information</h1>
 					<p>Build ID: #{buildData?.id}</p>
 					<p>Started {startedAgo()} ago.</p>
-					{buildData?.duration >= 0 && <p>Duration: {formatMilliseconds(buildData?.duration)}</p>}
-					{buildData?.estimatedDuration >= 0 && <p>Estimated Duration: {formatMilliseconds(buildData?.estimatedDuration)}</p>}
+					{buildData?.duration > 0 && <p>Duration: {formatMilliseconds(buildData?.duration)}</p>}
+					{buildData?.estimatedDuration > 0 && <p>Estimated Duration: {formatMilliseconds(buildData?.estimatedDuration)}</p>}
 
 				</div>
 			</motion.div>
