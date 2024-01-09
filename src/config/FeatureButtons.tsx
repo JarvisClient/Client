@@ -65,7 +65,7 @@ const FeatureButtons: { [key: string]: FeatureButtonProps } = {
 	},
 	parameters: {
 		title: "Parameters",
-		description: "View Build Parameters (if available)",
+		description: "View Build Parameters for this build",
 		titleBar: "View Build Parameters",
 		bg_color: "#2F2331",
 		icon_color: "#B479AC",
@@ -74,7 +74,7 @@ const FeatureButtons: { [key: string]: FeatureButtonProps } = {
 	},
 	changes: {
 		title: "Changes",
-		description: "View Changes (if available)",
+		description: "View Changes since last build",
 		titleBar: "View Changes",
 		bg_color: "#0F332A",
 		icon_color: "#00B589",

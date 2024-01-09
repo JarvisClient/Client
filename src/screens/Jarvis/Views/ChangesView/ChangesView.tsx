@@ -36,7 +36,7 @@ const ChangesView = ({ buildData }: Props) => {
 	}
 
 	return (
-		<div className="mx-10 my-10 select-none">
+		<div className="mx-10 my-10">
 			{/* Summary */}
 			<details>
 				<summary className="text-2xl font-bold">Summary</summary>
