@@ -38,14 +38,15 @@ const ChangesView = ({ buildData }: Props) => {
 	return (
 		<div className="mx-10 my-10">
 			{/* Summary */}
-			<details>
+			<details
+			className="select-none">
 				<summary className="text-2xl font-bold">Summary</summary>
 				<ol className="ml-10">
 					{changes?.items?.map((change, index) => (
 						<li
 							onClick={() => moveToAnchor(index)}
-							className="list-decimal"
-							key={index}>{change.msg} ({change.author.fullName})</li>
+							className="list-decimal "
+							key={index}><span className="cursor-pointer">{change.msg}</span> ({change.author.fullName})</li>
 					))}
 				</ol>
 			</details>
