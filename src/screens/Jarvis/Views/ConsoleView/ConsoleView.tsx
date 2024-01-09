@@ -46,7 +46,10 @@ const ConsoleView: React.FC<Props> = ({ buildData }) => {
 			setConsoleData(formattedData);
 			setIsLoading(false);
 
-			if (buildData.result !== null) return clearIntervalId();
+			if (buildData.result !== null) {
+				clearIntervalId()
+				Logger.info("ConsoleView: Build is finished, clearing interval")
+		}
 		} catch (error) {
 			Logger.error("Error invoking get_build_data:", error);
 		}
