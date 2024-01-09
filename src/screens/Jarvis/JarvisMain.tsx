@@ -32,6 +32,7 @@ import { FeautreButton_S } from "../../Interfaces/IFeatureButtonProps";
 import { JobCardProps } from "../../Interfaces/IJobCardProps";
 import { useNotification } from "../../components/NotificationManager/NotificationContext";
 import CustomAnimatePresence from "../../components/CustomAnimatePresence/CustomAnimatePresence ";
+import ChangesView from "./Views/ChangesView/ChangesView";
 
 /**
  * Main component for the Jarvis application.
@@ -161,6 +162,7 @@ function JarvisMain(): React.ReactElement {
 							{activeFeature === "console" && <ConsoleView buildData={selectedBuildData} />}
 							{activeFeature === "parameters" && <ParametersView buildData={selectedBuildData} />}
 							{activeFeature === "settings" && <SettingsView />}
+							{activeFeature === "changes" && <ChangesView buildData={selectedBuildData} />}
 							{activeFeature === "status_for_project" && <ProjectStatusView buildData={projectData} />}
 							{activeFeature === "testReport" && <TestReport buildData={selectedBuildData} />}
 							{activeFeature === "build" && <BuildView buildData={selectedBuildData} parameterDefinition={parameterDefinition} />}

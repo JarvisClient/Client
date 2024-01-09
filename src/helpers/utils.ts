@@ -3,7 +3,7 @@ import DOMPurify from "dompurify";
 import StorageManager from "./StorageManager";
 import showdown from "showdown";
 
-export const formatBuildDate = (timestamp: number) => {
+export const formatBuildDate = (timestamp: number | string) => {
 	const date = new Date(timestamp);
 
 	const day = String(date.getDate()).padStart(2, "0");
@@ -88,3 +88,13 @@ export const MarkdownRenderer: React.FC<{ markdownText: string }> = ({ markdownT
 	return converter.makeHtml(markdownText);
 };
   
+
+export function isEmpty(obj: any): boolean {
+    // Check if the object is null or undefined first
+    if (obj === null || obj === undefined) {
+        return true;
+    }
+
+    // Then check if it's an empty object
+    return Object.keys(obj).length === 0 && obj.constructor === Object;
+}

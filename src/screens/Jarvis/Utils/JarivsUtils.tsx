@@ -6,7 +6,7 @@ import { useNotification } from "../../../components/NotificationManager/Notific
 import Logger, { onStartup } from "../../../helpers/Logger";
 import { fetchUtils } from "./fetchUtils";
 import JobCardComponent from "../../../components/JobCardComponent/JobCardComponent";
-import { deepEqual, openLink } from "../../../helpers/utils";
+import { deepEqual, isEmpty, openLink } from "../../../helpers/utils";
 import FeatureButtonComponent from "../../../components/FeatureButtonComponent/FeatureButtonComponent";
 import { DEFAULT_WINDOW_HEIGHT, DEFAULT_WINDOW_WIDTH, JOBCARD_REFRESH_TIME } from "../../../config/constants";
 import { IJenkinsBuild } from "../../../Interfaces/IBuildInterface";
@@ -111,10 +111,15 @@ export class JarvisUtils {
 	 */
 	handleJobCardClick = async (buildNumber: number) => {
 		try {
+			// Set the active job build number
 			this.setActiveJobBuildNumber(buildNumber);
 			this.activeJobBuild = buildNumber;
+
+			// Fetch data for the selected build
 			const buildData = await fetchUtils.fetchBuildData(buildNumber, this.storedProjectName, 2);
 			this.setSelectedBuildData(buildData);
+
+			// Update UI with the fetched build data
 			this.setActiveFeature("status");
 		} catch (error) {
 			Logger.error("Error fetching build data:", error);
@@ -190,7 +195,7 @@ export class JarvisUtils {
 				break;
 			case "jenkins":
 				if (!selectedBuildData) throw new Error("selectedBuildData is undefined");
-				openLink(selectedBuildData.url);
+				openLink(selectedBuildData.url + activeJobBuild.number);
 				return;
 				break;
 			case "pin": {
@@ -251,21 +256,39 @@ export class JarvisUtils {
 				active: activeFeature === element.name,
 			};
 
-			// Set useSecondaryIcon to true if the job is pinned
-			if (element.name === "pin" && jobCardProps.find((item: JobCardProps) => item.buildNumber === activeJobBuild)?.pinned) {
-				featureButtonProps.useSecondaryIcon = true;
+			switch (element.name) {
+				case "pin":
+					if (jobCardProps.find((item: JobCardProps) => item.buildNumber === activeJobBuild)?.pinned) {
+						featureButtonProps.useSecondaryIcon = true;
+					}
+					break;
+				case "notification":
+					if (jobCardProps.find((item: JobCardProps) => item.buildNumber === activeJobBuild)?.notification_set) {
+						featureButtonProps.useSecondaryIcon = true;
+					}
+					if (selectedBuildData.result !== null) {
+						return null;
+					}
+					break;
+				case "stop_build":
+					if (selectedBuildData.result !== null) {
+						return null;
+					}
+					break;
+				case "changes":
+					if (selectedBuildData.changeSet?.items.length === 0) {
+						return null;
+					}
+					break;
+				case "parameters":
+					if (isEmpty(selectedBuildData.actions?.find((item) => item._class === "hudson.model.ParametersAction")?.parameters)) {
+						return null;
+					}
+					break;
+				default:
+					break;
 			}
-
-			// Set useSecondaryIcon to true if the job is notification set
-			if (element.name === "notification" && jobCardProps.find((item: JobCardProps) => item.buildNumber === activeJobBuild)?.notification_set) {
-				featureButtonProps.useSecondaryIcon = true;
-			}
-
-			// Skip rendering the stop_build button if the build is not running
-			if ((element.name === "stop_build" || element.name === "notification") && selectedBuildData.result !== null) {
-				return null;
-			}
-
+			
 			buttons.push(
 				<FeatureButtonComponent
 					key={index}

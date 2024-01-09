@@ -18,10 +18,34 @@ export interface JenkinsBuildArtifact {
     relativePath: string;
 }
 
-export interface JenkinsBuildChangeLogItem {
+export interface JenkinsBuildChangeLogChangeSet {
     _class: string;
-    items: unknown;
+    items: JenkinsBuildchangeLogItem[];
     kind: string | null;
+}
+
+export interface JenkinsBuildchangeLogItem {
+    _class: string;
+    affectedPaths: string[];
+    commitId: string;
+    timestamp: number;
+    author: JenkinsBuildchangeLogAuthor;
+    authorEmail: string;
+    comment: string;
+    date: string;
+    id: string;
+    msg: string;
+    paths: JenkinsBuildchangeLogPath[];
+}
+
+export interface JenkinsBuildchangeLogAuthor {
+    absoluteUrl: string;
+    fullName: string;
+}
+
+export interface JenkinsBuildchangeLogPath {
+    editType: string;
+    file: string;
 }
 
 export interface JenkinsBuildAction {
@@ -51,7 +75,7 @@ export interface IJenkinsBuild {
     url: string;
     builtOn: string;
     color: string;
-    changeSet: JenkinsBuildChangeLogItem;
+    changeSet: JenkinsBuildChangeLogChangeSet;
     lastSuccessfulBuild: unknown | unknown[];
     culprits: unknown[]; 
     healthReport: unknown[]; 

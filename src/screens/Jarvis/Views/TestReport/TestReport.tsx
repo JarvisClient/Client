@@ -112,17 +112,22 @@ const TestReport: React.FC<Props> = ({ buildData }) => {
 
 	const isSuiteCollapsed = (suiteName: string) => collapsedSuites.includes(suiteName);
 
+	// Show a message if there are no changes
+	if (showBanner) {
+		return (
+			<div className="mx-10 my-10 select-none">
+				<div className="flex mb-5 items-center w-full p-4 bg-[#403D2F] rounded-lg shadow">
+					<div className="ms-3 text-md font-normal">
+						<strong>No Test Results available!</strong>
+					</div>
+				</div>
+			</div>
+		);
+	}
+
 	return (
 		<>
 			<div className="mx-10 my-10">
-				{showBanner ? (
-					<div className="flex mb-5 items-center w-full p-4 bg-[#403D2F] rounded-lg shadow">
-						<div className="ms-3 text-md font-normal">
-							<strong>No TestCases available!</strong>
-						</div>
-					</div>
-				) : (
-					<>
 						{buildData && testReport ? (
 							<>
 								<div className="mb-10 mx-10 space-y-8">
@@ -220,9 +225,8 @@ const TestReport: React.FC<Props> = ({ buildData }) => {
 									</div>
 								</div>
 							))}
-					</>
-				)}
-			</div>
+					</div>
+			
 		</>
 	);
 };

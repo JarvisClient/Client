@@ -1,6 +1,6 @@
 import StorageManager from "../helpers/StorageManager";
 import { FeatureButtonProps } from "../Interfaces/IFeatureButtonProps";
-import { IcoArrowTriangleRight, IcoBell, IcoBellFilled, IcoBook, IcoConsole, IcoCover, IcoError, IcoGlobe, IcoPin, IcoPinFilled, IcoSettings, IcoSliders, IcoStop, IcoSuccess, IcoTestTube, IcoWindow } from "@/Icons/pack_1";
+import { IcoArrowTriangleRight, IcoBell, IcoBellFilled, IcoBook, IcoCodeBracket, IcoConsole, IcoCover, IcoError, IcoGlobe, IcoPin, IcoPinFilled, IcoSettings, IcoSliders, IcoStop, IcoSuccess, IcoTestTube, IcoWindow } from "@/Icons/pack_1";
 
 const projectName = StorageManager.get("projectName");
 
@@ -65,11 +65,20 @@ const FeatureButtons: { [key: string]: FeatureButtonProps } = {
 	},
 	parameters: {
 		title: "Parameters",
-		description: "View Build Parameters (if available)",
+		description: "View Build Parameters for this build",
 		titleBar: "View Build Parameters",
 		bg_color: "#2F2331",
 		icon_color: "#B479AC",
 		icon: IcoSliders,
+		purpose: "JOB",
+	},
+	changes: {
+		title: "Changes",
+		description: "View Changes since last build",
+		titleBar: "View Changes",
+		bg_color: "#0F332A",
+		icon_color: "#00B589",
+		icon: IcoCodeBracket,
 		purpose: "JOB",
 	},
 	testReport: {
