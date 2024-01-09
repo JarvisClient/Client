@@ -39,3 +39,5 @@ export const JARVIS_LOADING_MESSAGES = [
 	"Synchronizing Jarvis' impeccable timing",
 	"Reviewing the etiquette rulebook",
 ];
+
+export const CONSOLE_VIEW_CHUNK_SIZE = 50;

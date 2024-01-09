@@ -31,10 +31,21 @@ const ConsoleView: React.FC<Props> = ({ buildData }) => {
 
 			const lines = await fetchUtils.consoleText(projectName, buildNumber);
 
-			const formattedData = await formatConsoleData(lines);
 
-			setIsLoading(false);
+			const chunkSize = 100;
+			const chunks = Array.from({ length: Math.ceil(lines.length / chunkSize) }, (_, index) =>
+				lines.slice(index * chunkSize, (index + 1) * chunkSize)
+			);
+
+			const formattedChunks = await Promise.all(
+				chunks.map((chunk) => formatConsoleData(chunk))
+			);
+
+			const formattedData = formattedChunks.join("\n");
+
 			setConsoleData(formattedData);
+			setIsLoading(false);
+
 			if (buildData.result !== null) return clearIntervalId();
 		} catch (error) {
 			Logger.error("Error invoking get_build_data:", error);
