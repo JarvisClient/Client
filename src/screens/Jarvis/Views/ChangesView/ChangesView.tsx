@@ -53,45 +53,47 @@ const ChangesView = ({ buildData }: Props) => {
 			{/* Details */}
 			{changes?.items?.map((change, index) => (
 				<>
-				<motion.div
-				initial={{ border: "2px solid #313133" }}
-				animate={{
-					border: selectedChange === index ? ["2px solid #313133", "2px solid #4657CE", "2px solid #313133"] : "2px solid #313133",
-				}}
-				transition={{ duration: 1, delay: 0.5 }}
-				onAnimationEnd={() => setSelectedChange(-1)}
-				id= { index.toString() }
-				className = "mt-[20px] ml-4 flex flex-col rounded-md bg-console-background shadow-lg px-6 py-4 overflow-auto" >
-				<div className="flex flex-col">
-					<div className="items-center mb-2">
-						<p className="font-bold text-xl break-word">{change.msg} ({formatBuildDate(change.date)})</p>
-						<p className="text-comment-color ml-2">{change.comment}</p>
-					</div>
-					<hr className="my-2 border-[1.5px] border-border" />
-					<div className="flex flex-col">
-						<div>
-							<b>Commit: </b>
-							<span>{change.id} </span>
-							<b>by{" "}
-								<span
-									onClick={() => openLink(change.author.absoluteUrl)}
-									className="transition text-blue-500 hover:text-blue-600 active:text-blue-700 cursor-pointer">{change.author.fullName}</span>
-							</b>
+					<motion.div
+						initial={{ border: "2px solid #313133" }}
+						animate={{
+							border: selectedChange === index ? ["2px solid #313133", "2px solid #4657CE", "2px solid #313133"] : "2px solid #313133",
+						}}
+						transition={{ duration: 1, delay: 0.5 }}
+						onAnimationEnd={() => setSelectedChange(-1)}
+						id={index.toString()}
+						className="mt-[20px] ml-4 flex flex-col rounded-md bg-console-background shadow-lg px-6 py-4 overflow-auto" >
+						<div className="flex flex-col">
+							<div className="items-center mb-2">
+								<p className="font-bold text-xl break-word">{change.msg} {change.date ? `(${formatBuildDate(change?.date)})` : ""}</p>
+								<p className="text-comment-color ml-2">{change.comment}</p>
+							</div>
+							<hr className="my-2 border-[1.5px] border-border" />
+							<div className="flex flex-col">
+								<div>
+									<b>Commit: </b>
+									<span>{change.id} </span>
+									<b>by{" "}
+										<span
+											onClick={() => openLink(change.author.absoluteUrl)}
+											className="transition text-blue-500 hover:text-blue-600 active:text-blue-700 cursor-pointer">{change.author.fullName}</span>
+									</b>
+								</div>
+								{change?.paths?.length > 0 && (
+									<div>
+									<b>Changes in: </b>
+									<ul className="">
+										{change.paths?.map((path, index) => (
+											<li key={index} className="text-comment-color ml-2">{path.editType} {path.file}</li>
+										))}
+									</ul>
+								</div>
+								)}
+							</div>
 						</div>
-						<div>
-							<b>Changes in: </b>
-							<ul className="">
-								{change.paths?.map((path, index) => (
-									<li key={index} className="text-comment-color ml-2">{path.editType} {path.file}</li>
-									))}
-							</ul>
-						</div>
-					</div>
-				</div>
-				</motion.div>
-</>
-	))
-}
+					</motion.div>
+				</>
+			))
+			}
 		</div >
 	);
 }
