@@ -128,81 +128,81 @@ const TestReport: React.FC<Props> = ({ buildData }) => {
 	return (
 		<>
 			<div className="mx-10 my-10">
-						{buildData && testReport ? (
-							<>
-								<div className="mb-10 mx-10 space-y-8">
-									<TestReportIndicators
-										failCount={testReport.failCount}
-										skipCount={testReport.skipCount}
-										passCount={testReport.passCount}
-									/>
-									<div className="flex h-2 rounded-full">
-										<div style={{ width: `${failWidth}%` }} className="bg-jenkins-job-red rounded-l-full" />
-										<div style={{ width: `${skipWidth}%` }} className="bg-jenkins-job-orange" />
-										<div style={{ width: `${passWidth}%` }} className="bg-jenkins-job-green rounded-r-full" />
-									</div>
+				{buildData && testReport ? (
+					<>
+						<div className="mb-10 mx-10 space-y-8">
+							<TestReportIndicators
+								failCount={testReport.failCount}
+								skipCount={testReport.skipCount}
+								passCount={testReport.passCount}
+							/>
+							<div className="flex h-2 rounded-full">
+								<div style={{ width: `${failWidth}%` }} className="bg-jenkins-job-red rounded-l-full" />
+								<div style={{ width: `${skipWidth}%` }} className="bg-jenkins-job-orange" />
+								<div style={{ width: `${passWidth}%` }} className="bg-jenkins-job-green rounded-r-full" />
+							</div>
 
-									<div>
-										<p className="font-bold text-xl">Test Suites:</p>
-										<div className="flex space-x-2 items-center">
-											<input
-												type="checkbox"
-												id="jarvis_closeAll"
-												checked={selectAllChecked}
-												onChange={toggleSelectAll}
-												className="w-4 h-4 rounded-full cursor-pointer accent-jenkins-job-blue"
-											/>
-											<label htmlFor="jarvis_closeAll" className="cursor-pointer">
-												{selectAllChecked ? "Collapse All" : "Expand All"}
-											</label>
-										</div>
-										<div className="ml-2">
-											{testReport && testReport.suites && testReport.suites.map((suite: TestSuite) => (
-												<div key={suite.name}>
-													<div className="flex space-x-2 items-center">
-														<input
-															type="checkbox"
-															id={suite.name}
-															checked={!isSuiteCollapsed(suite.name)}
-															onChange={() => toggleTestSuite(suite.name)}
-															className="w-4 h-4 rounded-full cursor-pointer accent-jenkins-job-blue"
-														/>
-														<label htmlFor={suite.name} className="cursor-pointer">
-															(
-															{suite.cases.length}
-															)
-															{suite.name}
-														</label>
-													</div>
-												</div>
-											))}
-										</div>
-									</div>
+							<div>
+								<p className="font-bold text-xl">Test Suites:</p>
+								<div className="flex space-x-2 items-center">
+									<input
+										type="checkbox"
+										id="jarvis_closeAll"
+										checked={selectAllChecked}
+										onChange={toggleSelectAll}
+										className="w-4 h-4 rounded-full cursor-pointer accent-jenkins-job-blue"
+									/>
+									<label htmlFor="jarvis_closeAll" className="cursor-pointer">
+										{selectAllChecked ? "Collapse All" : "Expand All"}
+									</label>
 								</div>
-							</>
-						) : (
-							<div className="flex animate-pulse flex-col items-center justify-center">
-								<div className="mt-[20px] w-full ml-4 flex flex-col">
-									<div className="bg-console-background border-2 border-border rounded-md shadow-lg px-6 py-5 overflow-auto">
-										<div className="flex flex-col space-y-4">
-											<div className="h-2 w-1/4 bg-border rounded col-span-2" />
-											<hr className="my-2 border-2 border-border" />
-											<div className="flex items-center space-x-4 mb-2">
-												<div className="h-2 w-1/4 bg-border rounded col-span-2" />
-											</div>
-											<div className="flex flex-row space-x-4">
-												<div className="h-2 w-1/3 bg-border rounded col-span-2" />
-											</div>
-											<div className="flex flex-row space-x-4 space-y-2">
-												<div className="h-2 w-full mt-3 bg-border rounded col-span-2" />
+								<div className="ml-2">
+									{testReport && testReport.suites && testReport.suites.map((suite: TestSuite) => (
+										<div key={suite.name}>
+											<div className="flex space-x-2 items-center">
+												<input
+													type="checkbox"
+													id={suite.name}
+													checked={!isSuiteCollapsed(suite.name)}
+													onChange={() => toggleTestSuite(suite.name)}
+													className="w-4 h-4 rounded-full cursor-pointer accent-jenkins-job-blue"
+												/>
+												<label htmlFor={suite.name} className="cursor-pointer">
+															(
+													{suite.cases.length}
+															)
+													{suite.name}
+												</label>
 											</div>
 										</div>
+									))}
+								</div>
+							</div>
+						</div>
+					</>
+				) : (
+					<div className="flex animate-pulse flex-col items-center justify-center">
+						<div className="mt-[20px] w-full ml-4 flex flex-col">
+							<div className="bg-console-background border-2 border-border rounded-md shadow-lg px-6 py-5 overflow-auto">
+								<div className="flex flex-col space-y-4">
+									<div className="h-2 w-1/4 bg-border rounded col-span-2" />
+									<hr className="my-2 border-2 border-border" />
+									<div className="flex items-center space-x-4 mb-2">
+										<div className="h-2 w-1/4 bg-border rounded col-span-2" />
+									</div>
+									<div className="flex flex-row space-x-4">
+										<div className="h-2 w-1/3 bg-border rounded col-span-2" />
+									</div>
+									<div className="flex flex-row space-x-4 space-y-2">
+										<div className="h-2 w-full mt-3 bg-border rounded col-span-2" />
 									</div>
 								</div>
 							</div>
-						)}
+						</div>
+					</div>
+				)}
 
-						{testReport
+				{testReport
 							&& testReport.suites
 							&& testReport.suites.map((suite: TestSuite) => (
 								<div key={suite.name}>
@@ -225,7 +225,7 @@ const TestReport: React.FC<Props> = ({ buildData }) => {
 									</div>
 								</div>
 							))}
-					</div>
+			</div>
 			
 		</>
 	);

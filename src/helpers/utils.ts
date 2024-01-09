@@ -89,12 +89,12 @@ export const MarkdownRenderer: React.FC<{ markdownText: string }> = ({ markdownT
 };
   
 
-export function isEmpty(obj: any): boolean {
-    // Check if the object is null or undefined first
-    if (obj === null || obj === undefined) {
-        return true;
-    }
+export function isEmpty(obj: any  /* eslint-disable-line @typescript-eslint/no-explicit-any */): boolean {
+	// Check if the object is null or undefined first
+	if (obj === null || obj === undefined) {
+		return true;
+	}
 
-    // Then check if it's an empty object
-    return Object.keys(obj).length === 0 && obj.constructor === Object;
+	// Then check if it's an empty object
+	return Object.keys(obj).length === 0 && obj.constructor === Object;
 }

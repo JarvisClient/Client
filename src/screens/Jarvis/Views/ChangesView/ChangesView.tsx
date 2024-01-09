@@ -33,13 +33,13 @@ const ChangesView = ({ buildData }: Props) => {
 	const moveToAnchor = (index: number) => {
 		document.getElementById(index.toString())?.scrollIntoView({ behavior: "smooth" });
 		setSelectedChange(index);
-	}
+	};
 
 	return (
 		<div className="mx-10 my-10">
 			{/* Summary */}
 			<details
-			className="select-none">
+				className="select-none">
 				<summary className="text-2xl font-bold">Summary</summary>
 				<ol className="ml-10">
 					{changes?.items?.map((change, index) => (
@@ -81,13 +81,13 @@ const ChangesView = ({ buildData }: Props) => {
 								</div>
 								{change?.paths?.length > 0 && (
 									<div>
-									<b>Changes in: </b>
-									<ul className="">
-										{change.paths?.map((path, index) => (
-											<li key={index} className="text-comment-color ml-2">{path.editType} {path.file}</li>
-										))}
-									</ul>
-								</div>
+										<b>Changes in: </b>
+										<ul className="">
+											{change.paths?.map((path, index) => (
+												<li key={index} className="text-comment-color ml-2">{path.editType} {path.file}</li>
+											))}
+										</ul>
+									</div>
 								)}
 							</div>
 						</div>
@@ -97,6 +97,6 @@ const ChangesView = ({ buildData }: Props) => {
 			}
 		</div >
 	);
-}
+};
 
 export default ChangesView;

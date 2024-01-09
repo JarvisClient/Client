@@ -257,36 +257,36 @@ export class JarvisUtils {
 			};
 
 			switch (element.name) {
-				case "pin":
-					if (jobCardProps.find((item: JobCardProps) => item.buildNumber === activeJobBuild)?.pinned) {
-						featureButtonProps.useSecondaryIcon = true;
-					}
-					break;
-				case "notification":
-					if (jobCardProps.find((item: JobCardProps) => item.buildNumber === activeJobBuild)?.notification_set) {
-						featureButtonProps.useSecondaryIcon = true;
-					}
-					if (selectedBuildData.result !== null) {
-						return null;
-					}
-					break;
-				case "stop_build":
-					if (selectedBuildData.result !== null) {
-						return null;
-					}
-					break;
-				case "changes":
-					if (selectedBuildData.changeSet?.items.length === 0) {
-						return null;
-					}
-					break;
-				case "parameters":
-					if (isEmpty(selectedBuildData.actions?.find((item) => item._class === "hudson.model.ParametersAction")?.parameters)) {
-						return null;
-					}
-					break;
-				default:
-					break;
+			case "pin":
+				if (jobCardProps.find((item: JobCardProps) => item.buildNumber === activeJobBuild)?.pinned) {
+					featureButtonProps.useSecondaryIcon = true;
+				}
+				break;
+			case "notification":
+				if (jobCardProps.find((item: JobCardProps) => item.buildNumber === activeJobBuild)?.notification_set) {
+					featureButtonProps.useSecondaryIcon = true;
+				}
+				if (selectedBuildData.result !== null) {
+					return null;
+				}
+				break;
+			case "stop_build":
+				if (selectedBuildData.result !== null) {
+					return null;
+				}
+				break;
+			case "changes":
+				if (selectedBuildData.changeSet?.items.length === 0) {
+					return null;
+				}
+				break;
+			case "parameters":
+				if (isEmpty(selectedBuildData.actions?.find((item) => item._class === "hudson.model.ParametersAction")?.parameters)) {
+					return null;
+				}
+				break;
+			default:
+				break;
 			}
 			
 			buttons.push(
