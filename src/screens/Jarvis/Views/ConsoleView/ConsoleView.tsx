@@ -31,9 +31,8 @@ const ConsoleView: React.FC<Props> = ({ buildData }) => {
 
 			const lines = await fetchUtils.consoleText(projectName, buildNumber);
 
-			const chunkSize = CONSOLE_VIEW_CHUNK_SIZE;
-			const chunks = Array.from({ length: Math.ceil(lines.length / chunkSize) }, (_, index) =>
-				lines.slice(index * chunkSize, (index + 1) * chunkSize)
+			const chunks = Array.from({ length: Math.ceil(lines.length / CONSOLE_VIEW_CHUNK_SIZE) }, (_, index) =>
+				lines.slice(index * CONSOLE_VIEW_CHUNK_SIZE, (index + 1) * CONSOLE_VIEW_CHUNK_SIZE)
 			);
 
 			const formattedChunks = await Promise.all(
