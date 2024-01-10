@@ -4,7 +4,7 @@ import { appDataDir } from "@tauri-apps/api/path";
 import { invoke } from "@tauri-apps/api/tauri";
 import { CONSOLE_VIEW_STYLE_FILE, LOGS_FILE } from "../../../../config/constants";
 
-import { getConsoleViewStyleDict } from "../ConsoleView/ConsoleViewStyleDict";
+import { getConsoleViewStyleDict } from "../ConsoleView/ConsoleViewUtils";
 import Logger from "../../../../helpers/Logger";
 
 import StorageManager from "../../../../helpers/StorageManager";
