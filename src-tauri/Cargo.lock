@@ -1805,6 +1805,7 @@ name = "jarvis"
 version = "0.0.0"
 dependencies = [
  "base64 0.21.6",
+ "regex",
  "reqwest",
  "serde",
  "serde_json",

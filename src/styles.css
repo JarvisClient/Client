@@ -24,7 +24,7 @@
   @apply text-text-color;
   @apply antialiased;
 
-  overscroll-behavior-y: none;
+  overscroll-behavior: none;
 }
 
 

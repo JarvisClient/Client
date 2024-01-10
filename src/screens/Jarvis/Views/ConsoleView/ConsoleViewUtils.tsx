@@ -1,60 +1,39 @@
-import Logger from "@/helpers/Logger";
+import { CONSOLE_VIEW_CHUNK_SIZE } from "@/config/constants";
+import { invoke } from "@tauri-apps/api";
+import {
+	exists, BaseDirectory, createDir, writeTextFile, readTextFile,
+} from "@tauri-apps/api/fs";
+import { stylingDict as defaultStylingDict } from "./styleDict";
+import { CONSOLE_VIEW_STYLE_FILE } from "../../../../config/constants";
+import Logger from "../../../../helpers/Logger";
 import { IStylingDict } from "../../../../Interfaces/StylingDict";
-import { getConsoleViewStyleDict } from "./ConsoleViewStyleDict";
-import { type } from "@tauri-apps/api/os";
-
-let osType: string;
-
-(async () => {
-	osType = await type();
-	Logger.info("ConsoleView/ConsoleViewUtils.tsx", `OS Type: ${osType}`);
-})();
 
 
-const handleApplyStyledDataWebWorker = (data: string, stylingDict: IStylingDict): Promise<string> => {
-	return new Promise((resolve, reject) => {
-		const worker = new Worker(new URL("./worker", import.meta.url), { type: "module" });
-
-		worker.onmessage = (e) => {
-			resolve(e.data);
-			worker.terminate();
-		};
-
-		worker.onerror = (e) => {
-			reject(e);
-			worker.terminate();
-		};
-
-		worker.postMessage({ data, stylingDict });
+export const formatConsoleData = async (lines: string[]): Promise<string> => {
+	const formattedData: string = await invoke("format_console_text", {
+		consoleText: lines,
+		chunkSize: CONSOLE_VIEW_CHUNK_SIZE,
+		styleDict: await getConsoleViewStyleDict()
 	});
+
+	return formattedData;
 };
 
-export const formatConsoleData = async (lines: string[]) => {
-	// Process each line to replace URLs with clickable links
-	const formattedLines = lines.map((line) => line.replace(
-		/https?:\/\/[^\s]+/g,
-		(match) => `<a href="${match}" target="_blank">${match}</a>`,
-	));
+export async function getConsoleViewStyleDict(): Promise<IStylingDict> {
+	try {
+		const appDataDirExists = await exists("", { dir: BaseDirectory.AppData });
 
-	// Join the formatted lines back together with newline characters
-	const formattedData = formattedLines.join("\n");
+		if (!appDataDirExists) {
+			await createDir("", { dir: BaseDirectory.AppData });
+		}
 
-	// If Browser is Safari return the formatted data
-	if (osType === "Darwin") {
-		return formattedData;
+		if (await exists(CONSOLE_VIEW_STYLE_FILE, { dir: BaseDirectory.AppData })) {
+			return await JSON.parse(await readTextFile(CONSOLE_VIEW_STYLE_FILE, { dir: BaseDirectory.AppData }));
+		}
+		await writeTextFile(CONSOLE_VIEW_STYLE_FILE, await JSON.stringify(defaultStylingDict), { dir: BaseDirectory.AppData });
+		return defaultStylingDict;
+	} catch (error) {
+		Logger.error("ConsoleView/ConsoleViewStyleDict.tsx", `Error getting ${CONSOLE_VIEW_STYLE_FILE}. The File might be empty.  \n${error}`);
+		return defaultStylingDict;
 	}
-
-	const stylingDict: IStylingDict = await getConsoleViewStyleDict();
-	// if stylingDict is empty return the formatted data
-	if (!stylingDict || Object.keys(stylingDict).length === 0) {
-		console.log("stylingDict is empty");
-		
-		return formattedData;
-	}
-
-
-	// Apply styles based on the dictionary and get the styled data
-	const styledData = await handleApplyStyledDataWebWorker(formattedData, stylingDict);
-
-	return styledData;
-};
+}

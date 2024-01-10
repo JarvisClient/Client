@@ -5,21 +5,21 @@ import { IJenkinsBuild } from "../../../../Interfaces/IBuildInterface";
 import StorageManager from "../../../../helpers/StorageManager";
 import ConsoleViewLoading from "./ConsoleViewLoading";
 import { fetchUtils } from "../../Utils/fetchUtils";
-import { CONSOLE_RELOAD_TIME, CONSOLE_VIEW_CHUNK_SIZE } from "../../../../config/constants";
+import { CONSOLE_RELOAD_TIME } from "../../../../config/constants";
 
 import { motion } from "framer-motion";
 import { WebviewWindow } from "@tauri-apps/api/window";
-import { formatConsoleData } from "./ConsoleViewUtils";
 import { generateRandomString } from "../../../../helpers/utils";
 import { clearIntervalId, setIntervalId } from "./IntervalManager";
 import { IcoArrowDown, IcoDownload, IcoFile, IcoLinear } from "@/Icons/pack_1";
+import { formatConsoleData } from "./ConsoleViewUtils";
+import ConsoleViewRenderHTML from "@/components/ConsoleViewRenderHTML/ConsoleViewRenderHTML";
 
 interface Props {
 	buildData: IJenkinsBuild;
 }
 const ConsoleView: React.FC<Props> = ({ buildData }) => {
 	const consoleRef = useRef<HTMLDivElement | null>(null);
-	const preElementRef = useRef<HTMLPreElement | null>(null);
 	const [consoleData, setConsoleData] = useState<string>("");
 	const [isLoading, setIsLoading] = useState<boolean>(true);
 	const [autoScroll, setAutoScroll] = useState<boolean>(false);
@@ -31,26 +31,25 @@ const ConsoleView: React.FC<Props> = ({ buildData }) => {
 
 			const lines = await fetchUtils.consoleText(projectName, buildNumber);
 
-			const chunks = Array.from({ length: Math.ceil(lines.length / CONSOLE_VIEW_CHUNK_SIZE) }, (_, index) =>
-				lines.slice(index * CONSOLE_VIEW_CHUNK_SIZE, (index + 1) * CONSOLE_VIEW_CHUNK_SIZE)
-			);
+			const formattedData = await formatConsoleData(lines);
 
-			const formattedChunks = await Promise.all(
-				chunks.map((chunk) => formatConsoleData(chunk))
-			);
-
-			const formattedData = formattedChunks.join("\n");
-
+			// add the new data to the console data
 			setConsoleData(formattedData);
 			setIsLoading(false);
 
 			if (buildData.result !== null) {
-				clearIntervalId()
-				Logger.info("ConsoleView/ConsoleView.tsx", "ConsoleView: Build is finished, clearing interval")
+				clearIntervalId();
+				Logger.info(
+					"ConsoleView/ConsoleView.tsx",
+					"ConsoleView: Build is finished, clearing interval"
+				);
 				return true;
 			}
 		} catch (error) {
-			Logger.error("ConsoleView/ConsoleView.tsx", "ConsoleView: Error while fetching console data: " + error);
+			Logger.error(
+				"ConsoleView/ConsoleView.tsx",
+				"ConsoleView: Error while fetching console data: " + error
+			);
 		}
 	};
 
@@ -102,7 +101,7 @@ const ConsoleView: React.FC<Props> = ({ buildData }) => {
 			setIntervalId(setInterval(() => {
 				fetchAndSetConsoleData();
 			}, CONSOLE_RELOAD_TIME));
-		}
+		};
 
 		startConsole();
 
@@ -140,11 +139,7 @@ const ConsoleView: React.FC<Props> = ({ buildData }) => {
 								{/* <p className="font-medium text-sm cursor-pointer">Full Output</p> */}
 							</div>
 							<div>
-								<pre
-									className="overflow-auto px-6 py-4 console-custom-scroll"
-									ref={preElementRef} // Use preElementRef as the ref for the <pre> element
-									dangerouslySetInnerHTML={{ __html: consoleData }}
-								/>
+								<ConsoleViewRenderHTML htmlString={consoleData} />
 							</div>
 						</div>
 						{buildData.result === null && (

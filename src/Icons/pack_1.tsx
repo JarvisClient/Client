@@ -308,16 +308,16 @@ export const IcoMaximize = ({ size = 24, color = "currentColor", className }: Ic
 // Used in: Feature Buttons
 export const IcoMinimize = ({ size = 24, color = "currentColor", className }: IconProps) => (
 	<svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none">
-		<path d="M6 12L18 12" stroke={color} stroke-width="2" stroke-linecap="round" />
+		<path d="M6 12L18 12" stroke={color} strokeWidth="2" strokeLinecap="round" />
 	</svg>
-)
+);
 
 // Icon Pack: Jarvis
 // License: MIT - Copyright (c) 2024 JNSAPH
 // Used in: Feature Buttons
 export const IcoClose = ({ size = 24, color = "currentColor", className }: IconProps) => (
 	<svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none">
-		<path d="M7.41418 7L17.3137 16.8995" stroke={color} stroke-width="2" stroke-linecap="round" />
-		<path d="M16.8995 7L6.99998 16.8995" stroke={color} stroke-width="2" stroke-linecap="round" />
+		<path d="M7.41418 7L17.3137 16.8995" stroke={color} strokeWidth="2" strokeLinecap="round" />
+		<path d="M16.8995 7L6.99998 16.8995" stroke={color} strokeWidth="2" strokeLinecap="round" />
 	</svg>
 );

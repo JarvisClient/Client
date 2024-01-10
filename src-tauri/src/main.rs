@@ -11,6 +11,7 @@ mod jenkins {
 
 mod app_handle {
     pub mod jenkins_calls;
+    pub mod format_console_text;
 }
 
 #[tokio::main]
@@ -24,7 +25,8 @@ async fn main() {
                                                  app_handle::jenkins_calls::start_build_with_parameters,
                                                  app_handle::jenkins_calls::start_build,
                                                  app_handle::jenkins_calls::get_test_result_data,
-                                                 app_handle::jenkins_calls::get_jenkins_data
+                                                 app_handle::jenkins_calls::get_jenkins_data,
+                                                 app_handle::format_console_text::format_console_text,
                                                  ])
         .setup(|app| {
             let main_window = app.get_window("main").unwrap();

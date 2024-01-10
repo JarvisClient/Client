@@ -4,7 +4,6 @@ const ConsoleViewLoading: React.FC = () => {
 	return (
 		<div className="bg-console-background border-2 border-border rounded-md shadow-lg px-6 py-5 overflow-auto">
 			<div className="animate-pulse">
-
 				<div className="w-1/2 text-comment-color overflow-hidden h-3 mt-2 bg-comment-color rounded-full opacity-40" />
 				<div className="w-1/3 text-comment-color overflow-hidden h-3 mt-2 bg-comment-color rounded-full opacity-40" />
 				<div className="w-1/4 text-comment-color overflow-hidden h-3 mt-2 bg-comment-color rounded-full opacity-40" />
