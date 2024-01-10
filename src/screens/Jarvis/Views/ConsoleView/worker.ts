@@ -22,7 +22,7 @@ self.addEventListener("message", (e) => {
 
 			self.postMessage(styledText);
 		} catch (error) {
-			Logger.error(error);
+			Logger.error("ConsoleView/worker.ts", error);
 			return text;
 		}
 	};

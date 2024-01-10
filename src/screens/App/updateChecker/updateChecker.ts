@@ -14,12 +14,12 @@ export const checkForUpdates = async () => {
 	const data: ReleaseInfo = await response.json();
 
 	if (data.error) {
-		Logger.error("Error while trying to get Update Data, this occured on the Backend", data.error);
+		Logger.error("updateChecker.tsx", "Error while trying to get Update Data, this occured on the Backend", data.error);
 		throw new Error(data.error);
 	}
 
-	Logger.info(`Current version: ${currentVersion}`);
-	Logger.info(`Latest version: ${data.version}`);
+	Logger.info("updateChecker.tsx", `Current version: ${currentVersion}`);
+	Logger.info("updateChecker.tsx", `Latest version: ${data.version}`);
 
 	const latestVersion = data.version;
 	return currentVersion !== latestVersion;
@@ -33,7 +33,7 @@ export const getUpdateInfo = async (): Promise<ReleaseInfo> => {
 
 	// if data .error is defined, then there was an error
 	if (data.error) {
-		Logger.error("Error while trying to get Update Data, this occured on the Backend", data.error);
+		Logger.error("updateChecker.tsx", "Error while trying to get Update Data, this occured on the Backend", data.error);
 		throw new Error(data.error);
 	}
 

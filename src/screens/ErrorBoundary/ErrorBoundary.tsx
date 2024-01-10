@@ -22,7 +22,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
 	}
 
 	async componentDidCatch(error: Error, errorInfo: ErrorInfo): Promise<void> {
-		Logger.error("ErrorBoundary", error);
+		Logger.error("ErrorBoundary.tsx", error);
 		const path = await writeEmergencyLog(error, errorInfo);
 		this.setState({
 			hasError: true, error, errorInfo, file_path: path,

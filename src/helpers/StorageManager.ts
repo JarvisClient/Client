@@ -55,7 +55,7 @@ const StorageManager = {
 			}
 			localStorage.setItem(key, value);
 		} catch (error) {
-			Logger.error(error);
+			Logger.error("helpers/StorageManager.ts", error);
 			return false;
 		}
 		return true;
@@ -80,7 +80,7 @@ const StorageManager = {
 		try {
 			localStorage.clear();
 		} catch (error) {
-			Logger.error(error);
+			Logger.error("helpers/StorageManager.ts", error);
 			return false;
 		}
 		return true;
@@ -95,7 +95,7 @@ const StorageManager = {
 		try {
 			localStorage.removeItem(key);
 		} catch (error) {
-			Logger.error(error);
+			Logger.error("helpers/StorageManager.ts", error);
 			return false;
 		}
 		return true;

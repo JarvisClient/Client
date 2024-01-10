@@ -31,7 +31,6 @@ const ConsoleView: React.FC<Props> = ({ buildData }) => {
 
 			const lines = await fetchUtils.consoleText(projectName, buildNumber);
 
-
 			const chunkSize = CONSOLE_VIEW_CHUNK_SIZE;
 			const chunks = Array.from({ length: Math.ceil(lines.length / chunkSize) }, (_, index) =>
 				lines.slice(index * chunkSize, (index + 1) * chunkSize)
@@ -48,10 +47,11 @@ const ConsoleView: React.FC<Props> = ({ buildData }) => {
 
 			if (buildData.result !== null) {
 				clearIntervalId()
-				Logger.info("ConsoleView: Build is finished, clearing interval")
-		}
+				Logger.info("ConsoleView/ConsoleView.tsx", "ConsoleView: Build is finished, clearing interval")
+				return true;
+			}
 		} catch (error) {
-			Logger.error("Error invoking get_build_data:", error);
+			Logger.error("ConsoleView/ConsoleView.tsx", "ConsoleView: Error while fetching console data: " + error);
 		}
 	};
 
@@ -69,11 +69,11 @@ const ConsoleView: React.FC<Props> = ({ buildData }) => {
 		webview.center();
 
 		webview.once("tauri://created", () => {
-			Logger.info("Webview created");
+			Logger.info("ConsoleView/ConsoleView.tsx", "Webview created");
 		});
 
 		webview.once("tauri://error", (e) => {
-			Logger.error(`Error in webview: ${e}`);
+			Logger.error("ConsoleView/ConsoleView.tsx", `Error in webview: ${e}`);
 		});
 	};
 
@@ -98,15 +98,20 @@ const ConsoleView: React.FC<Props> = ({ buildData }) => {
 	// Start the interval to fetch console data
 	useEffect(() => {
 		// Start Interval to update console data
-		setIntervalId(setInterval(() => {
-			fetchAndSetConsoleData();
-		}, CONSOLE_RELOAD_TIME));
+		const startConsole = async () => {
+			if (await fetchAndSetConsoleData() == true) return;
+			setIntervalId(setInterval(() => {
+				fetchAndSetConsoleData();
+			}, CONSOLE_RELOAD_TIME));
+		}
+
+		startConsole();
 
 
 		// On unmount, clear the interval
 		return () => {
 			clearIntervalId();
-			Logger.info("Cleaning up ConsoleView Interval");
+			Logger.info("ConsoleView/ConsoleView.tsx", "Cleaning up ConsoleView Interval");
 		};
 	}, []);
 

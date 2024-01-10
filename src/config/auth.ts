@@ -10,7 +10,7 @@ export const getAuthDetails = (): AuthDetails | null => {
 	};
 
 	if (!authDetails.baseurl || !authDetails.username || !authDetails.apitoken) {
-		Logger.error("Missing auth details. Is Onboarding complete?");
+		Logger.error("config/auth.ts", "Missing auth details. Is Onboarding complete?");
 		return null;
 	}
 

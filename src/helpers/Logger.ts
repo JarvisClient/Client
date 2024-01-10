@@ -5,11 +5,11 @@ import { ErrorInfo } from "react";
 import { LOGS_FILE } from "../config/constants";
 
 const Logger = {
-	info: <T extends unknown[]>(...messages: T) => logMessage("INFO", "color: #3b82f6;", ...messages),
-	debug: <T extends unknown[]>(...messages: T) => logMessage("DEBUG", "color: #7c3aed;", ...messages),
-	warning: <T extends unknown[]>(...messages: T) => logMessage("WARNING", "color: #d97706;", ...messages),
-	error: <T extends unknown[]>(...messages: T) => logMessage("ERROR", "color: #ef4444;", ...messages),
-	fatal: <T extends unknown[]>(...messages: T) => logMessage("FATAL", "color: #ef4444; background: black", ...messages),
+	info: <T extends unknown[]>(suffix: string, ...messages: T) => logMessage("INFO - " + suffix, "color: #3b82f6;", ...messages),
+	debug: <T extends unknown[]>(suffix: string, ...messages: T) => logMessage("DEBUG - " + suffix, "color: #7c3aed;", ...messages),
+	warning: <T extends unknown[]>(suffix: string, ...messages: T) => logMessage("WARNING - " + suffix, "color: #d97706;", ...messages),
+	error: <T extends unknown[]>(suffix: string, ...messages: T) => logMessage("ERROR - " + suffix, "color: #ef4444;", ...messages),
+	fatal: <T extends unknown[]>(suffix: string, ...messages: T) => logMessage("FATAL - " + suffix, "color: #ef4444; background: black", ...messages),
 	clearLogfile
 } as const;
 
@@ -56,7 +56,7 @@ export async function writeEmergencyLog(error: Error, errorInfo: ErrorInfo): Pro
 		writeToLog("EMERGENCY", `An Emergency Log was created. Check the file: ${emergency_log_file_name} for more details.`);
 	} catch (error) {
 		alert(`An Error occured while trying to write an Emergency Log: ${JSON.stringify(error)}`);
-		Logger.error("An Error occured while trying to write an Emergency Log: ", error);
+		Logger.error("helpers/Logger.ts", "An Error occured while trying to write an Emergency Log: ", error);
 	}
 	return await appDataDir() + emergency_log_file_name;
 }
@@ -71,7 +71,7 @@ export async function clearLogfile(): Promise<boolean> {
 		return true;
 	} catch (error) {
 		alert(`An Error occured while trying to clear the Log File: ${JSON.stringify(error)}`);
-		Logger.error("An Error occured while trying to clear the Log File: ", error);
+		Logger.error("helpers/Logger.ts", "An Error occured while trying to clear the Log File: ", error);
 	}
 
 	return false;

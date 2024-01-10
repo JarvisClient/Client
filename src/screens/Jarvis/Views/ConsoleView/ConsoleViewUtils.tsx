@@ -7,7 +7,7 @@ let osType: string;
 
 (async () => {
 	osType = await type();
-	Logger.info(`OS Type: ${osType}`);
+	Logger.info("ConsoleView/ConsoleViewUtils.tsx", `OS Type: ${osType}`);
 })();
 
 

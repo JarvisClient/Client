@@ -6,7 +6,7 @@ export const checkJenkinsConnection = async (): Promise<boolean> => {
 		const response = await fetchUtils.fetchJenkinsData();
 		if (response) return true;
 	} catch (error) {
-		Logger.error("Error while trying to get Jenkins Data", error);
+		Logger.error("JenkinsConnectionChecker.ts", "Error while trying to get Jenkins Data", error);
 	}
 	return false;
 };

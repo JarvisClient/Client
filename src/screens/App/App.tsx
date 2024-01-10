@@ -17,7 +17,7 @@ const App: React.FC = () => {
 		const startApp = async () => {
 			// Set default window size
 			let abortStartup = false;
-			Logger.info("App started");
+			Logger.info("App.tsx", "App started");
 			appWindow.setSize(new LogicalSize(270, 350));
 			appWindow.center();
 
@@ -27,7 +27,7 @@ const App: React.FC = () => {
 				await initUpdateChecker();
 			} catch (error) {
 				setSpecificLoadingMessage("An error occured while checking for updates");
-				Logger.error("An error occured while checking for updates", error);
+				Logger.error("App.tsx", "An error occured while checking for updates", error);
 			}
 
 			try {
@@ -36,7 +36,7 @@ const App: React.FC = () => {
 				await createPathsIfNotExists();
 			} catch (error) {
 				setSpecificLoadingMessage("An error occured while creating paths");
-				Logger.error("An error occured while creating paths", error);
+				Logger.error("App.tsx", "An error occured while creating paths", error);
 			}
 
 			try {
@@ -45,7 +45,7 @@ const App: React.FC = () => {
 				await checkLogFile();
 			} catch (error) {
 				setSpecificLoadingMessage("An error occured while checking logfile size");
-				Logger.error("An error occured while checking logfile size", error);
+				Logger.error("App.tsx", "An error occured while checking logfile size", error);
 			}
 
 			try {
@@ -60,7 +60,7 @@ const App: React.FC = () => {
 					checkPermissions();
 				}
 			} catch (error) {
-				Logger.error("An error occured while checking jenkins connection", error);
+				Logger.error("App.tsx", "An error occured while checking jenkins connection", error);
 			}
 
 			// Navigate to onboarding or jarvis
@@ -81,10 +81,10 @@ const App: React.FC = () => {
 		const onboardState = StorageManager.get("onboardState");
 
 		if (onboardState !== "true") {
-			Logger.info("Onboarding not completed, redirecting to onboarding");
+			Logger.info("App.tsx", "Onboarding not completed, redirecting to onboarding");
 			return "/onboarding";
 		}
-		Logger.info("Onboarding completed, redirecting to Jarvis");
+		Logger.info("App.tsx", "Onboarding completed, redirecting to Jarvis");
 		return "/jarvis";
 	};
 

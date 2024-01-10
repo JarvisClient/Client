@@ -28,7 +28,7 @@ export const editConsoleStyling = async () => {
 		}
 	} catch (error) {
 		alert(`Error opening file! \n${error}`);
-		Logger.error("Error opening the file:", error);
+		Logger.error("SettingsView/ButtonEvents.tsx", "Error opening the file:", error);
 	}
 };
 
@@ -48,7 +48,7 @@ export const openLogs = async () => {
 		}
 	} catch (error) {
 		alert(`Error opening file! \n${error}`);
-		Logger.error("Error opening the file:", error);
+		Logger.error("SettingsView/ButtonEvents.tsx", "Error opening the file:", error);
 	}
 };
 
@@ -62,7 +62,7 @@ export const clearAllData = async (notification: Props_NotificationContext) => {
 			soundOn: true,
 			soundType: "error"
 		});
-		Logger.error("Error clearing data:", error);
+		Logger.error("SettingsView/ButtonEvents.tsx", "Error clearing data:", error);
 	}
 };
 

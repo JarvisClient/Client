@@ -91,7 +91,7 @@ const OnboardingStep1: React.FC = () => {
 					soundType: "error",
 				});
 			}
-			Logger.error("OnboardingStep1 Error", error);
+			Logger.error("Onboarding/OnboardingStep1.tsx", "OnboardingStep1 Error", error);
 		}
 	};
 

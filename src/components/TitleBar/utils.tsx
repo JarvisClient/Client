@@ -21,7 +21,7 @@ export const renderSysButtons = (): React.JSX.Element => {
 			return <MacStyle />;
 		}
 	} catch (error) {
-		Logger.error("Error while rendering sysButtons", error);
+		Logger.error("TitleBar/utils.tsx", "Error while rendering sysButtons", error);
 		return <MacStyle />;
 	}
 };
