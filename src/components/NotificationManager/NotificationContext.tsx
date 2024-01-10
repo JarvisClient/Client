@@ -44,7 +44,7 @@ export function useNotification() {
 		}
 		return context;
 	} catch (error) {
-		Logger.error("Error using notification:", error);
+		Logger.error("NotificationContext.tsx", "Error using notification:", error);
 		return { showNotification: () => { }, showBannerNotification: () => { }, hideNotification: () => { } };
 	}
 }

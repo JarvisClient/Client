@@ -72,10 +72,10 @@ function JarvisMain(): React.ReactElement {
 	 * aka. Jarvis is started.
 	 */
 	useEffect(() => {
-		Logger.info("STARTUP: Running startup tasks for", storedProjectName);
+		Logger.info("JarvisMain.tsx", "STARTUP: Running startup tasks for", storedProjectName);
 		jarvisUtils.startJarvis();
 		return () => {
-			Logger.info("CLEANUP: Clearing interval for", storedProjectName);
+			Logger.info("JarvisMain.tsx", "CLEANUP: Clearing interval for", storedProjectName);
 			jarvisUtils.stopJarvis();
 		};
 	}, [storedProjectName, setProjectData]);
@@ -90,7 +90,7 @@ function JarvisMain(): React.ReactElement {
 				setFeatureButtons(await miniUtils.createFeatureButtons(activeJobBuild));
 				setParameterDefinition(await fetchUtils.fetchParameterDefinition(storedProjectName));
 			} catch (error) {
-				Logger.error("Error while updating job card props", error);
+				Logger.error("JarvisMain.tsx", "Error while updating job card props", error);
 			}
 		};
 

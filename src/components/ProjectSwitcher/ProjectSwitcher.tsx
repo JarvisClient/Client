@@ -93,7 +93,7 @@ const ProjectSwitcher = (): React.ReactElement => {
 			setModalData(data);
 			setIsModalOpen(true); // Open the modal
 		} catch (error) {
-			Logger.error(error);
+			Logger.error("ProjectSwitcher.tsx", error);
 			notification.showNotification("Error", "Something went wrong.", "error");
 		}
 	};

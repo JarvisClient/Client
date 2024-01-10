@@ -42,7 +42,7 @@ const OnboardingStep1: React.FC = () => {
 			navigate("/onboarding/step_3");
 
 		} catch (error) {
-			Logger.error(error);
+			Logger.error("Onboarding/OnboardingStep2.tsx",error);
 			notification.showNotification("error", String(error), "error", {
 				soundOn: true,
 				soundType: "error",
@@ -95,7 +95,7 @@ const OnboardingStep1: React.FC = () => {
 				const newAllJobs = allProjects.filter((item) => !favoriteProjects.includes(item));
 				setAllJobs(newAllJobs);
 			} catch (error) {
-				Logger.error("Error getting jobs:", error);
+				Logger.error("Onboarding/OnboardingStep2.tsx","Error getting jobs:", error);
 			}
 		};
 

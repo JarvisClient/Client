@@ -33,7 +33,7 @@ const BuildView: React.FC<Props> = ({ parameterDefinition, buildData }) => {
 				setSParameterDefinitions(mergeParameters(parameterDefinition, buildData));
 			}
 		} catch (error) {
-			Logger.error(error);
+			Logger.error("BuildView/BuildView.tsx", error);
 		}
 	}, [parameterDefinition, buildData]);
 
@@ -57,10 +57,10 @@ const BuildView: React.FC<Props> = ({ parameterDefinition, buildData }) => {
 		try {
 			let response: string;
 			if (SParameterDefinitions) {
-				Logger.info("Made request to start build with parameters: ", parameterValues);
+				Logger.info("Jarvis/Utils/JarvisUtils.tsx", "Made request to start build with parameters: ", parameterValues);
 				response = await fetchUtils.startBuild(projectName, parameterValues);
 			} else {
-				Logger.info("Made request to start build without parameters");
+				Logger.info("Jarvis/Utils/JarvisUtils.tsx", "Made request to start build without parameters");
 				response = await fetchUtils.startBuild(projectName, parameterValues);
 			}
 
@@ -73,7 +73,7 @@ const BuildView: React.FC<Props> = ({ parameterDefinition, buildData }) => {
 				soundType: "success",
 			});
 		} catch (error) {
-			Logger.error(error);
+			Logger.error("Jarvis/Utils/JarvisUtils.tsx", error);
 			notification.showNotification("Jenkins responded with an Error!", String(error), "error", {
 				soundOn: true,
 				soundType: "error",

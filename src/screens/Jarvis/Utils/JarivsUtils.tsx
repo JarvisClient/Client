@@ -84,7 +84,7 @@ export class JarvisUtils {
 				soundOn: true,
 				soundType: "error",
 			});
-			Logger.error("Error creating job card props:", error);
+			Logger.error("Jarvis/Utils/JarvisUtils.tsx", "Error creating job card props:", error);
 			return [];
 		}
 	};
@@ -122,7 +122,7 @@ export class JarvisUtils {
 			// Update UI with the fetched build data
 			this.setActiveFeature("status");
 		} catch (error) {
-			Logger.error("Error fetching build data:", error);
+			Logger.error("Jarvis/Utils/JarvisUtils.tsx", "Error fetching build data:", error);
 			this.notification.showNotification("Error", "Error fetching build data. Please check your internet connection and try again.", "jenkins", {
 				soundOn: true,
 				soundType: "error",
@@ -139,14 +139,14 @@ export class JarvisUtils {
 		if (interactedJobs[this.storedProjectName] && interactedJobs[this.storedProjectName]?.includes(activeJobBuild.id)) {
 			interactedJobs[this.storedProjectName] = interactedJobs[this.storedProjectName].filter((element: string) => element !== activeJobBuild.id);
 			this.notification.showNotification(messages[0], messages[1], messages[4]);
-			Logger.info("Interaction undone:", activeJobBuild);
+			Logger.info("Jarvis/Utils/JarvisUtils.tsx", "Interaction undone:", activeJobBuild);
 		} else {
 			if (!interactedJobs[this.storedProjectName]) {
 				interactedJobs[this.storedProjectName] = [];
 			}
 			interactedJobs[this.storedProjectName].push(activeJobBuild.id);
 			this.notification.showNotification(messages[2], messages[3], messages[4]);
-			Logger.info("Interaction noted:", activeJobBuild);
+			Logger.info("Jarvis/Utils/JarvisUtils.tsx", "Interaction noted:", activeJobBuild);
 		}
 
 		StorageManager.save(feature, JSON.stringify(interactedJobs));
@@ -167,7 +167,7 @@ export class JarvisUtils {
 
 			this.setJobCardProps(updatedJobCardProps);
 		} catch (error) {
-			Logger.error("Error updating job card props:", error);
+			Logger.error("Jarvis/Utils/JarvisUtils.tsx", "Error updating job card props:", error);
 		}
 	};
 
@@ -221,7 +221,7 @@ export class JarvisUtils {
 			}
 			this.setActiveFeature(feature);
 		} catch (error) {
-			Logger.error("Error handling feature button click:", error);
+			Logger.error("Jarvis/Utils/JarvisUtils.tsx", "Error handling feature button click:", error);
 			this.notification.showNotification("Error", "This Function is currently not available.", "error", {
 				soundOn: true,
 				soundType: "error",
@@ -411,7 +411,7 @@ export class JarvisUtils {
 				soundOn: true,
 				soundType: "error",
 			});
-			Logger.error("Error rendering job cards:", error);
+			Logger.error("Jarvis/Utils/JarvisUtils.tsx", "Error rendering job cards:", error);
 		}
 	};
 
@@ -472,11 +472,11 @@ export class JarvisUtils {
 								soundOn: true,
 								soundType: "error",
 							});
-							Logger.error("An Error occurred while trying to start Jarvis:", error);
+							Logger.error("Jarvis/Utils/JarvisUtils.tsx", "An Error occurred while trying to start Jarvis:", error);
 						}
 					}, JOBCARD_REFRESH_TIME)
 				);
-				Logger.info("Jarvis started with interval ID", getIntervalId());
+				Logger.info("Jarvis/Utils/JarvisUtils.tsx", "Jarvis started with interval ID", getIntervalId());
 			}
 		} catch (error: any /* eslint-disable-line @typescript-eslint/no-explicit-any */) {
 			this.notification.showNotification("Error", "An Error occurred while trying to start Jarvis. Please check your internet connection and try again.", "error", {
@@ -489,7 +489,7 @@ export class JarvisUtils {
 			}
 
 
-			Logger.error("Error starting Jarvis:", error);
+			Logger.error("Jarvis/Utils/JarvisUtils.tsx", "Error starting Jarvis:", error);
 			this.setActiveFeature("settings");
 			return null;
 		}
@@ -503,9 +503,9 @@ export class JarvisUtils {
 	stopJarvis = () => {
 		if (getIntervalId() !== null) {
 			clearIntervalId();
-			Logger.info("Jarvis stopped");
+			Logger.info("Jarvis/Utils/JarvisUtils.tsx", "Jarvis/Utils/JarvisUtils.tsx", "Jarvis stopped");
 		} else {
-			Logger.info("Jarvis is not running");
+			Logger.info("Jarvis/Utils/JarvisUtils.tsx", "Jarvis/Utils/JarvisUtils.tsx", "Jarvis is not running");
 		}
 	};
 
@@ -516,7 +516,7 @@ export class JarvisUtils {
 	private startJarvis_interval = async () => {
 		try {
 			//Logger
-			Logger.info(`Fetching project data every ${JOBCARD_REFRESH_TIME / 1000} seconds for ${this.storedProjectName}`);
+			Logger.info("Jarvis/Utils/JarvisUtils.tsx", `Fetching project data every ${JOBCARD_REFRESH_TIME / 1000} seconds for ${this.storedProjectName}`);
 
 			// Fetch project data to check for new builds
 			const newData = await fetchUtils.fetchProjectData(this.storedProjectName);
@@ -641,7 +641,7 @@ export class JarvisUtils {
 				this.notification.showBannerNotification("Storage Manager possibly corrupted.", "There was an error while trying to fetch the project data. You can try deleting the Local Storage file in the settings and restarting Jarvis.", false);
 			}
 
-			Logger.error("Error fetching project data:", error);
+			Logger.error("Jarvis/Utils/JarvisUtils.tsx", "Error fetching project data:", error);
 		}
 	};
 }

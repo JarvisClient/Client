@@ -94,7 +94,7 @@ const TestReport: React.FC<Props> = ({ buildData }) => {
 
 				setTestReport(testReport);
 			} catch (error) {
-				Logger.error(error);
+				Logger.error("TestReport.tsx", error);
 				setShowBanner(true);
 
 				/*

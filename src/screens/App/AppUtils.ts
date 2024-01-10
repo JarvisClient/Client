@@ -11,7 +11,7 @@ export const initUpdateChecker = async () => {
 	const updateState = await checkForUpdates();
 
 	if (updateState) {
-		Logger.info("Update available, opening update window");
+		Logger.info("AppUtils.tsx", "Update available, opening update window");
 		const webview = new WebviewWindow("checkUpdate", {
 			url: "/updateAvailable",
 			title: "Update Available",
@@ -24,11 +24,11 @@ export const initUpdateChecker = async () => {
 		webview.center();
 
 		webview.once("tauri://created", () => {
-			Logger.info("Webview created");
+			Logger.info("AppUtils.tsx", "Webview created");
 		});
 
 		webview.once("tauri://error", (e) => {
-			Logger.error(`Error in webview: ${e}`);
+			Logger.error("AppUtils.tsx", `Error in webview: ${e}`);
 		});
 	}
 };
@@ -40,10 +40,10 @@ export const initUpdateChecker = async () => {
 export const initJenkinsConnectionCheck = async () => {
 	const initJenkinsConnectionCheck = await checkJenkinsConnection();
 	if (initJenkinsConnectionCheck) {
-		Logger.info("Jenkins is available");
+		Logger.info("AppUtils.tsx", "Jenkins is available");
 		return true;
 	} else {
-		Logger.info("Jenkins is not available. Opening Window.");
+		Logger.info("AppUtils.tsx", "Jenkins is not available. Opening Window.");
 		const webview = new WebviewWindow("restartOnboardingMaybe", {
 			url: "/jenkinsUnavailable",
 			title: "Jenkins Unavailable",
@@ -56,11 +56,11 @@ export const initJenkinsConnectionCheck = async () => {
 		webview.center();
 
 		webview.once("tauri://created", () => {
-			Logger.info("Webview created");
+			Logger.info("AppUtils.tsx", "Webview created");
 		});
 
 		webview.once("tauri://error", (e) => {
-			Logger.error(`Error in webview: ${e}`);
+			Logger.error("AppUtils.tsx", `Error in webview: ${e}`);
 		});
 		return false;
 	}
@@ -71,10 +71,10 @@ export const checkPermissions = async (): Promise<void> => {
 		const permission = await requestPermission();
 		if (permission === "granted") {
 			StorageManager.save("notificationPermission", "granted");
-			Logger.info("Notification permission granted");
+			Logger.info("AppUtils.tsx", "Notification permission granted");
 		} else {
 			StorageManager.save("notificationPermission", "denied");
-			Logger.info("Notification permission denied");
+			Logger.info("AppUtils.tsx", "Notification permission denied");
 		}
 	}
 };
@@ -88,7 +88,7 @@ export const checkLogFile = async (): Promise<boolean> => {
 
 	// if log file is bigger than 5MB
 	if (logFileSize > MAX_LOG_FILE_SIZE) {
-		Logger.info("Log file is bigger than " + MAX_LOG_FILE_SIZE + " MB. Clearing log file.");
+		Logger.info("AppUtils.tsx", "Log file is bigger than " + MAX_LOG_FILE_SIZE + " MB. Clearing log file.");
 		// clear log file
 		const cleared = await Logger.clearLogfile();
 		return cleared;
@@ -106,7 +106,7 @@ export const createPathsIfNotExists = async () => {
 	const logsFileExists = await exists(LOGS_FILE, { dir: BaseDirectory.AppData });
 
 	if (!logsFileExists) {
-		Logger.info("Logs file does not exist. Creating it.");
+		Logger.info("AppUtils.tsx", "Logs file does not exist. Creating it.");
 		await writeTextFile(LOGS_FILE, "", { dir: BaseDirectory.AppData });
 	}
 };

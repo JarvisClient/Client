@@ -43,7 +43,7 @@ const SettingsView: React.FC = () => {
 				const version = await getVersion();
 				setAppVersion(version);
 			} catch (error) {
-				Logger.error("Error fetching app version:", error);
+				Logger.error("SettingsView/SettingsView.tsx", "Error fetching app version:", error);
 			}
 		};
 
