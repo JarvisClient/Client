@@ -5,16 +5,14 @@ import { IJenkinsBuild } from "../../../../Interfaces/IBuildInterface";
 import StorageManager from "../../../../helpers/StorageManager";
 import ConsoleViewLoading from "./ConsoleViewLoading";
 import { fetchUtils } from "../../Utils/fetchUtils";
-import { CONSOLE_RELOAD_TIME, CONSOLE_VIEW_CHUNK_SIZE } from "../../../../config/constants";
+import { CONSOLE_RELOAD_TIME } from "../../../../config/constants";
 
 import { motion } from "framer-motion";
 import { WebviewWindow } from "@tauri-apps/api/window";
-import { formatConsoleData } from "./ConsoleViewUtils";
 import { generateRandomString } from "../../../../helpers/utils";
 import { clearIntervalId, setIntervalId } from "./IntervalManager";
 import { IcoArrowDown, IcoDownload, IcoFile, IcoLinear } from "@/Icons/pack_1";
-import { invoke } from "@tauri-apps/api";
-import { getConsoleViewStyleDict } from "./ConsoleViewStyleDict";
+import { formatConsoleData } from "./ConsoleViewUtils";
 
 interface Props {
 	buildData: IJenkinsBuild;
@@ -33,19 +31,10 @@ const ConsoleView: React.FC<Props> = ({ buildData }) => {
 
 			const lines = await fetchUtils.consoleText(projectName, buildNumber);
 
-			// set last line to a https://google.com/
-			lines[1] = "https://google.com/";
+			const formattedData = await formatConsoleData(lines)
 
-			const formattedData: string = await invoke("format_console_text", {
-				consoleText: lines,
-				chunkSize: CONSOLE_VIEW_CHUNK_SIZE,
-				styleDict: await getConsoleViewStyleDict()
-			})
-
-
-			console.log(formattedData);
-			
-			setConsoleData(formattedData);
+			// add the new data to the console data
+			setConsoleData(consoleData + formattedData);
 			setIsLoading(false);
 
 			if (buildData.result !== null) {

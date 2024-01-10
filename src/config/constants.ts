@@ -40,4 +40,4 @@ export const JARVIS_LOADING_MESSAGES = [
 	"Reviewing the etiquette rulebook",
 ];
 
-export const CONSOLE_VIEW_CHUNK_SIZE = 50;
+export const CONSOLE_VIEW_CHUNK_SIZE = 10000;
