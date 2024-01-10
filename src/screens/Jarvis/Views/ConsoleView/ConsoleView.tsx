@@ -13,6 +13,8 @@ import { formatConsoleData } from "./ConsoleViewUtils";
 import { generateRandomString } from "../../../../helpers/utils";
 import { clearIntervalId, setIntervalId } from "./IntervalManager";
 import { IcoArrowDown, IcoDownload, IcoFile, IcoLinear } from "@/Icons/pack_1";
+import { invoke } from "@tauri-apps/api";
+import { getConsoleViewStyleDict } from "./ConsoleViewStyleDict";
 
 interface Props {
 	buildData: IJenkinsBuild;
@@ -31,16 +33,18 @@ const ConsoleView: React.FC<Props> = ({ buildData }) => {
 
 			const lines = await fetchUtils.consoleText(projectName, buildNumber);
 
-			const chunks = Array.from({ length: Math.ceil(lines.length / CONSOLE_VIEW_CHUNK_SIZE) }, (_, index) =>
-				lines.slice(index * CONSOLE_VIEW_CHUNK_SIZE, (index + 1) * CONSOLE_VIEW_CHUNK_SIZE)
-			);
+			// set last line to a https://google.com/
+			lines[1] = "https://google.com/";
 
-			const formattedChunks = await Promise.all(
-				chunks.map((chunk) => formatConsoleData(chunk))
-			);
+			const formattedData: string = await invoke("format_console_text", {
+				consoleText: lines,
+				chunkSize: CONSOLE_VIEW_CHUNK_SIZE,
+				styleDict: await getConsoleViewStyleDict()
+			})
 
-			const formattedData = formattedChunks.join("\n");
 
+			console.log(formattedData);
+			
 			setConsoleData(formattedData);
 			setIsLoading(false);
 
