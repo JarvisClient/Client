@@ -37,6 +37,9 @@ export default {
 			class: {
 				"big-sidebar": "bg-red-200",
 			},
+			backgroundImage: {
+				"windowStyleIcons": "url('/assets/images/windowStyleIcons.png')",
+			}
 		},
 	},
 	plugins: [],
