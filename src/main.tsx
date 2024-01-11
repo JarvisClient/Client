@@ -20,6 +20,7 @@ import CauseError from "./screens/ErrorBoundary/CauseError";
 import UpdateAvailable from "./screens/App/updateChecker/UpdateAvailable";
 import JenkinsConnectionFailedView from "./screens/App/JenkinsConnectionChecker/JenkinsConnectionFailedView";
 import FullConsoleLog from "./screens/Jarvis/Views/ConsoleView/FullConsoleLogView";
+import OnboardingStep4 from "./screens/Onboarding/OnboardingStep4";
 
 function AppContainer() {
 	return (
@@ -33,6 +34,7 @@ function AppContainer() {
 						<Route path="/onboarding/step_1" element={<OnboardingStep1 />} />
 						<Route path="/onboarding/step_2" element={<OnboardingStep2 />} />
 						<Route path="/onboarding/step_3" element={<OnboardingStep3 />} />
+						<Route path="/onboarding/step_4" element={<OnboardingStep4 />} />
 						<Route path="/onboarding/complete" element={<OnboardingComplete />} />
 						<Route path="/updateAvailable" element={<UpdateAvailable />} />
 						<Route path="/jenkinsUnavailable" element={<JenkinsConnectionFailedView />} />

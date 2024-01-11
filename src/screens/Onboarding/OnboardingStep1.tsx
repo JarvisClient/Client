@@ -48,7 +48,7 @@ const OnboardingStep1: React.FC = () => {
 				});
 				return;
 			}
-	
+
 			if (username === "") {
 				notification.showNotification("Invalid Username", "Please check again.", "error", {
 					soundOn: true,
@@ -56,7 +56,7 @@ const OnboardingStep1: React.FC = () => {
 				});
 				return;
 			}
-	
+
 			if (apiToken === "") {
 				notification.showNotification("Invalid API Token", "Please check again.", "error", {
 					soundOn: true,
@@ -64,9 +64,9 @@ const OnboardingStep1: React.FC = () => {
 				});
 				return;
 			}
-	
+
 			const response = await checkAuthentication(baseUrl, username, apiToken);
-	
+
 			if (response === false) {
 				notification.showNotification("Authentication failed", "Please check your Credentials.", "error", {
 					soundOn: true,
@@ -106,7 +106,7 @@ const OnboardingStep1: React.FC = () => {
 					transition={{ duration: 0.5, delay: 0.5 }}
 				>
 					<label htmlFor="baseUrl" className="block text-sm font-medium text-comment-color">
-    Base URL
+						Base URL
 					</label>
 					<input
 						type="url"
@@ -126,7 +126,7 @@ const OnboardingStep1: React.FC = () => {
 				>
 					<div className="flex flex-row">
 						<label htmlFor="userName" className="block text-sm font-medium text-comment-color">
-    User Name
+							User Name
 						</label>
 					</div>
 					<input
@@ -146,7 +146,7 @@ const OnboardingStep1: React.FC = () => {
 					transition={{ duration: 0.5, delay: 1.5 }}
 				>
 					<label htmlFor="apitoken" className="block text-sm font-medium text-comment-color">
-    API Token
+						API Token
 					</label>
 					<input
 						type="password"
@@ -172,7 +172,7 @@ const OnboardingStep1: React.FC = () => {
 					}
 				}}
 			>
-    Continue
+				Continue
 			</motion.button>
 
 			{/* Help Modal */}
@@ -180,7 +180,7 @@ const OnboardingStep1: React.FC = () => {
 				onClick={() => setShowHelpModal(true)}
 				className="absolute bottom-4 right-8 text-sm text-comment-color transition hover:brightness-75 active:brightness-90"
 			>
-    Need help?
+				Need help?
 			</p>
 
 			{showHelpModal && (
@@ -221,16 +221,16 @@ const OnboardingStep1: React.FC = () => {
 							<div className="ml-4 text-comment-color">
 								<p>You can create an API Token by goint to</p>
 								<p>
-    Profile
+									Profile
 									{">"}
 									{" "}
-    Configure
+									Configure
 									{">"}
 									{" "}
-    API Token
+									API Token
 									{">"}
 									{" "}
-    Add new Token
+									Add new Token
 								</p>
 							</div>
 						</details>
