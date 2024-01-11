@@ -437,8 +437,8 @@ export class JarvisUtils {
 			this.notification.showNotification("Stopping Build", "Stopping build " + activeJobBuild.number + "...", "jenkins");
 			await fetchUtils.stopBuild(this.storedProjectName, String(activeJobBuild.number));
 			// refresh jobcard data 
-			getIntervalId() && clearIntervalId();
 			activeJobBuild.result = "ABORTED";
+			this.setSelectedBuildData(activeJobBuild);
 
 			return true;
 		} else {
