@@ -8,12 +8,14 @@ import { BannerNotificcation, Notification } from "../../Interfaces/INotificatio
 import { NOTIFICATION_CLOSE_TIME } from "../../config/constants";
 import Logger from "../../helpers/Logger";
 
+import "./Buttons.css";
+
 // Audio
 import notification_info from "../../assets/sounds/notification_info.mp3";
 import notification_pop from "../../assets/sounds/notification_pop.mp3";
 import notification_success from "../../assets/sounds/notification_success.mp3";
 import notification_error from "../../assets/sounds/notification_error.mp3";
-import { IcoCross } from "@/Icons/pack_1";
+import { IcoCross, IcoError, IcoQuestionmark, IcoSuccess } from "@/Icons/pack_1";
 import { Props_NotificationContext, SoundSettings } from "@/Interfaces/IProps_NotificationContext";
 
 
@@ -23,9 +25,6 @@ const notificationSounds = {
 	success: new Audio(notification_success),
 	error: new Audio(notification_error),
 };
-
-
-
 
 const NotificationContext = createContext<Props_NotificationContext | undefined>(undefined);
 
@@ -45,7 +44,7 @@ export function useNotification() {
 		return context;
 	} catch (error) {
 		Logger.error("NotificationContext.tsx", "Error using notification:", error);
-		return { showNotification: () => { }, showBannerNotification: () => { }, hideNotification: () => { } };
+		return { showNotification: () => { }, showBannerNotification: () => { }, showPopupNotification: () => { }, hideNotification: () => { } };
 	}
 }
 
@@ -55,11 +54,21 @@ interface Props_NotificationProvider {
 	children: ReactNode;
 }
 
+interface PopupNotification {
+	title: string;
+	description: string;
+	buttons: {
+		text: string;
+		onClick: () => void;
+		type: "primary" | "secondary" | "danger";
+	}[];
+}
 
 
 export const NotificationProvider: React.FC<Props_NotificationProvider> = ({ children }) => {
 	const [notifications, setNotifications] = useState<Notification[]>([]);
 	const [bannerNotification, setBannerNotification] = useState<BannerNotificcation | null>(null);
+	const [popupNotification, setPopupNotification] = useState<PopupNotification | null>(null);
 
 	const showNotification = (title: string, message: string, icon: string, config: SoundSettings = {
 		soundOn: true,
@@ -99,12 +108,24 @@ export const NotificationProvider: React.FC<Props_NotificationProvider> = ({ chi
 		setBannerNotification(newNotification);
 	};
 
+	// function using PopupNotification for props
+	const showPopupNotification = (title: string, description: string, buttons: { text: string; onClick: () => void; type: "primary" | "secondary" | "danger" }[]) => {
+		const newNotification: PopupNotification = {
+			title,
+			description,
+			buttons,
+		};
+
+		setPopupNotification(newNotification);
+	};
+
+
 	const hideNotification = (id: number) => {
 		setNotifications((prevNotifications) => prevNotifications.filter((n) => n.id !== id));
 	};
 
 	return (
-		<NotificationContext.Provider value={{ showNotification, showBannerNotification, hideNotification }}>
+		<NotificationContext.Provider value={{ showNotification, showBannerNotification, showPopupNotification, hideNotification }}>
 			<div className="absolute bottom-[30px] right-[30px] space-y-2 w-[300px] z-50 select-none cursor-pointer">
 				{notifications.map((notification) => (
 					<motion.div
@@ -137,19 +158,71 @@ export const NotificationProvider: React.FC<Props_NotificationProvider> = ({ chi
 				))}
 			</div>
 			{bannerNotification && (
-				<motion.div 
+				<motion.div
 					initial={{ opacity: 0, y: 50 }}
 					animate={{ opacity: 1, y: 0 }}
 					className="bg-jenkins-job-red absolute bottom-0 left-0 w-screen min-h-[50px] z-50 flex flex-row items-center justify-between p-4 select-none">
 					<p><b>{bannerNotification.title}</b> {String(bannerNotification.message)}</p>
 					{!bannerNotification.permanent && (
-						<span 
+						<span
 							className="mx-8"
 							onClick={() => setBannerNotification(null)}>
 							<IcoCross className="hover:scale-[1.1] active:scale-[0.95] transition cursor-pointer" />
 						</span>
 					)}
 				</motion.div>
+			)}
+
+			{popupNotification && (
+				<>
+					<motion.div
+						className="fixed top-0 left-0 w-full h-full z-50 bg-black bg-opacity-80 flex items-center justify-center"
+						initial={{ opacity: 0 }}
+						animate={{ opacity: 1 }}
+						exit={{ opacity: 0 }}
+						onClick={() => setPopupNotification(null)}
+					>
+						<motion.div
+							initial={{ opacity: 0, y: 50 }}
+							animate={{ opacity: 1, y: 0 }}
+							className="bg-background-sidebar p-4 rounded-md w-[500px] min-h-[200px] flex flex-col justify-between"
+						>
+							{/* Text Section */}
+							<div className="pt-4 px-4 grid grid-cols-[48px_auto] gap-4">
+								{/* if buttons contain danger type, show danger icon if not show icosuccess */}
+								{popupNotification.buttons.some((button) => button.type === "danger") ? (
+									<div className="h-[48px] w-[48px] flex justify-center items-center bg-red-500 bg-opacity-30 rounded-full">
+										<IcoError size={30} color="#f22c3d"/>
+									</div>
+								) : (
+									<div className="h-[48px] w-[48px] flex justify-center items-center bg-gray-500 bg-opacity-30 rounded-full">
+										<IcoQuestionmark size={30}/>
+									</div>
+								)}
+								<div className="w-auto">
+									<p className="font-bold text-xl word-break">{popupNotification.title}</p>
+									<p className="text-md word-break">{popupNotification.description}</p>
+								</div>
+							</div>
+							{/* Button Section */}
+							<div className="flex justify-end space-x-4">
+								{popupNotification.buttons.map((button, index) => (
+									<button
+										key={index}
+										className={button.type === "primary" ? "popup-btn-primary" : button.type === "secondary" ? "popup-btn-secondary" : "popup-btn-danger"}
+										onClick={() => {
+											button.onClick();
+											setPopupNotification(null);
+										}}
+									>
+										{button.text}
+									</button>
+								))}
+							</div>
+						</motion.div>
+					</motion.div>
+
+				</>
 			)}
 			{children}
 		</NotificationContext.Provider>

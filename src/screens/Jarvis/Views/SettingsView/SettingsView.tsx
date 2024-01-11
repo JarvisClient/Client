@@ -260,6 +260,46 @@ const SettingsView: React.FC = () => {
 												Show Banner
 											</button>
 										</div>
+										{/* Show Popup */}
+										<div className="flex flex-col h-full">
+											<p className="mb-2 text-lg font-bold">Popup Notification</p>
+											<p className="mb-2 leading-5 text-comment-color">...</p>
+										</div>
+										<div className="h-full">
+											<button
+												onClick={() => {
+													notification.showPopupNotification(
+														"Lorem ipsum dolor sit amet",
+														"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor",
+														[
+															{
+																"text": "Button 1",
+																onClick: () => {
+																	notification.showNotification("Button 1 Clicked", "Button 1 was clicked", "success", {
+																		soundOn: true,
+																		soundType: "success",
+																	});
+																},
+																"type": "primary"
+															},
+															{
+																"text": "Button 2",
+																onClick: () => {
+																	notification.showNotification("Button 2 Clicked", "Button 2 was clicked", "success", {
+																		soundOn: true,
+																		soundType: "success",
+																	});
+																},
+																"type": "primary"
+															},
+														]
+
+													)
+												}}
+												className="button_danger_zone">
+												Show Popup
+											</button>
+										</div>
 									</div>
 								</div>
 							</>

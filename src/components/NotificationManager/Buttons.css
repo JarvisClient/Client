@@ -1,0 +1,33 @@
+.popup-btn-primary {
+    @apply h-[40px];
+    @apply text-[15px];
+    @apply font-medium;
+    @apply rounded-md;
+    @apply text-comment-color;
+    @apply px-5;
+    @apply bg-background-card;
+    @apply hover:bg-background-card-selected;
+    @apply hover:text-white;
+}
+
+.popup-btn-secondary {
+    @apply h-[40px];
+    @apply text-[15px];
+    @apply font-medium;
+    @apply rounded-md;
+    @apply text-comment-color;
+    @apply px-5;
+    @apply hover:text-white;
+}
+
+.popup-btn-danger {
+    @apply h-[40px];
+    @apply text-white;
+    @apply font-medium;
+    @apply rounded-md;
+    @apply px-3;
+    @apply text-white;
+    @apply bg-jenkins-job-red;
+    @apply hover:brightness-[0.9];
+    @apply active:brightness-[0.7]
+}
