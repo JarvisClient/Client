@@ -13,6 +13,7 @@ import StorageManager from "../../../../helpers/StorageManager";
 import { IJenkinsProjectParameterDefinition } from "../../../../Interfaces/IProjectInterface";
 import { IJenkinsBuild } from "../../../../Interfaces/IBuildInterface";
 import { fetchUtils } from "../../Utils/fetchUtils";
+import { motion } from "framer-motion";
 
 interface Props {
 	parameterDefinition: IJenkinsProjectParameterDefinition[] | undefined;
@@ -22,6 +23,7 @@ interface Props {
 const BuildView: React.FC<Props> = ({ parameterDefinition, buildData }) => {
 	const [parameterValues, setParameterValues] = useState<{ [key: string]: string | boolean | number | null }>({});
 	const [SParameterDefinitions, setSParameterDefinitions] = useState<IJenkinsProjectParameterDefinition[]>([]);
+	const [buildButtonDisabled, setBuildButtonDisabled] = useState<boolean>(false);
 	const projectName = StorageManager.get("projectName");
 
 	const notification = useNotification();
@@ -72,6 +74,11 @@ const BuildView: React.FC<Props> = ({ parameterDefinition, buildData }) => {
 				soundOn: true,
 				soundType: "success",
 			});
+
+			// Disable the button for 5 seconds
+			setBuildButtonDisabled(true);
+			setTimeout(() => setBuildButtonDisabled(false), 2000);
+
 		} catch (error) {
 			Logger.error("Jarvis/Utils/JarvisUtils.tsx", error);
 			notification.showNotification("Jenkins responded with an Error!", String(error), "error", {
@@ -83,45 +90,45 @@ const BuildView: React.FC<Props> = ({ parameterDefinition, buildData }) => {
 
 	const getComponentForParameter = (parameter: IJenkinsProjectParameterDefinition): React.JSX.Element => {
 		switch (parameter._class) {
-		case "hudson.model.BooleanParameterDefinition":
-			return (
-				<BoolenParameterDefinition
-					parameters={parameter}
-					value={String(parameterValues[parameter.name]) || "false"}
-					onChange={(value) => setParameterValues((prev) => ({ ...prev, [parameter.name]: value }))}
-				/>
-			);
+			case "hudson.model.BooleanParameterDefinition":
+				return (
+					<BoolenParameterDefinition
+						parameters={parameter}
+						value={String(parameterValues[parameter.name]) || "false"}
+						onChange={(value) => setParameterValues((prev) => ({ ...prev, [parameter.name]: value }))}
+					/>
+				);
 
-		case "hudson.model.StringParameterDefinition":
-		case "org.jvnet.jenkins.plugins.nodelabelparameter.NodeParameterDefinition":
-			return (
-				<StringParameterDefinition
-					parameters={parameter}
-					value={parameterValues[parameter.name] || ""}
-					onChange={(value) => setParameterValues((prev) => ({ ...prev, [parameter.name]: value }))}
-				/>
-			);
+			case "hudson.model.StringParameterDefinition":
+			case "org.jvnet.jenkins.plugins.nodelabelparameter.NodeParameterDefinition":
+				return (
+					<StringParameterDefinition
+						parameters={parameter}
+						value={parameterValues[parameter.name] || ""}
+						onChange={(value) => setParameterValues((prev) => ({ ...prev, [parameter.name]: value }))}
+					/>
+				);
 
-		case "hudson.model.TextParameterDefinition":
-			return (
-				<TextParameterDefinition
-					parameters={parameter}
-					value={parameterValues[parameter.name] || ""}
-					onChange={(value) => setParameterValues((prev) => ({ ...prev, [parameter.name]: value }))}
-				/>
-			);
+			case "hudson.model.TextParameterDefinition":
+				return (
+					<TextParameterDefinition
+						parameters={parameter}
+						value={parameterValues[parameter.name] || ""}
+						onChange={(value) => setParameterValues((prev) => ({ ...prev, [parameter.name]: value }))}
+					/>
+				);
 
-		case "hudson.model.ChoiceParameterDefinition":
-		case "jp.ikedam.jenkins.plugins.extensible_choice_parameter.ExtensibleChoiceParameterDefinition":
-			return (
-				<ChoiceParameterDefinition
-					parameters={parameter}
-					onChange={(value) => setParameterValues((prev) => ({ ...prev, [parameter.name]: value }))}
-				/>
-			);
+			case "hudson.model.ChoiceParameterDefinition":
+			case "jp.ikedam.jenkins.plugins.extensible_choice_parameter.ExtensibleChoiceParameterDefinition":
+				return (
+					<ChoiceParameterDefinition
+						parameters={parameter}
+						onChange={(value) => setParameterValues((prev) => ({ ...prev, [parameter.name]: value }))}
+					/>
+				);
 
-		default:
-			return <OtherParameterDefinition parameter={parameter} />;
+			default:
+				return <OtherParameterDefinition parameter={parameter} />;
 		}
 	};
 
@@ -132,12 +139,24 @@ const BuildView: React.FC<Props> = ({ parameterDefinition, buildData }) => {
 				<div key={index} className="mb-10">{getComponentForParameter(parameter)}</div>
 			))}
 
-			<button
-				onClick={buildButtonClick}
-				className="w-[80px] h-[37px] text-[15px] text-white bg-[#3a5e4b] font-medium rounded-md text-comment-color px-3 mt-5 mr-3 active:bg-background-card-selected hover:brightness-[1.3]"
-			>
-				<b>Build</b>
-			</button>
+<div className="relative flex items-center  h-[50px]">
+    <motion.button
+        initial={{ opacity: 1, y: 0 }}
+        animate={{ opacity: buildButtonDisabled ? 0 : 1, y: buildButtonDisabled ? -10 : 0 }}
+        onClick={buildButtonClick}
+        className="absolute h-[37px] text-[15px] text-white bg-[#3a5e4b] font-medium rounded-md text-comment-color px-3 active:bg-background-card-selected hover:brightness-[1.3]"
+    >
+        Start Build
+    </motion.button>
+    <motion.span
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: buildButtonDisabled ? 1 : 0, y: buildButtonDisabled ? 0 : 10 }}
+        className="absolute pointer-events-none"
+    >
+	<span className="inline-flex items-center rounded-md bg-[#122a2d] px-2 py-1 text-xs font-medium text-green-300 ring-2 ring-inset ring-green-600/20">BUILD STARTED</span>
+    </motion.span>
+</div>
+
 		</div>
 	);
 };

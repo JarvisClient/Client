@@ -434,7 +434,10 @@ export class JarvisUtils {
 	async stopBuild(activeJobBuild: IJenkinsBuild): Promise<boolean> {
 		if (activeJobBuild.result == null) {
 			// Build is running
-			this.notification.showNotification("Stopping Build", "Stopping build " + activeJobBuild.number + "...", "jenkins");
+			this.notification.showNotification("Build Stopped", "The Build #" + activeJobBuild.number + " has been Stopped!", "success", {
+				soundOn: true,
+				soundType: "info",
+			});
 			await fetchUtils.stopBuild(this.storedProjectName, String(activeJobBuild.number));
 			// refresh jobcard data 
 			activeJobBuild.result = "ABORTED";
