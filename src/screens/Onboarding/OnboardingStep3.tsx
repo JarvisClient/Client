@@ -6,8 +6,8 @@ import "./Onboarding.css";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 
-import macStyle from "@assets/icons/macStyle.png"
-import windowsStyle from "@assets/icons/winStyle.png"
+import macStyle from "@assets/icons/macStyle.png";
+import windowsStyle from "@assets/icons/winStyle.png";
 import StorageManager from "@/helpers/StorageManager";
 
 const OnboardingStep3: React.FC = () => {
@@ -20,17 +20,17 @@ const OnboardingStep3: React.FC = () => {
 			const size = new LogicalSize(700, 550);
 			appWindow.setSize(size).then(() => appWindow.center());
 
-			const titlebarStyle = await StorageManager.get("titlebarStyle")
-			setTitlebarStyle(titlebarStyle || "macStyle")
-		}
+			const titlebarStyle = await StorageManager.get("titlebarStyle");
+			setTitlebarStyle(titlebarStyle || "macStyle");
+		};
 
-		init()
+		init();
 	}, []);
 
 	const setTitlebarStyleAndSave = async (style: string) => {
-		await StorageManager.save("titlebarStyle", style)
-		setTitlebarStyle(style)
-	}
+		await StorageManager.save("titlebarStyle", style);
+		setTitlebarStyle(style);
+	};
 
 	const continueOnboarding = async () => {
 		navigate("/onboarding/step_4");
@@ -40,15 +40,15 @@ const OnboardingStep3: React.FC = () => {
 		<div className="flex flex-col bg-background-view items-center justify-center h-screen select-none">
 			<img src={icon} alt="Welcome icon" className="absolute top-8 w-8 h-8" />
 			<motion.p 
-			initial={{ opacity: 0 }}
-			animate={{ opacity: 1 }}
-			transition={{ duration: 0.5 }}
-			className="absolute top-24 font-medium text-xl">Selected Titlebar Style</motion.p>
-			<div className="flex flex-row w-[85%] space-x-4">
-				<motion.div
 				initial={{ opacity: 0 }}
 				animate={{ opacity: 1 }}
-				transition={{ duration: 0.5, delay: 0.25 }}
+				transition={{ duration: 0.5 }}
+				className="absolute top-24 font-medium text-xl">Selected Titlebar Style</motion.p>
+			<div className="flex flex-row w-[85%] space-x-4">
+				<motion.div
+					initial={{ opacity: 0 }}
+					animate={{ opacity: 1 }}
+					transition={{ duration: 0.5, delay: 0.25 }}
 					onClick={() => setTitlebarStyleAndSave("macStyle")}
 					className={`w-2/3 rounded-xl space-y-2 onboarding-custom-scroll border-border border-2 min-h-[200px] transition hover:bg-background-card-selected ${titlebarStyle === "macStyle" ? "bg-background-card-selected" : ""}`}
 					style={{
@@ -57,9 +57,9 @@ const OnboardingStep3: React.FC = () => {
 					}}>
 				</motion.div>
 				<motion.div
-				initial={{ opacity: 0 }}
-				animate={{ opacity: 1 }}
-				transition={{ duration: 0.5, delay: 0.5 }}
+					initial={{ opacity: 0 }}
+					animate={{ opacity: 1 }}
+					transition={{ duration: 0.5, delay: 0.5 }}
 					onClick={() => setTitlebarStyleAndSave("winStyle")}
 					className={`w-2/3 rounded-xl space-y-2 onboarding-custom-scroll border-border border-2 min-h-[200px] transition hover:bg-background-card-selected ${titlebarStyle === "winStyle" ? "bg-background-card-selected" : ""}`}
 					style={{

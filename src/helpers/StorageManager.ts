@@ -38,16 +38,19 @@ const getConfigFile = async (CONFIG_FILE: string): Promise<ConfigFile> => {
 */
 
 /**
- * Should be a drop in replacement for StorageManager
+ * @classdesc A class to manage the storage of data in the browser.
+ * @note This class is a wrapper around the localStorage API. It is used to store data in the browser. 
+ * 
  */
-
 const StorageManager = {
 	/**
-     * Save a value to local storage.
-     * @param {AllowedKey} key - The key to save the value under.
-     * @param {*} value - The value to save.
-     * @returns {boolean} - True if the save was successful, false otherwise.
-     */
+	 * 
+	 * @param key They key to save the value under
+	 * @param value The value to save
+	 * @returns True if the save was successful, false otherwise
+	 * @example
+	 * StorageManager.save("username", "John Doe");
+	 */
 	save: (key: allowedKeys, value: string): boolean => {
 		try {
 			if (typeof value === "object") {
@@ -62,11 +65,12 @@ const StorageManager = {
 	},
 
 	/**
-     *
-     * @param {AllowedKey} key - The key to get the value for.
-     * @returns {*} - The value for the key.
-     * @returns {null} - If the key does not exist.
-     */
+	 * 
+	 * @param key The key to get the value of
+	 * @returns The value of the key, or null if the key does not exist
+	 * @example
+	 * StorageManager.get("username");
+	 */
 	get: (key: string): string | null => {
 		const value = localStorage.getItem(key);
 
@@ -76,6 +80,10 @@ const StorageManager = {
 		return null;
 	},
 
+	/**
+	 * @note This function clears all data stored in the browser
+	 * @returns True if the clear was successful, false otherwise
+	 */
 	clearAll: (): boolean => {
 		try {
 			localStorage.clear();
@@ -88,8 +96,8 @@ const StorageManager = {
 
 	/**
      *
-     * @param {AllowedKey} key - The key to remove.
-     * @returns {boolean} - True if the removal was successful, false otherwise.
+     * @param {AllowedKey} key The key to remove.
+     * @returns {boolean} True if the removal was successful, false otherwise.
      */
 	removeItem: (key: string): boolean => {
 		try {

@@ -213,22 +213,22 @@ export class JarvisUtils {
 			case "stop_build": {
 				if (!selectedBuildData) throw new Error("selectedBuildData is undefined");
 				this.notification.showPopupNotification("Stop Build", "Are you sure you want to stop this build?", 
-				[
-					{
-						"text": "Yes, Stop Build",
-						"type": "danger",
-						"onClick": () => {
-							this.stopBuild(activeJobBuild);
+					[
+						{
+							"text": "Yes, Stop Build",
+							"type": "danger",
+							"onClick": () => {
+								this.stopBuild(activeJobBuild);
+							}
+						},
+						{
+							"text": "Cancel",
+							"type": "secondary",
+							"onClick": () => {
+								return;
+							}
 						}
-					},
-					{
-						"text": "Cancel",
-						"type": "secondary",
-						"onClick": () => {
-							return;
-						}
-					}
-				])
+					]);
 				return;
 				break;
 			}

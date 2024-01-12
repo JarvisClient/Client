@@ -1,7 +1,11 @@
 import { IJenkinsBuild } from "../Interfaces/IBuildInterface";
 import { JobCardProps } from "../Interfaces/IJobCardProps";
 
-// Determine the color based on build result
+/**
+ * 
+ * @param buildData Build data to get the color of
+ * @returns The color of the build as TailwindCSS classes
+ */
 const circleColor = (buildData: IJenkinsBuild | JobCardProps) => {
 	switch (buildData.result) {
 	case "SUCCESS":

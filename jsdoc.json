@@ -5,8 +5,8 @@
       "dictionaries": ["jsdoc", "closure"]
     },
     "source": {
-      "include": ["src"],
-      "includePattern": ".+\\.(ts|tsx|js|jsx)$",
+      "include": ["src", "README.md"],
+      "includePattern": ".+\\.(js|jsx|ts|tsx)$",
       "excludePattern": "(^|\\/|\\\\)_"
     },
     "plugins": [

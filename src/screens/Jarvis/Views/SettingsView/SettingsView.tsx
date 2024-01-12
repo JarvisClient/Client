@@ -294,7 +294,7 @@ const SettingsView: React.FC = () => {
 															},
 														]
 
-													)
+													);
 												}}
 												className="button_danger_zone">
 												Show Popup

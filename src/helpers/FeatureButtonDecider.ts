@@ -26,9 +26,6 @@ function featureButtonKeywordFinder(jenkinsRun: IJenkinsBuild): string[] {
 				}
 			});
 		}
-		// Add more conditions as needed for other classes
-
-		// You can customize this part based on your actual data structure
 	});
 
 	return result;

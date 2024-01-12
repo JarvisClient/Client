@@ -15,10 +15,12 @@ import notification_info from "../../assets/sounds/notification_info.mp3";
 import notification_pop from "../../assets/sounds/notification_pop.mp3";
 import notification_success from "../../assets/sounds/notification_success.mp3";
 import notification_error from "../../assets/sounds/notification_error.mp3";
-import { IcoCross, IcoError, IcoQuestionmark, IcoSuccess } from "@/Icons/pack_1";
+import { IcoCross, IcoError, IcoQuestionmark } from "@/Icons/pack_1";
 import { Props_NotificationContext, SoundSettings } from "@/Interfaces/IProps_NotificationContext";
 
-
+/**
+ * NotificationContext
+ */
 const notificationSounds = {
 	info: new Audio(notification_info),
 	pop: new Audio(notification_pop),
@@ -28,6 +30,10 @@ const notificationSounds = {
 
 const NotificationContext = createContext<Props_NotificationContext | undefined>(undefined);
 
+/**
+ * 
+ * @param soundType The type of sound to play
+ */
 export function playAudio(soundType: "success" | "error" | "pop" | "info") {
 	if (soundType === "success") notificationSounds.success.play();
 	else if (soundType === "error") notificationSounds.error.play();
@@ -35,6 +41,16 @@ export function playAudio(soundType: "success" | "error" | "pop" | "info") {
 	else if (soundType === "pop") notificationSounds.pop.play();
 }
 
+/**
+ * 
+ * @returns The NotificationContext
+ * @example 
+ * const notification = useNotification();
+ * 
+ * notification.showNotification("Title", "Message", "success", { soundOn: true, soundType: "pop" });
+ * notification.showBannerNotification("Title", "Message", true);
+ * notification.showPopupNotification("Title", "Description", [{ text: "Button", onClick: () => { }, type: "primary" }]);
+ */
 export function useNotification() {
 	try {
 		const context = useContext(NotificationContext);
@@ -64,12 +80,26 @@ interface PopupNotification {
 	}[];
 }
 
-
+/**
+ * 
+ * @param param0 The children of the NotificationProvider
+ * @returns The NotificationProvider
+ * @example <NotificationProvider>...</NotificationProvider>
+ * @example <NotificationProvider><App /></NotificationProvider>
+ */
 export const NotificationProvider: React.FC<Props_NotificationProvider> = ({ children }) => {
 	const [notifications, setNotifications] = useState<Notification[]>([]);
 	const [bannerNotification, setBannerNotification] = useState<BannerNotificcation | null>(null);
 	const [popupNotification, setPopupNotification] = useState<PopupNotification | null>(null);
 
+	/**
+	 * 
+	 * @param title The title of the notification
+	 * @param message The message of the notification
+	 * @param icon The icon of the notification
+	 * @param config The config of the notification sound
+	 * @example showNotification("Title", "Message", "success", { soundOn: true, soundType: "pop" });
+	 */
 	const showNotification = (title: string, message: string, icon: string, config: SoundSettings = {
 		soundOn: true,
 		soundType: "pop",
@@ -93,10 +123,24 @@ export const NotificationProvider: React.FC<Props_NotificationProvider> = ({ chi
 		}, NOTIFICATION_CLOSE_TIME);
 	};
 
+	/**
+	 * 
+	 * @param title The title of the notification
+	 * @param message The message of the notification
+	 * @note This function is used when the NotificationProvider is not rendered
+	 * @example showNotificationAsAlert("Title", "Message");
+	 */
 	const showNotificationAsAlert = (title: string, message: string) => {
 		alert(`${title}\n\n${message}`);
 	};
 
+	/**
+	 * 
+	 * @param title The title of the notification
+	 * @param message The message of the notification
+	 * @param permanent If the notification should have a close button. 
+	 * @example showBannerNotification("Title", "Message", true);
+	 */
 	const showBannerNotification = (title: string, message: string, permanent: boolean = false) => {
 		const newNotification: BannerNotificcation = {
 			id: notificationIdCounter++,
@@ -108,7 +152,12 @@ export const NotificationProvider: React.FC<Props_NotificationProvider> = ({ chi
 		setBannerNotification(newNotification);
 	};
 
-	// function using PopupNotification for props
+	/**
+	 * 
+	 * @param title The title of the notification
+	 * @param description The description of the notification
+	 * @param buttons Array of Objects containing the text, onClick function and type of the button
+	 */
 	const showPopupNotification = (title: string, description: string, buttons: { text: string; onClick: () => void; type: "primary" | "secondary" | "danger" }[]) => {
 		const newNotification: PopupNotification = {
 			title,
@@ -119,7 +168,10 @@ export const NotificationProvider: React.FC<Props_NotificationProvider> = ({ chi
 		setPopupNotification(newNotification);
 	};
 
-
+	/**
+	 * 
+	 * @param id The id of the notification to hide
+	 */
 	const hideNotification = (id: number) => {
 		setNotifications((prevNotifications) => prevNotifications.filter((n) => n.id !== id));
 	};

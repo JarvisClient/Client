@@ -3,6 +3,11 @@ import DOMPurify from "dompurify";
 import StorageManager from "./StorageManager";
 import showdown from "showdown";
 
+/**
+ * 
+ * @param timestamp Timestamp to format
+ * @returns Formatted timestamp in the format of "DD.MM.YYYY - HH:MM:SS"
+ */
 export const formatBuildDate = (timestamp: number | string) => {
 	const date = new Date(timestamp);
 
@@ -16,6 +21,14 @@ export const formatBuildDate = (timestamp: number | string) => {
 	return `${day}.${month}.${year} - ${hours}:${minutes}:${seconds}`;
 };
 
+/**
+ * 
+ * @param url URL to open
+ * @param forceBrowser Whether to force the URL to open in the browser
+ * @example
+ * openLink("https://google.com"); // Opens in the browser if the user has set the setting to do so
+ * openLink("https://google.com", true); // Opens in the browser regardless of the user's settings
+ */
 export const openLink = async (url: string, forceBrowser: boolean = false) => {
 	const openInBrowser = StorageManager.get("openInBrowser");
 
@@ -25,6 +38,17 @@ export const openLink = async (url: string, forceBrowser: boolean = false) => {
 	return await window.open(url, "_blank");
 };
 
+/**
+ * 
+ * @param obj1
+ * @param obj2 
+ * @returns True if the objects are equal, false otherwise
+ * @note This function is recursive
+ * @example 
+ * const obj1 = { a: 1, b: 2, c: { d: 3, e: 4 } };
+ * const obj2 = { a: 1, b: 2, c: { d: 3, e: 4 } };
+ * deepEqual(obj1, obj2); // Returns true
+ */
 export function deepEqual(obj1: unknown, obj2: unknown): boolean {
 	// Handle primitive types
 	if (obj1 === obj2) {
@@ -57,7 +81,11 @@ export function deepEqual(obj1: unknown, obj2: unknown): boolean {
 	return true;
 }
 
-
+/**
+ * 
+ * @param str String to check
+ * @returns True if the string is valid JSON, false otherwise
+ */
 export const isValidJson = (str: string) => {
 	try {
 		JSON.parse(str);
@@ -67,11 +95,21 @@ export const isValidJson = (str: string) => {
 	return true;
 };
 
+/**
+ * 
+ * @param html HTML to render
+ * @returns Sanitized HTML
+ */
 export const renderHTML = (html: string) => {
 	const sanitizedHTML = DOMPurify.sanitize(html);
 	return { __html: sanitizedHTML };
 };
 
+/**
+ * 
+ * @param length Length of the string to generate
+ * @returns Random string of the specified length
+ */
 export const generateRandomString = (length: number) => {
 	const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 	let result = "";
@@ -82,13 +120,23 @@ export const generateRandomString = (length: number) => {
 	return result;
 };
 
+/**
+ * 
+ * @param param0 Markdown text to render
+ * @returns Rendered markdown
+ * @note This function uses showdown to render the markdown
+ */
 export const MarkdownRenderer: React.FC<{ markdownText: string }> = ({ markdownText }) => {
 	const converter = new showdown.Converter();
 
 	return converter.makeHtml(markdownText);
 };
   
-
+/**
+ * 
+ * @param obj Object to check
+ * @returns True if the object is empty, false otherwise
+ */
 export function isEmpty(obj: any  /* eslint-disable-line @typescript-eslint/no-explicit-any */): boolean {
 	// Check if the object is null or undefined first
 	if (obj === null || obj === undefined) {

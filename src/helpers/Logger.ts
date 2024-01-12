@@ -4,6 +4,10 @@ import { arch, platform } from "@tauri-apps/api/os";
 import { ErrorInfo } from "react";
 import { LOGS_FILE } from "../config/constants";
 
+/**
+ * @classdesc A class to manage logging in the application
+ * @note This class is a wrapper around the console.log API. It is used to log messages to the console and to a log file
+ */
 const Logger = {
 	info: <T extends unknown[]>(suffix: string, ...messages: T) => logMessage("INFO - " + suffix, "color: #3b82f6;", ...messages),
 	debug: <T extends unknown[]>(suffix: string, ...messages: T) => logMessage("DEBUG - " + suffix, "color: #7c3aed;", ...messages),
@@ -24,6 +28,13 @@ export async function getLogfileSize(): Promise<number> {
 	return file.length;
 }
 
+/**
+ * 
+ * @param error Error object
+ * @param errorInfo ErrorInfo object
+ * @returns The path to the emergency log file
+ * @note This function is used to write an emergency log file when an error occurs that causes the application to crash
+ */
 export async function writeEmergencyLog(error: Error, errorInfo: ErrorInfo): Promise<string> {
 	const emergency_log_file_name = `emergency_log_${Math.floor(Date.now() / 1000)}.log`;
 	try {
@@ -63,7 +74,7 @@ export async function writeEmergencyLog(error: Error, errorInfo: ErrorInfo): Pro
 
 /**
  * 
- * @returns true if the log file was cleared successfully
+ * @returns True if the log file was cleared successfully, false otherwise
  */
 export async function clearLogfile(): Promise<boolean> {
 	try {
@@ -77,10 +88,22 @@ export async function clearLogfile(): Promise<boolean> {
 	return false;
 }
 
+/**
+ * @note This function is called when the application starts. It writes a message to the log file
+ */
 export async function onStartup() {
 	await writeToLog("SYSTEM", "==================== JARVIS STARTUP ====================");
 }
 
+/**
+ * 
+ * @param level Log level
+ * @param css CSS to apply to the log message
+ * @param messages Messages to log
+ * @note This function is used to log messages to the console and to a log file
+ * @example
+ * logMessage("INFO", "color: #3b82f6;", "Hello World");
+ */
 function logMessage<T extends unknown[]>(level: string, css: string, ...messages: T) {
 	try {
 		const { stack } = new Error();
@@ -105,6 +128,10 @@ function logMessage<T extends unknown[]>(level: string, css: string, ...messages
 	}
 }
 
+/**
+ * @returns The current date and time in the format: YYYY-MM-DD HH:MM:SS
+ * @note This function is duplicated in src/helpers/utils.ts
+ */
 function getCurrentDateTime() {
 	const now = new Date();
 
@@ -118,6 +145,12 @@ function getCurrentDateTime() {
 	return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 }
 
+/**
+ * 
+ * @param level Log level
+ * @param messages Messages to log
+ * @note This function is used to write messages to the log file
+ */
 async function writeToLog<T extends unknown[]>(level: string, ...messages: T) {
 	try {
 		await writeTextFile(LOGS_FILE, `[${getCurrentDateTime()}] [${level}] ${messages.join(" ")}`, {

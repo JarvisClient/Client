@@ -4,6 +4,10 @@ import { IcoArrowTriangleRight, IcoBell, IcoBellFilled, IcoBook, IcoCodeBracket,
 
 const projectName = StorageManager.get("projectName");
 
+/**
+ * FeatureButtons
+ * @note This is the configuration for the FeatureButtons. The Order of the Buttons is the Order they will be displayed in the UI.
+ */
 const FeatureButtons: { [key: string]: FeatureButtonProps } = {
 	status_for_project: {
 		title: "Project",
