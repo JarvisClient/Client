@@ -7,6 +7,7 @@ import { fetchUtils } from "../../Utils/fetchUtils";
 import ProjectHealthDisplay from "../../../../components/ProjectHealthDisplay/ProjectHealthDisplay";
 import { motion } from "framer-motion";
 import { IcoCube } from "@/Icons/pack_1";
+import circleColor from "@/config/getCircleColor";
 
 interface Props {
 	buildData: IJenkinsProject | null;
@@ -35,6 +36,7 @@ const ProjectStatusView: React.FC<Props> = ({ buildData }) => {
 				setLastSuccessfulBuild(data);
 			});
 		}
+
 	}, [buildData]);
 
 	return (
@@ -46,9 +48,9 @@ const ProjectStatusView: React.FC<Props> = ({ buildData }) => {
 						<div className="flex-shrink-0 mr-3 ">
 							<span className="relative flex h-[37px] w-[37px]">
 								{buildData.color.includes("_anime") ? (
-									<span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-jenkins-job-blue opacity-75" />
+									<span className={`animate-ping absolute inline-flex h-full w-full rounded-full ${circleColor(buildData.color)} opacity-75`} />
 								) : null}
-								<span className={`relative inline-flex rounded-full h-full w-full bg-jenkins-job-${buildData.color}`} />
+								<span className={`relative inline-flex rounded-full h-full w-full ${circleColor(buildData.color)}`} />
 							</span>
 						</div>
 						<div className="flex flex-col justify-center">

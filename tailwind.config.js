@@ -12,7 +12,7 @@ export default {
 		extend: {
 			colors: {
 				// UI Colors
-				border: "#313133",
+				"border": "#313133",
 				"background-sidebar": "#0E0E0F",
 				"background-view": "#171717",
 				"background-card": "#212121",
@@ -32,7 +32,10 @@ export default {
 				"jenkins-job-gray": "#939495",
 
 				// Brand
-				"brand-mint": "#9DFDD0"
+				"brand-mint": "#9DFDD0",
+				"brand-lavender": "#AA9DF8",
+				"brand-marine": "#4468F2",
+				"brand-baby": "#DB9DFF"
 			},
 			class: {
 				"big-sidebar": "bg-red-200",

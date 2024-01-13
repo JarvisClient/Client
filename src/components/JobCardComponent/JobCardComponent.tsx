@@ -34,7 +34,7 @@ const JobCardComponent: React.FC<JobCardProps> = ({
 					{!buildData.result
 						? <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-jenkins-job-blue opacity-75" />
 						: null}
-					<span className={`relative inline-flex rounded-full h-5 w-5 ${circleColor(buildData)}`} />
+					<span className={`relative inline-flex rounded-full h-5 w-5 ${circleColor(buildData.result)}`} />
 				</span>
 			</div>
 			<div className="flex flex-col justify-center">
