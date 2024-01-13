@@ -1,10 +1,11 @@
 [package]
 name = "jarvis"
 version = "0.0.0"
-description = "Jarvis Jenkins Client"
+description = "JarvisCI - Jenkins Client "
 authors = ["aph"]
-license = ""
-repository = ""
+license = "MIT"
+repository = "https://github.com/JarvisClient/Client"
+homepage = "https://jarvisci.com"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
