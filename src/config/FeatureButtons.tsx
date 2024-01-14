@@ -130,12 +130,12 @@ const FeatureButtons: { [key: string]: FeatureButtonProps } = {
 	},
 	jenkins: {
 		title: "Jenkins",
-		description: "Open this build in Jenkins",
+		description: "Open this Page in Jenkins",
 		titleBar: "Jenkins",
 		bg_color: "#44272B",
 		icon_color: "#F45B69",
 		icon: IcoWindow,
-		purpose: "JOB",
+		purpose: "BOTH",
 	},
 	// Just for Notifications
 	success: {

@@ -195,7 +195,8 @@ export class JarvisUtils {
 				break;
 			case "jenkins":
 				if (!selectedBuildData) throw new Error("selectedBuildData is undefined");
-				openLink(selectedBuildData.url + activeJobBuild.number);
+				if (activeJobBuild.number) openLink(selectedBuildData.url + activeJobBuild.number);
+				if (!activeJobBuild.number) openLink(selectedBuildData.url);
 				return;
 				break;
 			case "pin": {
