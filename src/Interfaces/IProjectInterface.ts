@@ -16,12 +16,12 @@ export interface IJenkinsProject {
     inQueue: boolean;
     keepDependencies: boolean;
     lastBuild: IJenkinsProjectBuild;
-    lastCompletedBuild: IJenkinsProjectBuild;
+    lastCompletedBuild: IJenkinsProjectBuild | null;
     lastFailedBuild: IJenkinsProjectBuild | null;
-    lastStableBuild: IJenkinsProjectBuild;
-    lastSuccessfulBuild: IJenkinsProjectBuild;
+    lastStableBuild: IJenkinsProjectBuild | null;
+    lastSuccessfulBuild: IJenkinsProjectBuild | null;
     lastUnstableBuild: IJenkinsProjectBuild | null;
-    lastUnsuccessfulBuild: IJenkinsProjectBuild;
+    lastUnsuccessfulBuild: IJenkinsProjectBuild | null;
     nextBuildNumber: number;
     property: IJenkinsProjectProperty[];
     queueItem: unknown | null;
