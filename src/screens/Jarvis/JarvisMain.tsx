@@ -163,7 +163,7 @@ function JarvisMain(): React.ReactElement {
 							{activeFeature === "parameters" && <ParametersView buildData={selectedBuildData} />}
 							{activeFeature === "settings" && <SettingsView />}
 							{activeFeature === "changes" && <ChangesView buildData={selectedBuildData} />}
-							{activeFeature === "status_for_project" && <ProjectStatusView buildData={projectData} />}
+							{activeFeature === "status_for_project" && <ProjectStatusView projectData={projectData} />}
 							{activeFeature === "testReport" && <TestReport buildData={selectedBuildData} />}
 							{activeFeature === "build" && <BuildView buildData={selectedBuildData} parameterDefinition={parameterDefinition} />}
 						</CustomAnimatePresence>

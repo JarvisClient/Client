@@ -542,6 +542,7 @@ export class JarvisUtils {
 			const collectedBuildData: IJenkinsBuild[] = [];
 			if (!newData) throw new Error("No project data found, please check your internet connection and try again.");
 			const newBuilds = newData.builds;
+			this.setProjectData(newData);
 
 			/**
 			 * This Section is for adding new builds to the jobCardProps array.
