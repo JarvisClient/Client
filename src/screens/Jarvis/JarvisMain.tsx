@@ -160,7 +160,7 @@ function JarvisMain(): React.ReactElement {
 							{activeFeature === "switch_project" && <SwitchProjectView />}
 							{activeFeature === "status" && <StatusView buildData={selectedBuildData} />}
 							{activeFeature === "console" && <ConsoleView buildData={selectedBuildData} />}
-							{activeFeature === "parameters" && <ParametersView buildData={selectedBuildData} />}
+							{activeFeature === "parameters" && <ParametersView buildData={selectedBuildData} parameterDefinition={parameterDefinition}  />}
 							{activeFeature === "settings" && <SettingsView />}
 							{activeFeature === "changes" && <ChangesView buildData={selectedBuildData} />}
 							{activeFeature === "status_for_project" && <ProjectStatusView projectData={projectData} />}

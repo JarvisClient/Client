@@ -14,6 +14,7 @@ import { IJenkinsProjectParameterDefinition } from "../../../../Interfaces/IProj
 import { IJenkinsBuild } from "../../../../Interfaces/IBuildInterface";
 import { fetchUtils } from "../../Utils/fetchUtils";
 import { motion } from "framer-motion";
+import { IcoArrowTriangleRight } from "@/Icons/pack_1";
 
 interface Props {
 	parameterDefinition: IJenkinsProjectParameterDefinition[] | undefined;
@@ -134,7 +135,12 @@ const BuildView: React.FC<Props> = ({ parameterDefinition, buildData }) => {
 
 	return (
 		<div className="mx-10 my-10 select-none">
-			<h1 className="text-3xl font-bold mb-[40px]">Start a new Build</h1>
+			<span className="flex flex-row items-center space-x-4 mb-[40px]">
+				<span className="flex items-center justify-center rounded-md bg-[#2D483A] h-10 w-10">
+				<IcoArrowTriangleRight color="#84FFB3" size={28} className="ml-0" />
+				</span>
+			<h1 className="text-3xl font-bold">Start a new Build</h1>
+			</span>
 			{SParameterDefinitions?.map((parameter, index) => (
 				<div key={index} className="mb-10">{getComponentForParameter(parameter)}</div>
 			))}

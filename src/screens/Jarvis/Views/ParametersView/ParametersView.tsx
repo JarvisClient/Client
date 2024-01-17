@@ -10,16 +10,28 @@ import TextParameterValue from "./ParameterComponents/TextParameterValue";
 import PasswordParameterValue from "./ParameterComponents/PasswordParameterValue";
 import OtherParameterValue from "./ParameterComponents/OtherParameter";
 import { IJenkinsBuild, JenkinsBuildAction, JenkinsBuildParameter } from "../../../../Interfaces/IBuildInterface";
+import { IJenkinsProjectParameterDefinition } from "@/Interfaces/IProjectInterface";
 
 interface Props {
     buildData: IJenkinsBuild;
+	parameterDefinition: IJenkinsProjectParameterDefinition[] | undefined;
 }
 
-const ParametersView: React.FC<Props> = ({ buildData }) => {
+const ParametersView: React.FC<Props> = ({ buildData, parameterDefinition }) => {
 	const getParameters = (): JenkinsBuildParameter[] => {
 		try {
 			const buildDataActions: JenkinsBuildAction[] = buildData?.actions || [];
 			const parameters = buildDataActions.find((action: JenkinsBuildAction) => action._class === "hudson.model.ParametersAction")?.parameters;
+
+			if (parameters === undefined) return [];
+
+			for (let i = 0; i < parameters.length; i++) {
+				const parameterDefinitionForParameter = parameterDefinition?.find((parameterDef) => parameterDef.name === parameters[i].name);
+				
+				if (parameterDefinitionForParameter?.description) {
+					parameters[i].description = parameterDefinitionForParameter.description;
+				}
+			}
 
 			return parameters || [] as JenkinsBuildParameter[];
 		} catch (error) {
