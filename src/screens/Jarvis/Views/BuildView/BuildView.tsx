@@ -139,23 +139,23 @@ const BuildView: React.FC<Props> = ({ parameterDefinition, buildData }) => {
 				<div key={index} className="mb-10">{getComponentForParameter(parameter)}</div>
 			))}
 
-<div className="relative flex items-center  h-[50px]">
-    <motion.button
-        initial={{ opacity: 1, y: 0 }}
-        animate={{ opacity: buildButtonDisabled ? 0 : 1, y: buildButtonDisabled ? -10 : 0 }}
-        onClick={buildButtonClick}
-        className="absolute h-[37px] text-[15px] text-white bg-[#3a5e4b] font-medium rounded-md text-comment-color px-3 active:bg-background-card-selected hover:brightness-[1.3]"
-    >
-        Start Build
-    </motion.button>
-    <motion.span
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: buildButtonDisabled ? 1 : 0, y: buildButtonDisabled ? 0 : 10 }}
-        className="absolute pointer-events-none"
-    >
-	<span className="inline-flex items-center rounded-md bg-[#122a2d] px-2 py-1 text-xs font-medium text-green-300 ring-2 ring-inset ring-green-600/20">BUILD STARTED</span>
-    </motion.span>
-</div>
+			<div className="relative flex items-center  h-[50px]">
+				<motion.button
+					initial={{ opacity: 1, y: 0 }}
+					animate={{ opacity: buildButtonDisabled ? 0 : 1, y: buildButtonDisabled ? -10 : 0 }}
+					onClick={buildButtonClick}
+					className="absolute h-[37px] text-[15px] text-white bg-[#3a5e4b] font-medium rounded-md text-comment-color px-3 active:bg-background-card-selected hover:brightness-[1.3]"
+				>
+					Start Build
+				</motion.button>
+				<motion.span
+					initial={{ opacity: 0, y: 10 }}
+					animate={{ opacity: buildButtonDisabled ? 1 : 0, y: buildButtonDisabled ? 0 : 10 }}
+					className="absolute pointer-events-none"
+				>
+					<span className="inline-flex items-center rounded-md bg-[#122a2d] px-2 py-1 text-xs font-medium text-green-300 ring-2 ring-inset ring-green-600/20">BUILD STARTED</span>
+				</motion.span>
+			</div>
 
 		</div>
 	);

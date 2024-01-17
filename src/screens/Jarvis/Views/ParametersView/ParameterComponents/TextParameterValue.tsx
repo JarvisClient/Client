@@ -7,9 +7,9 @@ interface Props {
 }
 
 const TextParameterValue: React.FC<Props> = ({ parameter }): JSX.Element => (
-	<div className="grid items-center">
-		<div className="flex items-center mr-2">
-			<IcoQuote size={30} />
+<div className="grid items-center">
+			<div className="grid grid-cols-[30px_auto] mr-2">
+			<IcoQuote size={30} className="mt-2"/>
 			<div className="ml-5">
 				<h1 className="text-2xl font-bold text-text-color">{parameter.name}</h1>
 				<p className="text-md text-comment-color">{parameter.description}</p>

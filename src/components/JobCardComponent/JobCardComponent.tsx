@@ -44,9 +44,9 @@ const JobCardComponent: React.FC<JobCardProps> = ({
 					{pinned && <IcoPinFilled className="inline-block ml-1" size={20} />}
 					{notification_set && <IcoBellFilled className="inline-block ml-1" size={20} />}
 				</div>
-				<div className="text-sm text-comment-color overflow-hidden line-clamp-2">
+				<p className="text-sm text-comment-color overflow-hidden line-clamp-2 break-all ">
 					{buildData.description}
-				</div>
+				</p>
 			</div>
 		</div>
 	);

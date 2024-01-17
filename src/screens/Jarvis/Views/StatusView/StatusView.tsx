@@ -1,16 +1,19 @@
-import React from "react";
+import React, { useState } from "react";
 import { openLink } from "../../../../helpers/utils";
 
 import StorageManager from "../../../../helpers/StorageManager";
 import { IJenkinsBuild, JenkinsBuildAction, JenkinsBuildArtifact } from "../../../../Interfaces/IBuildInterface";
 import { motion } from "framer-motion";
-import { IcoCodeBracket, IcoCube, IcotInformation, IcoPerson } from "@/Icons/pack_1";
+import { IcoCodeBracket, IcoCube, IcotInformation, IcoPerson, IcoNotes } from "@/Icons/pack_1";
+import NotesModal from "./NotesModal";
 
 interface Props {
 	buildData: IJenkinsBuild;
 }
 
 const StatusView: React.FC<Props> = ({ buildData }) => {
+	const [notesModalOpen, setNotesModalOpen] = useState<boolean>(false);
+
 	const openArtifact = async (artifact: string = "") => {
 		const baseURL: string = StorageManager.get("baseurl") || "";
 		const projectName: string = StorageManager.get("projectName") || "";
@@ -109,7 +112,9 @@ const StatusView: React.FC<Props> = ({ buildData }) => {
 					<p>Started {startedAgo()} ago.</p>
 					{buildData?.duration > 0 && <p>Duration: {formatMilliseconds(buildData?.duration)}</p>}
 					{buildData?.estimatedDuration > 0 && <p>Estimated Duration: {formatMilliseconds(buildData?.estimatedDuration)}</p>}
-
+					<span 
+					onClick={() => setNotesModalOpen(true)}
+					className="flex space-x-2 cursor-pointer"><IcoNotes color={"#E8D17D"} size={20}/><p className="font-bold text-[#E8D17D]">Notes</p></span>
 				</div>
 			</motion.div>
 
@@ -180,6 +185,7 @@ const StatusView: React.FC<Props> = ({ buildData }) => {
 					</p>
 				</div>
 			</motion.div>
+			{notesModalOpen && <NotesModal buildData={buildData} isOpen={notesModalOpen} closeModal={() => setNotesModalOpen(false)} />}
 		</div>
 	);
 };

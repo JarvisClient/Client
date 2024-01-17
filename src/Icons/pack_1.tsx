@@ -321,3 +321,21 @@ export const IcoClose = ({ size = 24, color = "currentColor", className }: IconP
 		<path d="M16.8995 7L6.99998 16.8995" stroke={color} strokeWidth="2" strokeLinecap="round" />
 	</svg>
 );
+
+// Icon Pack: Phosphor Icons
+// License: MIT - Copyright (c) 2023 Phosphor Icons
+// Used in: Params View
+export const IcoNotes = ({ size = 24, color = "currentColor", className }: IconProps) => (
+	<svg className={className} width={size} height={size} fill={color} viewBox="0 0 256 256">
+		<path d="M230.15,70.54,185.46,25.86a20,20,0,0,0-28.28,0L33.86,149.17A19.86,19.86,0,0,0,28,163.31V208a20,20,0,0,0,20,20H216a12,12,0,0,0,0-24H125L230.15,98.83A20,20,0,0,0,230.15,70.54ZM91,204H52V165l84-84,39,39ZM192,103,153,64l18.34-18.34,39,39Z">
+			</path>
+			</svg>
+);
+
+// Icon Pack: Phosphor Icons
+// License: MIT - Copyright (c) 2023 Phosphor Icons
+// Used in: Params View
+export const IcoSave = ({ size = 24, color = "currentColor", className }: IconProps) => (
+<svg className={className} width={size} height={size} fill={color} viewBox="0 0 256 256">
+	<path d="M222.14,77.17,178.83,33.86A19.86,19.86,0,0,0,164.69,28H48A20,20,0,0,0,28,48V208a20,20,0,0,0,20,20H208a20,20,0,0,0,20-20V91.31A19.86,19.86,0,0,0,222.14,77.17ZM164,204H92V156h72Zm40,0H188V152a20,20,0,0,0-20-20H88a20,20,0,0,0-20,20v52H52V52H163l41,41ZM164,80a12,12,0,0,1-12,12H96a12,12,0,0,1,0-24h56A12,12,0,0,1,164,80Z"></path></svg>
+);
