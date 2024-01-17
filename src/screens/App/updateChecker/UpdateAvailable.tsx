@@ -8,7 +8,7 @@ import { openLink } from "../../../helpers/utils";
 import TitleBarComponentLight from "../../../components/TitleBar/TitleBarComponentLight";
 import showdown from "showdown";
 
-import "./UpdateAvailable.css";
+import "../../../css/UpdateAvailable.css";
 
 const UpdateAvailable: React.FC = () => {
 	const [updateInfo, setUpdateInfo] = React.useState<ReleaseInfo>();
