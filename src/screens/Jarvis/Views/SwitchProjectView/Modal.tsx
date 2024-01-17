@@ -15,11 +15,11 @@ const Modal: React.FC<Props> = ({ isOpen, closeModal, modalData }) => (isOpen ? 
 		animate={{ opacity: 1 }}
 		transition={{ duration: 0.1 }}
 		exit={{ opacity: 0 }}
-		className="absolute top-0 left-0 w-full h-full backdrop-blur-sm bg-black/70 transition flex justify-center items-center"
+		className="absolute top-0 left-0 w-full z-40 h-full backdrop-blur-sm bg-black/70 transition flex justify-center items-center"
 		onClick={() => closeModal()}
 	>
 		<div
-			className="bg-background-sidebar p-14 w-[850px] h-[600px] rounded-md relative overflow-y-scroll overflow-x-hidden custom-scroll scrollbar-hidden"
+			className="bg-background-sidebar p-14 w-[850px] h-[600px] rounded-md relative overflow-y-scroll overflow-x-hidden error-custom-scroll"
 			onClick={(e) => e.stopPropagation()}
 		>
 			<div

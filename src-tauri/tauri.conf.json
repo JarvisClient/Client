@@ -7,7 +7,7 @@
   },
   "package": {
     "productName": "Jarvis Client",
-    "version": "0.9.7"
+    "version": "0.9.75"
   },
   "tauri": {
     "allowlist": {
