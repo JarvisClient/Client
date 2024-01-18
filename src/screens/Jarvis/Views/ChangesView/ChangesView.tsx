@@ -14,7 +14,6 @@ const ChangesView = ({ buildData }: Props) => {
 
 	useEffect(() => {
 		setChanges(buildData.changeSet);
-		console.log(changes);
 	}, []);
 
 	// Show a message if there are no changes

@@ -106,6 +106,8 @@ export async function onStartup() {
  */
 function logMessage<T extends unknown[]>(level: string, css: string, ...messages: T) {
 	try {
+		if (level.includes("DEBUG") && window.location.port !== "1420") return; 
+
 		const { stack } = new Error();
 		const stackLines = stack?.split("\n") || [];
 		let callerLine = stackLines[3]; // Adjust the index if necessary
