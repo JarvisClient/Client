@@ -51,7 +51,7 @@ fn format_chunk(
     // Function to replace URLs with HTML <a> tags
     fn replace_url_with_link(captures: &regex::Captures) -> String {
         let url = captures.get(0).unwrap().as_str();
-        format!("<a href=\"{}\">{}</a>", url, url)
+        format!("<a href=\"{}\" target=\"_blank\">{}</a>", url, url)
     }
 
     // Apply any additional formatting based on the style_dict
