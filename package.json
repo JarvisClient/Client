@@ -19,7 +19,7 @@
     "@emotion/react": "^11.11.3",
     "@emotion/styled": "^11.11.0",
     "@tauri-apps/api": "^1.5.2",
-    "autoprefixer": "^10.4.16",
+    "autoprefixer": "^10.4.17",
     "chart.js": "^4.4.1",
     "dompurify": "^3.0.8",
     "framer-motion": "^11.0.3",
