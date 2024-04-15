@@ -80,7 +80,7 @@ jobs:
           zip Jarvis_${{ github.event.inputs.version }}_Windows_Release.zip "Jarvis Client.exe"
 
       - name: Create GitHub release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.event.inputs.version }}
           generate_release_notes: true
