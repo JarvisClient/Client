@@ -1,7 +1,7 @@
 {
   "name": "jarvis",
   "private": true,
-  "version": "0.9.77",
+  "version": "0.9.772",
   "type": "module",
   "scripts": {
     "dev": "vite",
